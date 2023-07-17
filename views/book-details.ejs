@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Book Details</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Additional CSS styles for book details page -->
+</head>
+<body>
+  <h1>Book Details</h1>
+  <div>
+    <h3>Title: <%= book.title %></h3>
+    <p>ID: <%= book.id %></p>
+  <p>Page Count: <%= book.page_count %></p>
+  <p>Letter ID: <%= book.letter_id %></p>
+  <p>Language ID: <%= book.language_id %></p>
+  <p>Binding ID: <%= book.binding_id %></p>
+  <p>Format ID: <%= book.format_id %></p>
+  <p>Publisher ID: <%= book.publisher_id %></p>
+  <p>ISBN: <%= book.ISBN %></p>
+  <p>Quantity Count: <%= book.quantity_count %></p>
+  <p>Rented Count: <%= book.rented_count %></p>
+  <p>Reserved Count: <%= book.reserved_count %></p>
+  <p>Body: <%= book.body %></p>
+  <p>Year: <%= book.year %></p>
+  <p>PDF: <%= book.pdf %></p>
+  <p>Placeholder: <%= book.placeholder %></p>
+  
+  <a href="/">Back to Home</a>
+  </div>
+</body>
+</html>

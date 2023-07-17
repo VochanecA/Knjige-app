@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add New Book</title>
+</head>
+<body>
+  <h1>Add New Book</h1>
+  
+  <form method="POST" action="/books">
+    <label for="id">ID:</label>
+    <input type="number" id="id" name="id" required>
+    <br>
+    
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required maxlength="25">
+    <br>
+    
+    <label for="page_count">Page Count:</label>
+    <input type="number" id="page_count" name="page_count" required>
+    <br>
+    
+    <label for="letter_id">Letter ID:</label>
+    <input type="number" id="letter_id" name="letter_id" required>
+    <br>
+    
+    <label for="language_id">Language ID:</label>
+    <input type="number" id="language_id" name="language_id" required>
+    <br>
+    
+    <label for="binding_id">Binding ID:</label>
+    <input type="number" id="binding_id" name="binding_id" required>
+    <br>
+    
+    <label for="format_id">Format ID:</label>
+    <input type="number" id="format_id" name="format_id" required>
+    <br>
+    
+    <label for="publisher_id">Publisher ID:</label>
+    <input type="number" id="publisher_id" name="publisher_id" required>
+    <br>
+    
+    <label for="ISBN">ISBN:</label>
+    <input type="text" id="ISBN" name="ISBN" maxlength="15">
+    <br>
+    
+    <label for="quantity_count">Quantity Count:</label>
+    <input type="number" id="quantity_count" name="quantity_count" required>
+    <br>
+    
+    <label for="rented_count">Rented Count:</label>
+    <input type="number" id="rented_count" name="rented_count" required>
+    <br>
+    
+    <label for="reserved_count">Reserved Count:</label>
+    <input type="number" id="reserved_count" name="reserved_count" required>
+    <br>
+    
+    <label for="body">Body:</label>
+    <input type="text" id="body" name="body" maxlength="41">
+    <br>
+    
+    <label for="year">Year:</label>
+    <input type="text" id="year" name="year" maxlength="4">
+    <br>
+    
+    <label for="pdf">PDF:</label>
+    <input type="text" id="pdf" name="pdf" maxlength="45">
+    <br>
+    
+    <label for="placeholder">Placeholder:</label>
+    <input type="number" id="placeholder" name="placeholder" required>
+    <br>
+    
+    <button type="submit">Add Book</button>
+  </form>
+</body>
+</html>
