@@ -148,6 +148,13 @@
       <p>ID: <%= book.id %></p>
       <p>Page Count: <%= book.page_count %></p>
       <p>Reservation Count: <%= book.reserved_count %></p>
+      <p>
+        <% if (book.authorNameSurname) { %>
+          <a href="/authors/<%= book.authorId %>/books" class="author-link"><%= book.authorNameSurname %></a>
+        <% } else { %>
+          Unknown author
+        <% } %>
+      </p>
       <div class="card-buttons">
         <a href="/books/<%= book.id %>" class="card-button">View</a>
         <a href="/books/<%= book.id %>/edit" class="card-button">Edit</a>
