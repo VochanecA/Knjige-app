@@ -103,7 +103,11 @@
       </div>
       <div class="form-field">
         <label for="author_name" class="form-label">Author Name:</label>
-        <input type="text" id="author_name" name="author_name" class="form-input" value="<%= book.author ? book.author.NameSurname : '' %>" required>
+        <select id="author_name" name="author_name" class="form-input" required>
+          <% authors.forEach(author => { %>
+            <option value="<%= author.NameSurname %>" <%= book.author && book.author.NameSurname === author.NameSurname ? 'selected' : '' %>><%= author.NameSurname %></option>
+          <% }) %>
+        </select>
       </div>
       
       <div class="form-field">
