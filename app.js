@@ -116,10 +116,10 @@ const Authors = mongoose.model('Authors', new mongoose.Schema({
 // Podesi EJS
 app.set('view engine', 'ejs');
 
-// SETUJ views direktorijum
+// Setuj views direktorijum
 app.set('views', path.join(__dirname, 'views'));
 
-// Middleware
+// Middleware je tu
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('assets'));
 app.use(express.static('assets', { "extensions": ["css"] }));
@@ -150,7 +150,7 @@ app.get('/', async (req, res) => {
     res.render('index', { users, books });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send('Greska servera.');
   }
 });
 
@@ -184,7 +184,7 @@ app.post('/users', async (req, res) => {
     res.redirect('/');
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send('Greska servera.');
   }
 });
 
@@ -222,7 +222,7 @@ app.post('/books', async (req, res) => {
     res.redirect('/');
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send('Greska servera.');
   }
 });
 
@@ -235,7 +235,7 @@ app.get('/books/:id', async (req, res) => {
     res.render('book-details', { book });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send('Greska servera.');
   }
 });
 
@@ -261,7 +261,7 @@ app.post('/authors', async (req, res) => {
     res.redirect('/');
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send('Greska servera.');
   }
 });
 
