@@ -4,7 +4,9 @@ const mongoose = require('mongoose');
 const path = require('path');
 const mime = require('mime');
 const models = require('./models/models');
-const { Book } = require('./models/models');
+//const { Book } = require('./models/models');
+const { Book, Author } =require('./models/models');
+
 
 require('dotenv').config();
 
@@ -154,17 +156,21 @@ app.get('/books/:id', async (req, res) => {
 });
 
 
+// Route for rendering the add author page
 app.get('/authors/new', (req, res) => {
   res.render('new-author');
 });
 
-app.get('/authors', async (req, res) => {
+// Route for handling the form submission to add a new author
+app.post('/authors', async (req, res) => {
   try {
-    const authors = await models.Author.find();
-    res.render('autor', { authors });
+    const { name } = req.body;
+    const author = new Author({ name });
+    await author.save();
+    res.redirect('/books/:id/edit'); // Redirect back to the book edit page
   } catch (err) {
     console.error(err);
-    res.status(500).send('Server greska prilikom povlacenja autora.');
+    res.status(500).send('Server error.');
   }
 });
 
