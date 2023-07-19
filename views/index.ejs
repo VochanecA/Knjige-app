@@ -3,16 +3,25 @@
 <head>
   <title>Bookstore</title>
   <link rel="stylesheet" href="../assets/css/main.css">
-  
+
   <style>
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
+      background-color: rgba(20, 20, 20, 0.2);
+      color: #fff; /* Boja teksta bijela */
+	        font-family: Arial, Helvetica, sans-serif;
+      background-image: url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+
     }
 
     .topnav {
       overflow: hidden;
-      background-color: #333;
+      background-color: #141414; /*boja pozadine*/
+      padding: 16px; /*Dodan padding za razmak */
     }
 
     .topnav a {
@@ -22,21 +31,19 @@
       padding: 14px 16px;
       text-decoration: none;
       font-size: 17px;
-    }
-
-    .topnav a:hover {
-      background-color: #ddd;
-      color: black;
+      margin-right: 16px; /* Dodata margina-desno za razmak */
     }
 
     .topnav a.active {
-      background-color: #04AA6D;
+      background-color: #e50914; /* Boja pozadine */
       color: white;
     }
 
-
     .container {
       display: flex;
+      align-items: center; /* centriraj vertikalno */
+      justify-content: space-between; /* Added justify-content for horizontal spacing */
+      padding: 16px; /*Dodan padding za razmak */
     }
 
     .box {
@@ -46,7 +53,7 @@
     }
 
     .box:nth-child(2) {
-      background-color: ##FFFFFF;
+      background-color: #141414; /* Boja pozadine*/
     }
 
     .search-box {
@@ -60,11 +67,13 @@
       padding: 8px;
       border: 1px solid #ccc;
       border-radius: 4px;
+      background-color: #141414; /* Boja pozadine*/
+      color: #fff; /* Boja teksta bijela */
     }
 
     .search-button {
-      padding: 8px 20px; /* Adjusted padding to fit the text */
-      background-color: #4CAF50;
+      padding: 8px 20px; /*  padding za fit teksta */
+      background-color: #e50914; /* boja*/
       color: white;
       border: none;
       border-radius: 4px;
@@ -77,17 +86,19 @@
 
     .card-container {
       display: flex;
-      flex-wrap: nowrap; /* Updated to nowrap to prevent wrapping */
-      overflow-x: auto; /* Added overflow-x to enable horizontal scrolling */
+      flex-wrap: nowrap; /* Ažurirano na Nowrap kako bi se spriječilo omatanje */
+      overflow-x: auto; /* Dodan overflow-x za omogućavanje horizontalnog pomicanja */
+      padding: 16px; /*Dodan padding za razmak */
     }
 
     .card {
-      flex: 0 0 auto; /* Updated to prevent card width from growing */
-      margin-right: 16px; /* Added margin-right for spacing between cards */
+      flex: 0 0 auto; /* Ažurirano kako bi se spriječilo povećanje širine kartice */
+      margin-right: 16px; /* Dodata margina-desno za razmak između kartica */
       padding: 16px;
       border: 1px solid #ccc;
       border-radius: 4px;
-      background-color: #f5f5f5; /* Added background color for the cards */
+      background-color: #1c1c1c; /* Boja pozadine*/
+      color: #fff; /* Boja teksta bijela */
     }
 
     .card-title {
@@ -103,14 +114,14 @@
 
     .card-button {
       padding: 8px 12px;
-      background-color: #4CAF50;
+      background-color: #e50914; /* boja */
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
     }
-	
-	.google-login-button {
+
+    .google-login-button {
       background-color: #DB4437;
     }
   </style>
@@ -118,6 +129,7 @@
 <body>
 <div class="topnav">
   <a class="active" href="/">Home</a>
+  <a href="/authors">View all authors</a>
   <a href="/books/new">Add New Book</a>
   <a href="/authors/new">Add New Author</a>
   <a href="/users/new">Create User</a>
@@ -129,7 +141,7 @@
 
 <div class="container">
   <div class="box">
-    <h1>Bookstore</h1>
+    <h1 style="font-size: 32px;">Bookstore</h1> <!-- Increased font size for the title -->
   </div>
   <div class="box"></div>
   <div class="search-box">
@@ -139,8 +151,8 @@
     </form>
   </div>
 </div>
-  
-<h2>Books</h2>
+
+<h2 style="padding: 16px;">Books</h2> <!--Dodan padding za razmak -->
 <div class="card-container">
   <% books.forEach(book => { %>
     <div class="card">
@@ -150,7 +162,9 @@
       <p>Reservation Count: <%= book.reserved_count %></p>
       <p>
         <% if (book.authorNameSurname) { %>
-          <a href="/authors/<%= book.authorId %>/books" class="author-link"><%= book.authorNameSurname %></a>
+          <% book.authorNameSurname.forEach(author => { %>
+            <a href="/authors/<%= author.id %>/books" class="author-link"><%= author.NameSurname %></a>
+          <% }) %>
         <% } else { %>
           Unknown author
         <% } %>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bookstore - Edit Book</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #141414;
+      color: #fff;
+    }
+
+    .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+    }
+
+    .box {
+      flex-grow: 1;
+      padding: 10px;
+      border: 0px solid #ccc;
+    }
+
+    .box:nth-child(2) {
+      background-color: #141414;
+    }
+
+    .form-container {
+      width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #1c1c1c;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .form-field {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .form-button {
+      padding: 8px 16px;
+      background-color: #e50914;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="box">
+      <h1 style="font-size: 32px;">Bookstore - Edit Book</h1>
+    </div>
+    <div class="box"></div>
+  </div>
+
+  <div class="form-container">
+    <form action="/books/<%= book.id %>" method="POST">
+      <div class="form-field">
+        <label for="title" class="form-label">Title:</label>
+        <input type="text" id="title" name="title" class="form-input" value="<%= book.title %>" required>
+      </div>
+      <div class="form-field">
+        <label for="page_count" class="form-label">Page Count:</label>
+        <input type="number" id="page_count" name="page_count" class="form-input" value="<%= book.page_count %>" required>
+      </div>
+      <div class="form-field">
+        <label for="isbn" class="form-label">ISBN:</label>
+        <input type="text" id="isbn" name="isbn" class="form-input" value="<%= book.ISBN %>" required>
+      </div>
+      <div class="form-field">
+        <label for="quantity_count" class="form-label">Quantity Count:</label>
+        <input type="number" id="quantity_count" name="quantity_count" class="form-input" value="<%= book.quantity_count %>" required>
+      </div>
+      <div class="form-field">
+        <label for="body" class="form-label">Description:</label>
+        <textarea id="body" name="body" class="form-input" rows="5" required><%= book.body %></textarea>
+      </div>
+      
+      <!-- Add other book details here -->
+
+      <div class="form-field">
+        <label for="author_id" class="form-label">Author ID:</label>
+        <input type="number" id="author_id" name="author_id" class="form-input" value="<%= book.author ? book.author.id : '' %>" required>
+      </div>
+      <div class="form-field">
+        <label for="author_name" class="form-label">Author Name:</label>
+        <input type="text" id="author_name" name="author_name" class="form-input" value="<%= book.author ? book.author.NameSurname : '' %>" required>
+      </div>
+      
+      <div class="form-field">
+        <button type="submit" class="form-button">Update Book</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

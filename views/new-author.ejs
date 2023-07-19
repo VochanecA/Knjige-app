@@ -3,13 +3,28 @@
 <head>
   <title>Add New Author</title>
   <link rel="stylesheet" href="../assets/css/main.css">
+  <script>
+    function setCurrentDateTime() {
+      var currentDate = new Date().toISOString().split('T')[0];
+      var currentTime = new Date().toISOString().split('T')[1].slice(0, 5);
+
+      document.getElementById('created_at').value = currentDate;
+      document.getElementById('updated_at').value = currentDate + ' ' + currentTime;
+    }
+  </script>
 </head>
-<body>
+<body onload="setCurrentDateTime()">
   <h1>Add New Author</h1>
 
   <form action="/authors" method="POST">
+    <label for="id">ID:</label>
+    <input type="number" id="id" name="id" required>
+
+    <label for="book_author_id">Book Author ID:</label>
+    <input type="number" id="book_author_id" name="book_author_id" required>
+
     <label for="name">Name Surname:</label>
-    <input type="text" id="name" name="name" required>
+    <input type="text" id="name" name="NameSurname" required>
 
     <label for="photo">Photo URL:</label>
     <input type="text" id="photo" name="photo">
@@ -19,6 +34,12 @@
 
     <label for="wikipedia">Wikipedia URL:</label>
     <input type="text" id="wikipedia" name="wikipedia">
+
+    <label for="created_at">Created At:</label>
+    <input type="date" id="created_at" name="created_at" required>
+
+    <label for="updated_at">Updated At:</label>
+    <input type="text" id="updated_at" name="updated_at" readonly>
 
     <button type="submit">Add Author</button>
   </form>
