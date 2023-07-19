@@ -22,7 +22,7 @@ const User = mongoose.model('User', new mongoose.Schema({
 }));
 
 // Book Model
-const Book = mongoose.model('Book', new mongoose.Schema({
+const BookSchema = new mongoose.Schema({
   id: { type: Number, required: true, unique: true },
   title: { type: String, required: true, maxlength: 25 },
   page_count: { type: Number, required: true },
@@ -39,7 +39,9 @@ const Book = mongoose.model('Book', new mongoose.Schema({
   year: { type: String, maxlength: 4 },
   pdf: { type: String, maxlength: 45 },
   placeholder: { type: Number, required: true }
-}));
+});
+
+const Book = mongoose.model('Book', BookSchema);
 
 // Reservation Model
 const Reservation = mongoose.model('Reservation', new mongoose.Schema({
@@ -90,8 +92,8 @@ const BookGenre = mongoose.model('BookGenre', new mongoose.Schema({
 }));
 
 // Author Model
-const Author = mongoose.model('Author', new mongoose.Schema({
-  id: { type: Number, required: true, unique: true },
+const authorSchema = new mongoose.Schema({
+  _id: mongoose.Schema.Types.ObjectId, // Use ObjectId data type for _id field
   book_author_id: { type: Number, required: true },
   NameSurname: { type: String, maxlength: 100 },
   photo: { type: String, maxlength: 200 },
@@ -99,7 +101,11 @@ const Author = mongoose.model('Author', new mongoose.Schema({
   wikipedia: { type: String, maxlength: 200 },
   created_at: { type: Date, required: true },
   updated_at: { type: Date, required: true }
-}));
+});
+
+
+const Author = mongoose.model('Author', authorSchema);
+
 
 module.exports = {
   User,

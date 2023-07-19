@@ -94,7 +94,7 @@
         <label for="body" class="form-label">Description:</label>
         <textarea id="body" name="body" class="form-input" rows="5" required><%= book.body %></textarea>
       </div>
-      
+
       <!-- Add other book details here -->
 
       <div class="form-field">
@@ -105,15 +105,25 @@
         <label for="author_name" class="form-label">Author Name:</label>
         <select id="author_name" name="author_name" class="form-input" required>
           <% authors.forEach(author => { %>
-            <option value="<%= author.NameSurname %>" <%= book.author && book.author.NameSurname === author.NameSurname ? 'selected' : '' %>><%= author.NameSurname %></option>
+            <option value="<%= author.id %>" <%= book.author && book.author.id === author.id ? 'selected' : '' %>><%= author.NameSurname %></option>
           <% }) %>
         </select>
       </div>
-      
+      <div class="form-field">
+        <button type="button" id="add_author_button" class="form-button">Add New Author</button>
+      </div>
+
       <div class="form-field">
         <button type="submit" class="form-button">Update Book</button>
       </div>
     </form>
   </div>
+
+  <script>
+    const addAuthorButton = document.getElementById('add_author_button');
+    addAuthorButton.addEventListener('click', () => {
+      window.location.href = '/authors/new';
+    });
+  </script>
 </body>
 </html>

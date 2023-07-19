@@ -4,10 +4,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const mime = require('mime');
 const models = require('./models/models');
-//const { Book } = require('./models/models');
-const { Book, Author } =require('./models/models');
-
-
+const { Book, Author }= require('./models/models');
 require('dotenv').config();
 
 // Konektuj seMongoDB
@@ -74,10 +71,11 @@ app.post('/users', async (req, res) => {
     res.status(500).send('Greska servera.');
   }
 });
+
 app.get('/books/:id/edit', async (req, res) => {
   try {
     const book = await Book.findOne({ id: req.params.id }).populate('author');
-    const authors = await Author.find({}, 'NameSurname'); // Retrieve all authors with only the NameSurname field
+    const authors = await Author.find({}, 'NameSurname');
 
     if (!book) {
       return res.status(404).send('Book not found');
@@ -86,11 +84,9 @@ app.get('/books/:id/edit', async (req, res) => {
     res.render('edit-book', { book, authors });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Server error');
+    res.status(500).send('Greska servera');
   }
 });
-
-
 
 
 app.post('/books/:id', async (req, res) => {
@@ -119,7 +115,7 @@ app.post('/books/:id', async (req, res) => {
     res.redirect('/books/' + book.id);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Server error');
+    res.status(500).send('Greska servera');
   }
 });
 
@@ -141,6 +137,21 @@ app.post('/books', async (req, res) => {
     res.status(500).send('Greska servera.');
   }
 });
+app.get('/books/:id/edit', async (req, res) => {
+  try {
+    const book = await Book.findOne({ id: req.params.id }).populate('author');
+    const authors = await Author.find({}, 'NameSurname'); // Retrieve all authors with only the NameSurname field
+
+    if (!book) {
+      return res.status(404).send('Book not found');
+    }
+
+    res.render('edit-book', { book, authors });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Greska servera');
+  }
+});
 
 app.get('/books/:id', async (req, res) => {
   try {
@@ -154,23 +165,51 @@ app.get('/books/:id', async (req, res) => {
     res.status(500).send('Greska servera.');
   }
 });
+app.get('/authors', async (req, res) => {
+  try {
+    const authors = await models.Author.find();
+    res.render('autor', { authors });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Greska servera.');
+  }
+});
 
-
-// Route for rendering the add author page
 app.get('/authors/new', (req, res) => {
   res.render('new-author');
 });
 
-// Route for handling the form submission to add a new author
+
+
+
 app.post('/authors', async (req, res) => {
   try {
-    const { name } = req.body;
-    const author = new Author({ name });
+    const {
+      book_author_id,
+      NameSurname,
+      photo,
+      biography,
+      wikipedia,
+      created_at,
+      updated_at
+    } = req.body;
+
+    const author = new Author({
+      _id: mongoose.Types.ObjectId(),
+      book_author_id,
+      NameSurname,
+      photo,
+      biography,
+      wikipedia,
+      created_at,
+      updated_at
+    });
+
     await author.save();
-    res.redirect('/books/:id/edit'); // Redirect back to the book edit page
+    res.redirect('/books/:id/edit'); // Redirekcija anzada na edit stranu
   } catch (err) {
     console.error(err);
-    res.status(500).send('Server error.');
+    res.status(500).send('Greska servera.');
   }
 });
 
