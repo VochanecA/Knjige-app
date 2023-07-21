@@ -8,10 +8,10 @@
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
-      background-color: rgba(20, 20, 20, 0.2);
+      background-color: rgb(0, 0, 0);
       color: #fff; /* Boja teksta bijela */
 	        font-family: Arial, Helvetica, sans-serif;
-      background-image: url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80');
+     /* background-image: url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80'); */
       background-repeat: no-repeat;
       background-size: cover;
       background-position: center;
@@ -124,27 +124,46 @@
     .google-login-button {
       background-color: #DB4437;
     }
+
+    .action-button {
+    display: inline-block;
+    width: 100px; /* Set the desired width */
+    height: 40px; /* Set the desired height */
+    margin: 5px;
+    padding: 10px;
+    text-align: center;
+    line-height: 20px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  /* Custom classes for individual buttons */
+  .view-button {
+    background-color: #007bff;
+  }
+
+  .edit-button {
+    background-color: #28a745;
+  }
+
+  .buy-button {
+    background-color: #dc3545;
+  }
   </style>
 </head>
 <body>
-<div class="topnav">
-  <a class="active" href="/">Home</a>
-  <a href="/authors">View all authors</a>
-  <a href="/books/new">Add New Book</a>
-  <a href="/authors/new">Add New Author</a>
-  <a href="/users/new">Create User</a>
-  <a href="#news">News</a>
-  <a href="#contact">Contact</a>
-  <a href="#about">About</a>
-  <a href="/login/google" class="google-login-button">Sign in with Google</a>
-  <a href="/login">Login</a>
-</div>
+  <%- include('navigation') %>
+  
+  
 
 <div class="container">
   <div class="box">
     <h1 style="font-size: 32px;">Bookstore</h1> <!-- Increased font size for the title -->
   </div>
-  <div class="box"></div>
+ <!--  <div class="box"></div> -->
   <div class="search-box">
     <form action="/" method="GET">
       <input type="text" name="search" placeholder="Search by Title, ID, or Page Count" class="search-field">
@@ -171,11 +190,44 @@
         <% } %>
       </p>
       <div class="card-buttons">
-        <a href="/books/<%= book.id %>" class="card-button">View</a>
-        <a href="/books/<%= book.id %>/edit" class="card-button">Edit</a>
+        <a href="/books/<%= book.id %>" class="action-button view-button">View</a>
+        <% if (loggedIn) { %>
+          <!-- Show the "Edit" button only when logged in -->
+          <a href="/books/<%= book.id %>/edit" class="action-button edit-button">Edit</a>
+        <% } %>
+        <form action="/add-to-cart/<%= book.id %>" method="POST" class="buy-form">
+          <button type="submit" class="action-button buy-button">Buy Book</button>
+        </form>
       </div>
     </div>
   <% }) %>
 </div>
+
+
+<script>
+  async function updateCartCount() {
+    try {
+      const response = await fetch('/get-cart-count', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const cartCount = data.count;
+        document.getElementById('cart-count').innerText = cartCount;
+      } else {
+        console.error('Failed to fetch cart count');
+      }
+    } catch (err) {
+      console.error('Error occurred while fetching cart count:', err);
+    }
+  }
+
+  updateCartCount();
+</script>
+<%- include('footer') %>
 </body>
 </html>

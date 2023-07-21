@@ -1,0 +1,20 @@
+<div class="topnav">
+    <a class="active" href="/">Home</a>
+    <a href="/authors">View all authors</a>
+    <% if (loggedIn) { %>
+      <a href="/books/new">Add New Book</a>
+      <a href="/authors/new">Add New Author</a>
+      <a href="/users/new">Create User</a>
+      <a href="/shopping-cart">Shopping Cart<span id="cart-link" style="color: red; font-weight: bold; margin-left: 5px;"></span></a>
+    <% } %>
+    <a href="#news">News</a>
+    <a href="#contact">Contact</a>
+    <a href="#about">About</a>
+    <% if (loggedIn) { %>
+      <a href="/logout">Logout</a>
+    <% } else { %>
+      <a href="/login/google" class="google-login-button">Sign in with Google</a>
+      <a href="/login">Login</a>
+    <% } %>
+  </div>
+  

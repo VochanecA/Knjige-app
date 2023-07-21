@@ -18,7 +18,8 @@ const User = mongoose.model('User', new mongoose.Schema({
   created_at: { type: Date, required: true },
   updated_at: { type: Date, required: true },
   github: { type: String },
-  active: { type: Boolean }
+  active: { type: Boolean },
+  shoppingCart: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }]
 }));
 
 // Book Model

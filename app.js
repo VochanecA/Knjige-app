@@ -5,6 +5,8 @@ const path = require('path');
 const mime = require('mime');
 const models = require('./models/models');
 const { Book, User, Author }= require('./models/models');
+const session = require('express-session');
+
 
 require('dotenv').config();
 
@@ -35,6 +37,25 @@ app.use('/assets', express.static(path.join(__dirname, 'assets'), {
   }
 }));
 
+
+app.use(session({
+  secret: '1234567890', // Replace with a strong secret key
+  resave: false,
+  saveUninitialized: true,
+  clearExpired: true,
+  cookie: { maxAge: 300000 } ,//  5 min u milisekundama
+  resave: false, // 
+  saveUninitialized: false 
+}));
+
+
+// Middleware da setuje loggedIn promjenljivu
+app.use((req, res, next) => {
+  req.loggedIn = req.session.username !== undefined;
+  next();
+});
+
+
 // Prikazuje pocetnu stranicu
 app.get('/', async (req, res) => {
   try {
@@ -55,7 +76,7 @@ app.get('/', async (req, res) => {
 
     const users = await models.User.find();
     const books = await models.Book.find(query).exec();
-    res.render('index', { username, users, books });
+    res.render('index', { loggedIn: req.loggedIn, username, users, books });
   } catch (err) {
     console.error(err);
     res.status(500).send('Greška servera.');
@@ -76,16 +97,22 @@ app.get('/dashboard', async (req, res) => {
       };
     }
 
-    // Get the logged-in user's username
-    const username = req.user ? req.user.username : null;
+    const username = req.session.username || null;
+    
+    // Fetch all authors from the database using your model (assuming your model is named "Author")
+    const authors = await models.Author.find();
 
+    // Fetch all books from the database based on the query
     const books = await models.Book.find(query).exec();
-    res.render('dashboard', { username, books });
+
+    // Render the dashboard.ejs template and pass the loggedIn, username, books, and authors variables
+    res.render('dashboard', { loggedIn: req.loggedIn, username, books, authors });
   } catch (err) {
     console.error(err);
     res.status(500).send('Server error');
   }
 });
+
 
 
 
@@ -176,8 +203,9 @@ app.post('/login', async (req, res) => {
       if (user.password === psw) {
         // Password se poklapa
         const welcomeMessage = `Welcome, ${user.username}!`;
-        // 
+        req.session.username = user.username;
         return res.send(`<script>alert("${welcomeMessage}"); window.location.href="/dashboard";</script>`);
+        return res.render('dashboard', { username: user.username });
       }
     }
 
@@ -189,6 +217,22 @@ app.post('/login', async (req, res) => {
   }
 });
 
+// Logout ruta
+app.get('/logout', (req, res) => {
+  res.render('logout');
+});
+
+// Handlovanje logout zahtjeva (da unisti sesiju)
+app.post('/logout', (req, res) => {
+  // unisti sesiju
+  req.session.destroy((err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Server error');
+    }
+    res.redirect('/');
+  });
+});
 
 // Prikazuje formu za uređivanje knjige
 app.get('/books/:id/edit', async (req, res) => {
@@ -212,23 +256,23 @@ app.post('/books/:id', async (req, res) => {
   try {
     const book = await models.Book.findOne({ id: req.params.id });
     if (!book) {
-      return res.status(404).send('Book not found');
+      return res.status(404).send('Knjiga nije nadjenaa');
     }
 
-    // Log the received data
-    console.log('Received data:', req.body);
+    
+    console.log('Primljeni podaci za kontrolu:', req.body);
 
-    // Update the book with the data from the form
+   
     book.title = req.body.title;
     book.page_count = req.body.page_count;
     book.ISBN = req.body.isbn;
     book.quantity_count = req.body.quantity_count;
     book.body = req.body.body;
 
-    // Log the updated book object
-    console.log('Updated book:', book);
+    
+    console.log('Updateovana knjiga:', book);
 
-    // Save the book
+   
     await book.save();
 
     res.redirect('/books/' + book.id);
@@ -262,7 +306,7 @@ app.get('/books/:id/edit', async (req, res) => {
     const authors = await Author.find({}, 'NameSurname'); // Retrieve all authors with only the NameSurname field
 
     if (!book) {
-      return res.status(404).send('Book not found');
+      return res.status(404).send('Knjiga nije nadjena');
     }
 
     res.render('edit-book', { book, authors });
@@ -276,7 +320,7 @@ app.get('/books/:id', async (req, res) => {
   try {
     const book = await models.Book.findOne({ id: req.params.id });
     if (!book) {
-      return res.status(404).send('Book not found');
+      return res.status(404).send('Knjiga nije nadjena');
     }
     res.render('book-details', { book });
   } catch (err) {
@@ -287,19 +331,146 @@ app.get('/books/:id', async (req, res) => {
 app.get('/authors', async (req, res) => {
   try {
     const authors = await models.Author.find();
-    res.render('autor', { authors });
+    res.render('autor', { authors, loggedIn: req.loggedIn });
   } catch (err) {
     console.error(err);
     res.status(500).send('Greska servera.');
   }
 });
 
+
 app.get('/authors/new', (req, res) => {
   res.render('new-author');
 });
 
+const removeBookFromCart = (req, bookId) => {
+  return new Promise((resolve, reject) => {
+    req.session.shoppingCart = req.session.shoppingCart || [];
 
 
+    const indexToRemove = req.session.shoppingCart.findIndex(book => book._id.equals(bookId));
+
+    if (indexToRemove !== -1) {
+      req.session.shoppingCart.splice(indexToRemove, 1);
+    }
+
+    req.session.save(err => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
+};
+
+
+app.post('/remove-from-cart/:id', (req, res) => {
+  const bookId = req.params.id;
+  removeBookFromCart(req, bookId)
+    .then(() => {
+      const cartCount = req.session.shoppingCart.length;
+      res.json({ message: 'Book removed from cart', count: cartCount });
+    })
+    .catch(err => {
+      console.error('Error occurred while removing book from cart:', err);
+      res.status(500).send('Server error');
+    });
+});
+
+
+
+
+
+
+
+
+app.post('/add-to-cart/:id', async (req, res) => {
+  try {
+    const bookId = req.params.id;
+    const book = await models.Book.findOne({ id: bookId });
+
+    if (!book) {
+      return res.status(404).send('Knjiga nije nadjena');
+    }
+
+  
+    if (!req.session.username) {
+      return res.status(401).send('User not found');
+    }
+
+
+    const user = await models.User.findOne({ username: req.session.username });
+
+    if (!user) {
+      return res.status(401).send('User not found');
+    }
+
+    user.shoppingCart.push(book);
+    await user.save();
+
+    
+    const cartCount = user.shoppingCart.length;
+    res.json({ message: 'Book added to cart', count: cartCount });
+  } catch (err) {
+    console.error('Error occurred while adding book to cart:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+
+
+app.get('/shopping-cart', async (req, res) => {
+  try {
+    // nadji logovanog usera
+    const user = await models.User.findOne({ username: req.session.username }).populate('shoppingCart');
+    if (!user) {
+      return res.status(401).send('Korisnik nije nadjena');
+    }
+
+    // prikazi shopping cart sa korisnickim knjigama
+    res.render('shopping-cart', { shoppingCart: user.shoppingCart });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+});
+
+app.get('/get-cart-count', (req, res) => {
+  const cartCount = req.session.shoppingCart ? req.session.shoppingCart.length : 0;
+  res.json({ count: cartCount });
+});
+
+
+
+
+
+
+
+
+// Handler to display the shopping cart and proceed to checkout
+app.get('/checkout', (req, res) => {
+  try {
+    const shoppingCart = req.session.shoppingCart || [];
+
+    res.render('checkout', { shoppingCart });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+});
+
+
+app.get('/checkout', (req, res) => {
+  try {
+    const shoppingCart = req.session.shoppingCart || [];
+
+    res.render('checkout', { shoppingCart });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+});
 
 app.post('/authors', async (req, res) => {
   try {

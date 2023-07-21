@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>All Authors</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #141414;
+      color: rgb(5, 1, 1);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .card {
+      flex: 0 0 200px;
+      margin: 16px;
+      padding: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #1c1c1c;
+      color: #fff;
+      text-align: center;
+    }
+
+    .card h3 {
+      font-weight: bold;
+      margin-top: 0;
+    }
+
+    .card p {
+      margin: 8px 0;
+    }
+  </style>
+</head>
+<body>
+    <div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+        <div style="border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; padding: 20px;">
+            <h1 style="text-align: center;">Shopping Cart</h1>
+            <div style="text-align: center; margin-top: 20px;">
+              Cart Count: <span id="cart-count">0</span>
+            </div>
+            <% if (shoppingCart.length === 0) { %>
+                <p style="text-align: center; font-weight: bold; padding: 20px;">Korpica je prazna.</p>
+            <% } else { %>
+                <ul id="cart-list" style="list-style-type: none; padding: 0;">
+                    <% shoppingCart.forEach(book => { %>
+                        <li style="padding: 10px 0; border-bottom: 1px solid #ddd;">
+                            <%= book.title %>
+                            <% if (book.author) { %>
+                                - <%= book.author.NameSurname %>
+                            <% } else { %>
+                                - Unknown author
+                            <% } %>
+                            <button class="remove-from-cart-btn" data-id="<%= book.id %>" style="background-color: #dc3545; color: rgb(6, 4, 126); border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Remove</button>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } %>
+
+            <a href="/checkout" style="display: block; width: 100%; max-width: 200px; margin: 20px auto; padding: 10px 20px; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer; text-align: center; text-decoration: none;">Checkout</a>
+        </div>
+    </div>
+
+    <script>
+      const removeBtns = document.querySelectorAll('.remove-from-cart-btn');
+    
+      removeBtns.forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const bookId = btn.getAttribute('data-id');
+          try {
+            const response = await fetch(`/remove-from-cart/${bookId}`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+    
+            if (response.ok) {
+              const li = btn.parentNode;
+              li.parentNode.removeChild(li);
+              updateCartCount();
+            } else {
+              console.error('Failed to remove book from cart');
+            }
+          } catch (err) {
+            console.error('Error occurred while removing book from cart:', err);
+          }
+        });
+      });
+    
+      async function updateCartCount() {
+        try {
+          const response = await fetch('/get-cart-count', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+    
+          if (response.ok) {
+            const data = await response.json();
+            const cartCount = data.count;
+            document.getElementById('cart-count').innerText = cartCount;
+          } else {
+            console.error('Failed to fetch cart count');
+          }
+        } catch (err) {
+          console.error('Error occurred while fetching cart count:', err);
+        }
+      }
+    
+      updateCartCount();
+    </script>
+    <script>
+      // JS za dodavanje u korpici - ispravno
+      const addToCartBtns = document.querySelectorAll('.add-to-cart-btn');
+    
+      addToCartBtns.forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const bookId = btn.getAttribute('data-id');
+          try {
+            const response = await fetch(`/add-to-cart/${bookId}`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+    
+            if (response.ok) {
+              const data = await response.json();
+              const cartCount = data.count;
+              document.getElementById('cart-count').innerText = cartCount;
+            } else {
+              console.error('Greska prilikom dodavanja u korpice');
+            }
+          } catch (err) {
+            console.error('Greska prilikom dodavanja u korpice:', err);
+          }
+        });
+      });
+    </script>
+    
+    
+</body>
+</html>
+
+
+
+
+
+
+
+
