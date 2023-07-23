@@ -1,3 +1,5 @@
+
+require("dotenv").config() //  ucitaj ENV promjenljive
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -11,12 +13,26 @@ const session = require('express-session');
 require('dotenv').config();
 
 // Konektuj seMongoDB
-mongoose.connect('mongodb://localhost:27017/bookstore', {
+/* mongoose.connect('mongodb://localhost:27017/bookstore', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
   .then(() => console.log('Povezano sa MongoDB'))
   .catch(err => console.error('Greška pri konektovanju na MongoDB:', err));
+ */
+ // Database Connection
+const DATABASE_URL = process.env.DATABASE_URL
+const CONFIG = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}
+
+mongoose.connect(DATABASE_URL, CONFIG)
+
+mongoose.connection
+  .on("open", () => console.log("Konektovan na Mongoose"))
+  .on("close", () => console.log("Diskonektovan sa Mongoose-a"))
+  .on("error", (error) => console.log(error))
 
 
 // Podesi EJS
