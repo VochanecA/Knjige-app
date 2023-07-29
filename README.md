@@ -42,6 +42,6 @@ IP filter (moze i geoblock)
 	npm start
 	```
 2. Otvori http://localhost:5000
-3. Prvo morate se registrovati, a zatim prijaviti kao administrator ili korisnik da biste pokrenuli aplikaciju.
+3. Prvo se morate registrovati, a zatim prijaviti kao administrator ili korisnik da biste pokrenuli aplikaciju.
 4. Stranica za registraciju administratora ukoliko ne radi iz aplikacije, skriveni link je: /auth/admin-signup
 
