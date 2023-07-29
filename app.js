@@ -19,7 +19,7 @@ require("./config/passport.js")(passport);
 app.use(helmet());
 app.use(
 	helmet.hsts({
-		maxAge: 60 * 60 * 24 * 60, // 60 dana
+		maxAge: 60 * 60 * 24 * 60, // 60 dana u sekundama
 		includeSubDomains: false,
 	})
 );
