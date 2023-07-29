@@ -1,0 +1,39 @@
+<main>
+	<%- include('../partials/adminSidebar') %>
+	
+	<div id="main-wrapper">
+		<form action="/admin/book/<%= book.id %>?_method=PUT" method="POST" class="w-75 border m-auto my-5 bg-white rounded-2">
+			<h5 class="text-center bg-primary text-white form-title">Update-uj knjigu</h5>
+			
+			<div class="form-body p-4">
+				<div class="mb-3">
+					<label for="title" class="form-label">Naslov knjige</label>
+					<input type="text" name="book[title]" class="form-control" id="title" placeholder="Unesi naslov knjige.." value="<%= book.title %>" required>
+				</div>
+				<div class="mb-3">
+					<label for="ISBN" class="form-label">ISBN broj</label>
+					<input type="number" name="book[ISBN]" class="form-control" id="ISBN" placeholder="Unesi ISBN broj.." value="<%= book.ISBN %>" required>
+				</div>
+				<div class="mb-3">
+					<label for="description" class="form-label">Opis knjige</label>
+					<textarea name="book[description]" class="form-control" id="description" rows="5" placeholder="Unesi opis knjige.."><%= book.description %></textarea>
+				</div>
+				<div class="mb-3">
+					<label for="authors" class="form-label">Autor knjige</label>
+					<input type="text" name="book[authors]" class="form-control" id="authors" placeholder="Unesi autora/autore.." value="<%= book.authors %>">
+				</div>
+				<div class="mb-3">
+					<label for="category" class="form-label">Kategorija knjige</label>
+					<input type="text" name="book[category]" class="form-control" id="category" placeholder="Unesi kategoriju.." value="<%= book.category %>">
+				</div>
+				<div class="mb-3">
+					<label for="copies" class="form-label">Broj kopija knjige</label>
+					<input type="number" min="0" name="book[copiesOwned]" class="form-control" id="copies" placeholder="Unesi broj kopija.." value="<%= book.copiesOwned %>" required>
+				</div>
+				<button type="submit" class="btn w-75 d-block m-auto mt-4">Update-uj</button>
+				<a href="/admin/books" class="btn btn-cancel w-75 d-block m-auto mt-4">Otkazi</a>
+			</div>
+		</form>
+	</div>
+
+</main>

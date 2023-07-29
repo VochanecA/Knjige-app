@@ -1,0 +1,44 @@
+<main>
+	<%- include('../partials/adminSidebar') %>
+	
+	<div id="main-wrapper">
+		
+		<div class="bg-white mb-5 p-3 d-sm-flex align-items-center justify-content-between">
+			<h5 class="m-0 fw-bold color-theme">Trenutno izdate knjige</h5>
+			<a href="/admin/emails/reminder" class="btn">Posalji upozorenje putem Email-a</a>
+		</div>
+		
+		<div class="col col-sm-10 col-12 m-auto my-4" style="max-height: 75%; overflow: auto;">
+			<table class="table table-info table-striped table-hover m-0 bg-white">
+				<thead>
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">Korisnik</th>
+						<th scope="col">Naslov knjige</th>
+						<th scope="col">ISBN broj</th>
+						<th scope="col">Vrijeme izdavanja</th>
+						<th scope="col">Izdata do</th>
+						<th scope="col">Status</th>
+						<th scope="col">Akcija</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% for(let i=0; i<currentLoans.length; i++) { %>
+						<tr>
+							<th scope="row"> <%= i+1 %> </th>
+							<td> <%= currentLoans[i].user.email %> </td>
+							<td> <%= currentLoans[i].book.title %> </td>
+							<td> <%= currentLoans[i].book.ISBN %> </td>
+							<td> <%= currentLoans[i].issueTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+							<td> <%= currentLoans[i].dueTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+							<td class="fw-bold text-<%= currentLoans[i].status %>"> <%= currentLoans[i].status %> </td>
+							<td> <a href="/admin/collectBook/<%= currentLoans[i]._id %>" class="btn p-0" style="font-size: 14px;"> Prikupi knjige </a> </td>
+						</tr>
+					<% } %>
+				</tbody>
+			</table>
+		</div>
+		
+		
+	</div>
+</main>

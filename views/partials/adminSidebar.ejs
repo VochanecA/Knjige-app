@@ -1,0 +1,18 @@
+<div id="sidebar">
+	<ul id="sidebar-nav">
+		<li>Dobrodosli, <%= currentUser.firstName ? currentUser.firstName : "Admin" %></li>
+		<li><a href="/admin/dashboard">Dashboard</a></li>
+		<li><a href="/admin/activities">Aktivnostiu</a></li>
+		<li><a href="/admin/students">Korisnici</a></li>
+		<li><a href="/admin/books">Knjige</a></li>
+		<li><a href="/admin/issue">Izdaj knjigu</a></li>
+		<li><a href="/admin/loans/current">Trenutno izdate knjige</a></li>
+		<li><a href="/admin/loans/previous">Vracene knjige</a></li>
+		<li><a href="/admin/profile">Moj profil</a></li>
+		<li><a href="/auth/admin-logout" class="btn">Izadji</a></li>
+	</ul>
+</div>
+	
+<div id="toggler" class="text-center">
+	<span id="sidebar-toggler-btn"><i class="fas fa-bars"></i></span>
+</div>

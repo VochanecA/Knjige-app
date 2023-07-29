@@ -1,2 +1,0 @@
-
-***** Radjeno na Win 7 masini, tako da je Mongo i Node prilagodjen Win7

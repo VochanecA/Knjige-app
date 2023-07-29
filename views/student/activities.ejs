@@ -1,0 +1,79 @@
+<main>
+	<%- include('../partials/studentSidebar') %>
+	
+	<div id="main-wrapper">
+		
+		<div class="bg-white p-3">
+			<h5 class="m-0 fw-bold color-theme">Aktivnosti</h5>
+		</div>
+		
+		
+		<div class="col col-sm-10 col-12 m-auto my-4" style="max-height: 75%; overflow: auto;">
+			<table class="table table-info table-striped table-hover m-0 bg-white">
+				<thead>
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">Kategorija</th>
+						<th scope="col">Aktivnost</th>
+						<th scope="col">Vrijeme aktivnosti</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% for(let i=0; i<activities.length; i++) { %>
+						<tr>
+							
+							<% if(activities[i].category == "issue") { %>
+								<th scope="row"> <%= i+1 %> </th>
+								<td> Izdavanje </td>
+								<td>
+									<span class="activity-item"><%= activities[i].book.title %></span>
+									<span>je izdato</span>
+								</td>
+								<td> <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+								
+							<% } else if(activities[i].category == "return") { %>
+								<th scope="row"> <%= i+1 %> </th>
+								<td> Povrat </td>
+								<td>
+									<span class="activity-item"><%= activities[i].book.title %></span>
+									<span> je vraceno </span>
+								</td>
+								<td> <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+								
+							<% } else if(activities[i].category == "addBook") { %>
+								<th scope="row"> <%= i+1 %> </th>
+								<td> DOdaj knjigu </td>
+								<td>
+									<span>Dodate knjige</span>
+									<span class="activity-item"><%= activities[i].book.title %></span>
+								</td>
+								<td> <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+								
+							<% } else if(activities[i].category == "updateBook") { %>
+								<th scope="row"> <%= i+1 %> </th>
+								<td> Update-uj knjigu </td>
+								<td>
+									<span>Update-ovana knjiga</span>
+									<span class="activity-item"><%= activities[i].book.title %></span>
+								</td>
+								<td> <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+								
+							<% } else if(activities[i].category == "updateStudentProfile") { %>
+								<th scope="row"> <%= i+1 %> </th>
+								<td> Update korisnika </td>
+								<td>
+									<span>Vi ste upate-ovai vas profil.</span>
+								</td>
+								<td> <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+							<% } %>
+							
+						</tr>
+					<% } %>
+				</tbody>
+			</table>
+		</div>
+		
+		
+	</div>
+	
+</main>
