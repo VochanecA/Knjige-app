@@ -1,6 +1,6 @@
 # Jednostavna biblioteka
 
-Funkcionalnosti
+## Funkcionalnosti
 Sistem se sastoji od dva tipa korisnika: administratori i korisnici.
 Svaki korisnik treba da ima svoj nalog.
 Aplikacija omogućava funkcionalnosti registracije, prijave i odjave.
@@ -16,7 +16,7 @@ Administratori takođe mogu pregledati prošle pozajmice kod kojih su knjige vra
 Administratori mogu slati e-mail pod$etnike korisnicima.
 Administratori mogu ažurirati svoj profil.
 
-Funkcije Korisnika
+## Funkcije Korisnika
 Korisnici mogu vidjeti sve knjige u biblioteci.
 Korisnici mogu pratiti sve svoje aktivnosti(sadasnje,prosle), zajedno sa vremenom(datum,vrijeme itd).
 Korisnici mogu vidjeti sve knjige koje trenutno posjeduju, zajedno sa statusom (kasne ili ne).
@@ -24,7 +24,7 @@ Korisnici takođe mogu vidjeti knjige koje su već vratili.
 Korisnici mogu ažurirati svoj profil.
 
 
-Korišćene tehnologije
+## Korišćene tehnologije
 HTML
 CSS
 Bootstrap
@@ -36,6 +36,7 @@ ejs
 HELMET
 IP filter (moze i geoblock)
 
+## Kako da pokrenem
 1. Pokreni
 	```sh
 	npm start
