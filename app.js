@@ -23,14 +23,14 @@ app.use(
 		includeSubDomains: false,
 	})
 );
-app.use(helmet.contentSecurityPolicy({
+/* app.use(helmet.contentSecurityPolicy({
 	directives: {
 		defaultSrc: ["'self'"],
 		scriptSrc: ["'self'", 'code.jquery.com', 'maxcdn.bootstrapcdn.com'],
 		styleSrc: ["'self'", 'maxcdn.bootstrapcdn.com'],
 		fontSrc: ["'self'", 'maxcdn.bootstrapcdn.com','fonts.googleapis.com']
 	}
-}));
+}));*/
 app.disable('x-powered-by');
 app.use(helmet.xssFilter());
 app.use(helmet.ieNoOpen());
