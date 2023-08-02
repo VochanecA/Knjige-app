@@ -1,89 +1,96 @@
 <main>
 	<%- include('../partials/adminSidebar') %>
 	
-	<div id="main-wrapper">
-		
-		<div class="bg-white mb-5 p-3 d-sm-flex align-items-center justify-content-between">
-			<h5 class="m-0 fw-bold color-theme">Knjige</h5>
-			<div class="btn-group">
-				<a href="/admin/books/add" class="btn">Dodaj novu knjigu</a>
-				<button class="btn" data-bs-toggle="modal" data-bs-target="#filter-modal">Filter</button>
-				<button class="btn" data-bs-toggle="modal" data-bs-target="#sort-modal">Sort</button>
-			</div>
-		</div>
-		
-<div class="d-flex flex-wrap justify-content-center">
-			<table id="books-table" class="table table-striped table-bordered">
-				<thead>
-					<tr>
-						<th>Naslov</th>
-						<th>Autor(i)</th>
-						<th>Kategorija</th>
-						<th>ISBN</th>
-						<th>Broj kopija</th>
-						<th>Na stanju</th>
-						<th>Opis</th>
-						<th>Akcije</th>
-					</tr>
-				</thead>
-				<tbody>
-					<% if(books.length == 0) { %>
-						<tr>
-							<td colspan="8">Nije pronadjena niti jedna knjiga.</td>
-						</tr>
-					<% } else { %>
-						<% for(let i=0; i<books.length; i++) { %>
-							<tr>
-								<td><%= books[i].title %></td>
-								<td><%= books[i].authors %></td>
-								<td><%= books[i].category %></td>
-								<td><%= books[i].ISBN %></td>
-								<td><%= books[i].copiesOwned %></td>
-								<td><%= books[i].stock %></td>
-								<td><%= books[i].description %></td>
-								<td>
-									<a href="/admin/book/<%= books[i].id %>" class="btn">Promjeni (Edituj)</a>
-									<form class="d-none" id="hidden-form-<%= books[i].id %>" action="/admin/book/<%= books[i].id %>?_method=DELETE" method="POST"><input type="submit"></form>
-									<button onclick="confirmDelete('<%= books[i].id %>')" class="btn">Obrisi</button>
-				
-								</td>
-							</tr>
-						<% } %>
-					<% } %>
-				</tbody>
-			</table>
-		</div>
-		
-		
-		<div class="d-flex flex-wrap justify-content-center">
-			
-			<% if(books.length == 0) { %>
-				<div>Nije pronadjena niti jedna knjiga.</div>
-			<% } else for(let i=0; i<books.length; i++) { %>
-				<div class="card border border-2 m-2" style="width: 18rem;">
-					<div class="card-body">
-						
-						<h5 class="card-title"> <%= books[i].title %> </h5>
-						<h6 class="card-subtitle mb-3 text-muted"> <%= books[i].authors %> </h6>
-						<div> <%= books[i].category %> </div>
-						<div> ISBN broj: <%= books[i].ISBN %> </div>
-						<div> Broj kopija: <%= books[i].copiesOwned %> </div>
-						<div> Na stanju: <%= books[i].stock %> </div>
-						<div> <%= books[i].description %> </div>
-						
-						<div class="btn-group mt-3">
-							<a href="/admin/book/<%= books[i].id %>" class="btn">Promjeni (Edituj)</a>
-							<form class="d-none" id="hidden-form-<%= books[i].id %>" action="/admin/book/<%= books[i].id %>?_method=DELETE" method="POST"><input type="submit"></form>
-							<button onclick="confirmDelete('<%= books[i].id %>')" class="btn">Obrisi</button>
-	
-						</div>
-						
-					</div>
-				</div>
-			<% } %>
-			
-		</div>
-		
+ <div id="main-wrapper">
+
+    <div class="bg-white mb-5 p-3 d-sm-flex align-items-center justify-content-between">
+      <h5 class="m-0 fw-bold color-theme">Knjige</h5>
+      <div class="btn-group">
+        <a href="/admin/books/add" class="btn">Dodaj novu knjigu</a>
+        <button class="btn" data-bs-toggle="modal" data-bs-target="#filter-modal">Filter</button>
+        <button class="btn" data-bs-toggle="modal" data-bs-target="#sort-modal">Sort</button>
+      </div>
+
+<div class="mb-4">
+  <h5 class="m-0 fw-bold color-theme">Trazi knjige:</h5>
+  <form id="searchForm">
+    <div class="input-group">
+      <input type="text" name="q" class="form-control" placeholder="Trazi knjige...">
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </form>
+</div>
+</div>
+
+
+    <div class="d-flex flex-wrap justify-content-center">
+      <table id="books-table" class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>Naslov</th>
+            <th>Autor(i)</th>
+            <th>Kategorija</th>
+            <th>ISBN</th>
+            <th>Broj kopija</th>
+            <th>Na stanju</th>
+            <th>Opis</th>
+            <th>Akcije</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if(books.length == 0) { %>
+          <tr>
+            <td colspan="8">Nije pronadjena niti jedna knjiga.</td>
+          </tr>
+          <% } else { %>
+          <% for(let i=0; i<books.length; i++) { %>
+          <tr>
+            <td><%= books[i].title %></td>
+            <td><%= books[i].authors %></td>
+            <td><%= books[i].category %></td>
+            <td><%= books[i].ISBN %></td>
+            <td><%= books[i].copiesOwned %></td>
+            <td><%= books[i].stock %></td>
+            <td><%= books[i].description %></td>
+            <td>
+              <a href="/admin/book/<%= books[i]._id %>" class="btn">Promjeni (Edituj)</a>
+              <form class="d-none" id="hidden-form-<%= books[i]._id %>" action="/admin/book/<%= books[i]._id %>?_method=DELETE" method="POST">
+                <input type="submit">
+              </form>
+              <button onclick="confirmDelete('<%= books[i]._id %>')" class="btn">Obrisi</button>
+            </td>
+          </tr>
+          <% } %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="d-flex flex-wrap justify-content-center">
+      <% if(books.length == 0) { %>
+      <div>Nije pronadjena niti jedna knjiga.</div>
+      <% } else for(let i=0; i<books.length; i++) { %>
+      <div class="card border border-2 m-2" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title"> <%= books[i].title %> </h5>
+          <h6 class="card-subtitle mb-3 text-muted"> <%= books[i].authors %> </h6>
+          <div> <%= books[i].category %> </div>
+          <div> ISBN broj: <%= books[i].ISBN %> </div>
+          <div> Broj kopija: <%= books[i].copiesOwned %> </div>
+          <div> Na stanju: <%= books[i].stock %> </div>
+          <div> <%= books[i].description %> </div>
+          <div class="btn-group mt-3">
+            <a href="/admin/book/<%= books[i]._id %>" class="btn">Promjeni (Edituj)</a>
+            <form class="d-none" id="hidden-form-<%= books[i]._id %>" action="/admin/book/<%= books[i]._id %>?_method=DELETE" method="POST">
+              <input type="submit">
+            </form>
+            <button onclick="confirmDelete('<%= books[i]._id %>')" class="btn">Obrisi</button>
+          </div>
+        </div>
+      </div>
+      <% } %>
+    </div>
+
 		
 		
 		<!-- Filter Modal -->
@@ -189,14 +196,6 @@
 	
 </main>
 
-<script>
-	function confirmDelete(id)
-	{
-		if(window.confirm("Are you sure you want to delete this book?\nAll the records related to this book will get deleted..."))
-		{
-			document.querySelector(`#hidden-form-${id}`).submit();
-		}
-	}
+<script src="../assets/js/jquery-3.6.0.min.js"></script>
 
-	
-</script>
+<script src="/../assets/js/search.js"></script>

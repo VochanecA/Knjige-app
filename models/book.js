@@ -10,7 +10,7 @@ const bookSchema = new mongoose.Schema({
 		required: true
 	},
 	description: String,
-	authors: String,
+    authors: String,
 	category: String,
 	copiesOwned: {
 		type: Number,

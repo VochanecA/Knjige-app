@@ -2,7 +2,7 @@
 
 :root
 {
-	--theme-color: #3b5998;		/* Other theme-color options: #1a936f, #ec6464 */
+	--theme-color: #3b5998;		/* druge opcije za temu: #1a936f, #ec6464 */
 }
 
 
@@ -36,7 +36,7 @@ header
 .bg-image-container
 {
 	min-height: calc(100vh - 85px);
-	background: url("/assets/images/library.jpg") no-repeat center;
+	background: url("/assets/images/naslovna.png") no-repeat center;
 	background-size: cover;
 	
 }

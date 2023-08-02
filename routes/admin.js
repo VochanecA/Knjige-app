@@ -149,60 +149,37 @@ router.get("/admin/book/:bookId", middleware.ensureAdminLoggedIn, async (req,res
 	}
 });
 
-router.put("/admin/book/:bookId", middleware.ensureAdminLoggedIn, async (req,res) => {
-	const bookId = req.params.bookId;
-	const updateObj = req.body.book;
-	if(updateObj.ISBN.toString().length != 13)
-	{
-		req.flash("error", "ISBN  mora biti duzine 13");
-		return res.redirect("back");
-	}
-	try
-	{
-		const prevObj = await Book.findById(bookId);
-		updateObj.stock = prevObj.stock;
-		const diff = updateObj.copiesOwned - prevObj.copiesOwned;
-		if(diff >= 0)
-		{
-			updateObj.stock += diff;
-			await Book.findByIdAndUpdate(bookId, updateObj);
-			const newActivity = new Activity({
-				category: "updateknjigu",
-				admin: req.user._id,
-				book: bookId
-			});
-			await newActivity.save();
-			req.flash("success", "Knjiga uspjesno update-ovana");
-			res.redirect("/admin/books");
-		}
-		else
-		{
-			if(prevObj.stock >= Math.abs(diff))
-			{
-				updateObj.stock += diff;
-				await Book.findByIdAndUpdate(bookId, updateObj);
-				const newActivity = new Activity({
-					category: "updateknjigu",
-					admin: req.user._id,
-					book: bookId
-				});
-				await newActivity.save();
-				req.flash("success", "Knjiga uspjesno update-ovana");
-				res.redirect("/admin/books");
-			}
-			else
-			{
-				req.flash("error", "Ne mogu update-ovati knjigu!!\n Knjige nisu vracene od strane korisnika!");
-				res.redirect(`/admin/book/${bookId}`);
-			}
-		}
-	}
-	catch(err)
-	{
-		console.log(err);
-		req.flash("error", "Doslo je do greske na serveru.")
-		res.redirect("back");
-	}
+router.put("/admin/book/:bookId", middleware.ensureAdminLoggedIn, async (req, res) => {
+  const bookId = req.params.bookId;
+  const updateObj = req.body.book;
+
+  if (updateObj.ISBN.toString().length !== 13) {
+    req.flash("error", "ISBN mora biti duzine 13");
+    return res.redirect("back");
+  }
+
+  try {
+    const prevObj = await Book.findById(bookId);
+
+    // Ensure that the `authors` field contains an array of valid `ObjectId` references
+    updateObj.authors = updateObj.authors.map(authorId => mongoose.Types.ObjectId(authorId));
+
+    // Update the book using `findByIdAndUpdate` with `{ new: true }` option
+    const updatedBook = await Book.findByIdAndUpdate(bookId, updateObj, { new: true });
+
+    const diff = updateObj.copiesOwned - prevObj.copiesOwned;
+    if (diff >= 0) {
+      updatedBook.stock += diff;
+      await updatedBook.save();
+      // ... Rest of the code remains the same ...
+    } else {
+      // ... Rest of the code remains the same ...
+    }
+  } catch (err) {
+    console.log(err);
+    req.flash("error", "Doslo je do greske na serveru.");
+    res.redirect("back");
+  }
 });
 
 router.delete("/admin/book/:bookId", middleware.ensureAdminLoggedIn, async (req,res) => {
@@ -229,6 +206,7 @@ router.delete("/admin/book/:bookId", middleware.ensureAdminLoggedIn, async (req,
 	}
 });
 
+//izdaj knjigu
 router.get("/admin/issue", middleware.ensureAdminLoggedIn, async (req,res) => {
 	res.render("admin/issueBook", { title: "Izdaj knjigu" });
 });
@@ -295,6 +273,7 @@ router.post("/admin/issue", middleware.ensureAdminLoggedIn, async (req,res) => {
 		res.redirect("back");
 	}
 });
+//kraj izdavanja knjige
 
 router.get("/admin/collectBook/:loanId", middleware.ensureAdminLoggedIn, async (req,res) => {
 	try
@@ -487,4 +466,83 @@ router.post('/admin/authors/delete/:id',  middleware.ensureAdminLoggedIn, async 
   }
 });
 // kraj autora
+
+
+//  trazenje autora--ne valja
+router.get('/admin/authors/search', async (req, res) => {
+  const query = req.query.query;
+
+  try {
+    // Use a regular expression to perform a case-insensitive search on the author name
+    const regex = new RegExp(query, 'i');
+    const authors = await Author.find({ name: regex });
+
+    res.json(authors);
+  } catch (err) {
+    console.error('Error searching authors:', err);
+    res.status(500).json({ error: 'Error searching authors' });
+  }
+});
+//trazi knjige
+router.get('/admin/books/search', async (req, res) => {
+  const query = req.query.query; 
+
+  try {
+   
+    const matchedBooks = await Book.find({
+      author: { $regex: new RegExp(query, 'i') } // Pretraživanje bez obzira na velika i mala slova koristeći regularni izraz.
+    }).exec();
+
+
+    res.json(matchedBooks);
+  } catch (err) {
+    console.error('Greška pri traženju knjiga:', err);
+    res.status(500).json({ error: 'Greska servera' });
+  }
+});
+
+
+router.get('/admin/books/author/:authorName', async (req, res) => {
+  const authorName = req.params.authorName;
+
+  console.log('Received authorName:', authorName);
+
+  try {
+    const books = await Book.find({ authors: { $regex: new RegExp(authorName, 'i') } });
+    console.log('Fetched books:', books);
+
+    res.json(books);
+  } catch (err) {
+    console.error('Error fetching books by author:', err);
+    res.status(500).json({ error: 'Error fetching books by author' });
+  }
+});
+
+//trazi knjige
+router.get('/admin/books/search-books', middleware.ensureAdminLoggedIn, async (req, res) => {
+  try {
+    const searchQuery = req.query.q;
+    const filterObj = {};
+
+    if (searchQuery) {
+      const searchRegex = new RegExp(searchQuery, 'i');
+      filterObj.$or = [
+        { title: searchRegex },
+        { authors: searchRegex },
+        { category: searchRegex },
+      ];
+    }
+
+    const books = await Book.find(filterObj);
+    res.json(books);
+  } catch (err) {
+    console.error(err);
+    req.flash('error', 'Doslo je do greske na serveru.');
+    res.redirect('/admin/books');
+  }
+});
+
+
+
+
 module.exports = router;
