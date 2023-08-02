@@ -501,22 +501,18 @@ router.get('/admin/books/search', async (req, res) => {
   }
 });
 
-
 router.get('/admin/books/author/:authorName', async (req, res) => {
   const authorName = req.params.authorName;
 
-  console.log('Received authorName:', authorName);
-
   try {
-    const books = await Book.find({ authors: { $regex: new RegExp(authorName, 'i') } });
-    console.log('Fetched books:', books);
-
-    res.json(books);
+    const matchedBooks = await Book.find({ authors: { $regex: new RegExp(authorName, 'i') } }).exec();
+    res.json(matchedBooks);
   } catch (err) {
-    console.error('Error fetching books by author:', err);
-    res.status(500).json({ error: 'Error fetching books by author' });
+    console.error('Error searching for books:', err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 //trazi knjige
 router.get('/admin/books/search-books', middleware.ensureAdminLoggedIn, async (req, res) => {
@@ -542,7 +538,19 @@ router.get('/admin/books/search-books', middleware.ensureAdminLoggedIn, async (r
   }
 });
 
+router.get('/admin/books/author/:authorId', async (req, res) => {
+  const authorId = req.params.authorId;
 
+  try {
+    // Find books associated with the selected author.
+    const matchedBooks = await Book.find({ authors: authorId }).exec();
+
+    res.json(matchedBooks);
+  } catch (err) {
+    console.error('Error searching for books:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 
 module.exports = router;
