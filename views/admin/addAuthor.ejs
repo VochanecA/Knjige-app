@@ -1,0 +1,30 @@
+<main>
+	<%- include('../partials/adminSidebar') %>
+	
+	<div id="main-wrapper">
+    <form action="/admin/authors/add" method="POST" class="w-75 border m-auto my-5 bg-white rounded-2">
+      <h5 class="text-center bg-primary text-white form-title">Dodaj novog autora</h5>
+
+      <div class="form-body p-4">
+        <div class="mb-3">
+          <label for="name" class="form-label">Ime autora</label>
+          <input type="text" name="author[name]" class="form-control" id="name" placeholder="Unesite ime autora.." required>
+        </div>
+        <div class="mb-3">
+          <label for="surname" class="form-label">Prezime autora</label>
+          <input type="text" name="author[surname]" class="form-control" id="surname" placeholder="Unesite prezime autora.." required>
+        </div>
+        <div class="mb-3">
+          <label for="biography" class="form-label">Biografija autora</label>
+          <textarea name="author[biography]" class="form-control" id="biography" rows="5" placeholder="Unesite biografiju autora.."></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="image" class="form-label">Slika autora</label>
+          <input type="text" name="author[image]" class="form-control" id="image" placeholder="Unesite URL slike autora..">
+        </div>
+        <button type="submit" class="btn w-75 d-block m-auto mt-4">Dodaj</button>
+        <a href="/admin/authors" class="btn btn-cancel w-75 d-block m-auto mt-4">Otkazi</a>
+      </div>
+    </form>
+  </div>
+</main>

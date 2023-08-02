@@ -26,9 +26,9 @@ const middleware = {
 			req.flash("warning", "Prvo se logujet da bi nastavili...");
 			return res.redirect("/auth/student-login");
 		}
-		if(req.user.role != "student") {
+		if(req.user.role != "korisnik") {
 			req.flash("warning", "Ovo je samo za korisnika!!");
-			return res.redirect("/");
+			return res.redirect("/student/dashboard");
 		}
 		next();
 	},
@@ -38,7 +38,7 @@ const middleware = {
 			req.flash("warning", "Prvo se izlogujte da bi nastavili...");
 			if(req.user.role == "admin")
 				return res.redirect("/admin/dashboard");
-			if(req.user.role == "student")
+			if(req.user.role == "korisnik")
 				return res.redirect("/student/dashboard");
 		}
 		next();

@@ -1,0 +1,46 @@
+<main>
+	<%- include('../partials/adminSidebar') %>
+	
+	<div id="main-wrapper">
+	
+			<div class="bg-white mb-5 p-3 d-sm-flex align-items-center justify-content-between">
+			<h5 class="m-0 fw-bold color-theme">Autori</h5>
+			<div class="btn-group">
+				<a href="/admin/authors/add" class="btn">Dodaj novu knjigu</a>
+				<button class="btn" data-bs-toggle="modal" data-bs-target="#filter-modal">Filter</button>
+				<button class="btn" data-bs-toggle="modal" data-bs-target="#sort-modal">Sort</button>
+			</div>
+		</div>
+    <table class="table table-info table-striped table-hover m-0 bg-white">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Ime</th>
+          <th scope="col">Prezime</th>
+          <th scope="col">Biografija</th>
+          <th scope="col">Slika</th>
+          <th scope="col">Akcije</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i=0; i<authors.length; i++) { %>
+          <tr>
+            <th scope="row"><%= i+1 %></th>
+            <td><%= authors[i].name %></td>
+            <td><%= authors[i].surname %></td>
+            <td><%= authors[i].biography %></td>
+            <td><img src="<%= authors[i].image %>" alt="Slika autora" class="author-image"></td>
+            <td>
+              <a href="/admin/authors/edit/<%= authors[i]._id %>" class="btn btn-primary">Edituj autora</a> <!-- Edituj taster -->
+              <form action="/admin/authors/delete/<%= authors[i]._id %>" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-danger">Obrisi</button> <!-- Delete button -->
+              </form>
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+    
+    <a href="/admin/authors/add" class="btn btn-success mt-3">Dodaj novog autora</a> <!-- dodaj novog autora taster -->
+  </div>
+</main>

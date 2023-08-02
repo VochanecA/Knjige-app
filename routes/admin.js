@@ -5,20 +5,21 @@ const User = require("../models/user.js");
 const Book = require("../models/book.js");
 const Loan = require("../models/loan.js");
 const Activity = require("../models/activity.js");
+const Author = require('../models/author.js');
 const nodemailer = require("nodemailer");
 
 
 router.get("/admin/dashboard", middleware.ensureAdminLoggedIn, async (req,res) => {
 	try
 	{
-		await Loan.updateMany({ status: "issued", dueTime: { $lt: new Date() } }, {status: "overdue"});
-		const numStudents = await User.countDocuments({ role: "student" });
+		await Loan.updateMany({ status: "izdata", dueTime: { $lt: new Date() } }, {status: "kasni"});
+		const numStudents = await User.countDocuments({ role: "korisnik" });
 		const numAdmins = await User.countDocuments({ role: "admin" });
 		const books = await Book.find();
 		const numDistinctBooks = books.length;
 		const numTotalBooks = books.reduce((total, book) => total + book.copiesOwned, 0);
-		const numBooksNotReturned = await Loan.countDocuments({ status: ["issued", "overdue"] });
-		const numBooksOverdue = await Loan.countDocuments({ status: "overdue" });
+		const numBooksNotReturned = await Loan.countDocuments({ status: ["izdata", "kasni"] });
+		const numBooksOverdue = await Loan.countDocuments({ status: "kasni" });
 		
 		res.render("admin/dashboard", {
 			title: "Dashboard",
@@ -28,7 +29,7 @@ router.get("/admin/dashboard", middleware.ensureAdminLoggedIn, async (req,res) =
 	catch(err)
 	{
 		console.log(err);
-		req.flash("error", "Some error occurred on the server.")
+		req.flash("error", "Doslo je do greske na serveru.")
 		res.redirect("back");
 	}
 });
@@ -36,13 +37,13 @@ router.get("/admin/dashboard", middleware.ensureAdminLoggedIn, async (req,res) =
 router.get("/admin/activities", middleware.ensureAdminLoggedIn, async (req,res) => {
 	try
 	{
-		const activities = await Activity.find().populate("admin").populate("student").populate("book").sort("-activityTime");
+		const activities = await Activity.find().populate("admin").populate("korisnik").populate("book").sort("-activityTime");
 		res.render("admin/activities", { title: "Activities", activities });
 	}
 	catch(err)
 	{
 		console.log(err);
-		req.flash("error", "Some error occurred on the server.")
+		req.flash("error", "Doslo je do greske na serveru.")
 		res.redirect("back");
 	}
 });
@@ -50,13 +51,13 @@ router.get("/admin/activities", middleware.ensureAdminLoggedIn, async (req,res) 
 router.get("/admin/students", middleware.ensureAdminLoggedIn, async (req,res) => {
 	try
 	{
-		const students = await User.find({role:"student"});
+		const students = await User.find({role:"korisnik"});
 		res.render("admin/students", { title: "Students", students });
 	}
 	catch(err)
 	{
 		console.log(err);
-		req.flash("error", "Some error occurred on the server.")
+		req.flash("error", "Doslo je do greske na serveru.")
 		res.redirect("back");
 	}
 });
@@ -92,10 +93,11 @@ router.get("/admin/books", middleware.ensureAdminLoggedIn, async (req,res) => {
 	catch(err)
 	{
 		console.log(err);
-		req.flash("error", "Some error occurred on the server.")
+		req.flash("error", "Doslo je do greske na serveru.")
 		res.redirect("back");
 	}
 });
+
 
 router.get("/admin/books/add", middleware.ensureAdminLoggedIn, (req,res) => {
 	res.render("admin/addBook", { title: "Add Book" });
@@ -107,7 +109,7 @@ router.post("/admin/books/add", middleware.ensureAdminLoggedIn, async (req,res) 
 		const book = req.body.book;
 		if(book.ISBN.toString().length != 13)
 		{
-			req.flash("error", "ISBN should be of length 13");
+			req.flash("error", "ISBN broj mora biti duzine 13");
 			return res.redirect("back");
 		}
 		book.stock = book.copiesOwned;
@@ -115,19 +117,19 @@ router.post("/admin/books/add", middleware.ensureAdminLoggedIn, async (req,res) 
 		await newBook.save();
 		
 		const newActivity = new Activity({
-			category: "addBook",
+			category: "dodajknjigu",
 			admin: req.user._id,
 			book: newBook._id
 		});
 		await newActivity.save();
 		
-		req.flash("success", "Book added successfully");
+		req.flash("success", "Knjiga uspjesno dodata");
 		res.redirect("/admin/books");
 	}
 	catch(err)
 	{
 		console.log(err);
-		req.flash("error", "Some error occurred on the server.")
+		req.flash("error", "Doslo je do greske na serveru.")
 		res.redirect("back");
 	}
 });
@@ -142,7 +144,7 @@ router.get("/admin/book/:bookId", middleware.ensureAdminLoggedIn, async (req,res
 	catch(err)
 	{
 		console.log(err);
-		req.flash("error", "Some error occurred on the server.")
+		req.flash("error", "Doslo je do greske na serveru.")
 		res.redirect("back");
 	}
 });
@@ -152,7 +154,7 @@ router.put("/admin/book/:bookId", middleware.ensureAdminLoggedIn, async (req,res
 	const updateObj = req.body.book;
 	if(updateObj.ISBN.toString().length != 13)
 	{
-		req.flash("error", "ISBN should be of length 13");
+		req.flash("error", "ISBN  mora biti duzine 13");
 		return res.redirect("back");
 	}
 	try
@@ -165,12 +167,12 @@ router.put("/admin/book/:bookId", middleware.ensureAdminLoggedIn, async (req,res
 			updateObj.stock += diff;
 			await Book.findByIdAndUpdate(bookId, updateObj);
 			const newActivity = new Activity({
-				category: "updateBook",
+				category: "updateknjigu",
 				admin: req.user._id,
 				book: bookId
 			});
 			await newActivity.save();
-			req.flash("success", "Book updated successfully");
+			req.flash("success", "Knjiga uspjesno update-ovana");
 			res.redirect("/admin/books");
 		}
 		else
@@ -180,17 +182,17 @@ router.put("/admin/book/:bookId", middleware.ensureAdminLoggedIn, async (req,res
 				updateObj.stock += diff;
 				await Book.findByIdAndUpdate(bookId, updateObj);
 				const newActivity = new Activity({
-					category: "updateBook",
+					category: "updateknjigu",
 					admin: req.user._id,
 					book: bookId
 				});
 				await newActivity.save();
-				req.flash("success", "Book updated successfully");
+				req.flash("success", "Knjiga uspjesno update-ovana");
 				res.redirect("/admin/books");
 			}
 			else
 			{
-				req.flash("error", "Couldn't update books!!\n Books are not returned by the students!!");
+				req.flash("error", "Ne mogu update-ovati knjigu!!\n Knjige nisu vracene od strane korisnika!");
 				res.redirect(`/admin/book/${bookId}`);
 			}
 		}
@@ -198,7 +200,7 @@ router.put("/admin/book/:bookId", middleware.ensureAdminLoggedIn, async (req,res
 	catch(err)
 	{
 		console.log(err);
-		req.flash("error", "Some error occurred on the server.")
+		req.flash("error", "Doslo je do greske na serveru.")
 		res.redirect("back");
 	}
 });
@@ -210,25 +212,40 @@ router.delete("/admin/book/:bookId", middleware.ensureAdminLoggedIn, async (req,
 		const book = await Book.findById(bookId);
 		if(book.stock != book.copiesOwned)
 		{
-			req.flash("error", "All copies of the book haven't come to library");
+			req.flash("error", "Sve kopije knjige nisu dosle u biblioteku");
 			return res.redirect("back");
 		}
 		await Book.findByIdAndDelete(bookId);
 		await Loan.deleteMany({ book: bookId });
 		await Activity.deleteMany({ book: bookId });
-		req.flash("success", "Book deleted successfully");
+		req.flash("success", "Knjiga uspjesno dodana!");
 		res.redirect("/admin/books");
 	}
 	catch(err)
 	{
 		console.log(err);
-		req.flash("error", "Some error occurred on the server.")
+		req.flash("error", "Doslo je do greske na serveru.")
 		res.redirect("back");
 	}
 });
 
 router.get("/admin/issue", middleware.ensureAdminLoggedIn, async (req,res) => {
-	res.render("admin/issueBook", { title: "Issue Book" });
+	res.render("admin/issueBook", { title: "Izdaj knjigu" });
+});
+
+router.get("/admin/issue/:bookId", middleware.ensureAdminLoggedIn, async (req,res) => {
+	try
+	{
+		const bookId = req.params.bookId;
+		// Add your logic here to issue the book based on the bookId
+		res.render("admin/issueBook", { title: "Izdaj knjigu" });
+	}
+	catch(err)
+	{
+		console.log(err);
+		req.flash("error", "Doslo je do greske na serveru.")
+		res.redirect("back");
+	}
 });
 
 router.post("/admin/issue", middleware.ensureAdminLoggedIn, async (req,res) => {
@@ -236,31 +253,31 @@ router.post("/admin/issue", middleware.ensureAdminLoggedIn, async (req,res) => {
 	{
 		const email = req.body.email;
 		const ISBN = req.body.ISBN;
-		const student = await User.findOne({email, role: "student"});
+		const student = await User.findOne({email, role: "korisnik"});
 		if(!student)
 		{
-			req.flash("error", "Book can't be issued.. Student not registered");
+			req.flash("error", "Knjiga se ne može izdati.. Korisnik nije prijavljen");
 			return res.redirect("back");
 		}
 		
 		const book = await Book.findOne({ISBN});
 		if(!book)
 		{
-			req.flash("error", "Book can't be issued.. Book with given ISBN not found");
+			req.flash("error", "Knjiga se ne može izdati.. Knjiga sa datim ISBN nije pronađena");
 			return res.redirect("back");
 		}
 		if(book.stock == 0)
 		{
-			req.flash("error", "Book can't be issued.. Stock is 0");
+			req.flash("error", "Knjiga se ne može izdati.. Zaliha je 0");
 			return res.redirect("back");
 		}
 		
-		const newLoan = new Loan({ book: book._id, user: student._id, status: "issued" });
+		const newLoan = new Loan({ book: book._id, user: student._id, status: "izdata" });
 		await newLoan.save();
 		await Book.findByIdAndUpdate(book.id, { $inc: { stock: -1 } });
 		
 		const newActivity = new Activity({
-			category: "issue",
+			category: "izdaj",
 			admin: req.user._id,
 			student: student._id,
 			book: book._id,
@@ -268,13 +285,13 @@ router.post("/admin/issue", middleware.ensureAdminLoggedIn, async (req,res) => {
 		});
 		await newActivity.save();
 		
-		req.flash("success", "Book issued successfully");
+		req.flash("success", "Knjiga uspješno izdata");
 		res.redirect("back");
 	}
 	catch(err)
 	{
 		console.log(err);
-		req.flash("error", "Some error occurred on the server.")
+		req.flash("error", "Doslo je do greske na serveru.")
 		res.redirect("back");
 	}
 });
@@ -284,13 +301,13 @@ router.get("/admin/collectBook/:loanId", middleware.ensureAdminLoggedIn, async (
 	{
 		const loanId = req.params.loanId;
 		const loan = await Loan.findById(loanId);
-		loan.status = "returned";
+		loan.status = "vracena";
 		loan.returnTime = Date.now();
 		loan.save();
 		await Book.findByIdAndUpdate(loan.book, { $inc: { stock: 1 } });
 		
 		const newActivity = new Activity({
-			category: "return",
+			category: "vrati",
 			admin: req.user._id,
 			student: loan.user,
 			book: loan.book,
@@ -298,13 +315,13 @@ router.get("/admin/collectBook/:loanId", middleware.ensureAdminLoggedIn, async (
 		});
 		await newActivity.save();
 		
-		req.flash("success", "Book returned successfully");
+		req.flash("success", "Knjiga uspjesno vracena");
 		res.redirect("/admin/loans/current");
 	}
 	catch(err)
 	{
 		console.log(err);
-		req.flash("error", "Some error occurred on the server.")
+		req.flash("error", "Doslo je do greske na serveru.")
 		res.redirect("back");
 	}
 });
@@ -312,14 +329,14 @@ router.get("/admin/collectBook/:loanId", middleware.ensureAdminLoggedIn, async (
 router.get("/admin/loans/current", middleware.ensureAdminLoggedIn, async (req,res) => {
 	try
 	{
-		await Loan.updateMany({ status: "issued", dueTime: { $lt: new Date() } }, {status: "overdue"});
-		const currentLoans = await Loan.find({ status: { $in: ["issued", "overdue"] } }).populate("book").populate("user");
+		await Loan.updateMany({ status: "izdata", dueTime: { $lt: new Date() } }, {status: "kasni"});
+		const currentLoans = await Loan.find({ status: { $in: ["izdata", "kasni"] } }).populate("book").populate("user");
 		res.render("admin/currentLoans", { title: "Current Loans", currentLoans });
 	}
 	catch(err)
 	{
 		console.log(err);
-		req.flash("error", "Some error occurred on the server.")
+		req.flash("error", "Doslo je do greske na serveru.")
 		res.redirect("back");
 	}
 });
@@ -327,13 +344,13 @@ router.get("/admin/loans/current", middleware.ensureAdminLoggedIn, async (req,re
 router.get("/admin/loans/previous", middleware.ensureAdminLoggedIn, async (req,res) => {
 	try
 	{
-		const previousLoans = await Loan.find({ status: "returned" }).populate("book").populate("user").sort("-returnTime");
+		const previousLoans = await Loan.find({ status: "vracena" }).populate("book").populate("user").sort("-returnTime");
 		res.render("admin/previousLoans", { title: "Previous loans", previousLoans });
 	}
 	catch(err)
 	{
 		console.log(err);
-		req.flash("error", "Some error occurred on the server.")
+		req.flash("error", "Doslo je do greske na serveru.")
 		res.redirect("back");
 	}
 });
@@ -346,7 +363,7 @@ router.put("/admin/profile", middleware.ensureAdminLoggedIn, async (req,res) => 
 	try
 	{
 		const id = req.user._id;
-		const updateObj = req.body.admin;	// updateObj: {firstName, lastName, gender, address, phone}
+		const updateObj = req.body.admin;	
 		await User.findByIdAndUpdate(id, updateObj);
 		
 		const newActivity = new Activity({
@@ -355,13 +372,13 @@ router.put("/admin/profile", middleware.ensureAdminLoggedIn, async (req,res) => 
 		});
 		await newActivity.save();
 		
-		req.flash("success", "Profile updated successfully");
+		req.flash("success", "Profil uspjesno update-ovan.");
 		res.redirect("/admin/profile");
 	}
 	catch(err)
 	{
 		console.log(err);
-		req.flash("error", "Some error occurred on the server.")
+		req.flash("error", "Doslo je do greske na serveru.")
 		res.redirect("back");
 	}
 });
@@ -369,7 +386,7 @@ router.put("/admin/profile", middleware.ensureAdminLoggedIn, async (req,res) => 
 router.get("/admin/emails/reminder", middleware.ensureAdminLoggedIn, async (req,res) => {
 	try
 	{
-		const currentLoans = await Loan.find({ status: { $in: ["issued", "overdue"] } }).populate("book").populate("user");
+		const currentLoans = await Loan.find({ status: { $in: ["izdata", "kasni"] } }).populate("book").populate("user");
 		
 		const transport = nodemailer.createTransport({
 			service: "gmail",
@@ -386,25 +403,88 @@ router.get("/admin/emails/reminder", middleware.ensureAdminLoggedIn, async (req,
 			const dueTime = currentLoans[i].dueTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"});
 			
 			await transport.sendMail({
-				from: `Library <test@gmail.com>`,
+				from: `Jednsotavna biblioteka<test@gmail.com>`,
 				to: email,
-				subject: "Book reminder",
-				text: "You have to return a book",
-				html: `<p>Your book ${book} is due to be returned before ${dueTime}</p>`
+				subject: "Podsjetnik za knjigu",
+				text: "Postovani, morate vratiti knjigu",
+				html: `<p>Vaša knjiga ${book} treba biti vraćena prije ${dueTime}</p>`
 			});
 			
 		}
 		
-		req.flash("success", "Emails sent successfully");
+		req.flash("success", "Email uspjesno poslati.");
 		res.redirect("/admin/loans/current");
 	}
 	catch(err)
 	{
 		console.log(err);
-		req.flash("error", "Some error occurred on the server.")
+		req.flash("error", "Doslo je do greske na serveru.")
 		res.redirect("back");
 	}
 });
 
+router.get('/admin/authors', async (req, res) => {
+  try {
+    const authors = await Author.find();
+    res.render('admin/authors', { authors });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+});
 
+
+//Autori
+router.get("/admin/authors/add", middleware.ensureAdminLoggedIn, (req,res) => {
+	res.render("admin/addAuthor", { title: "Dodaj Autora" });
+});
+
+
+router.post('/admin/authors/add',  middleware.ensureAdminLoggedIn, async (req, res) => {
+  const author = new Author(req.body.author);
+
+  try {
+    await author.save();
+	req.flash("success", "Autor uspjesno dodat");
+    res.redirect('/admin/authors');
+  } catch (err) {
+    console.error(err);
+    res.render('/admin/addAuthor', { title: 'Dodaj novog autora', author });
+  }
+});
+
+router.get('/admin/authors/edit/:id',  middleware.ensureAdminLoggedIn, async (req, res) => {
+  try {
+    const author = await Author.findById(req.params.id);
+    res.render('admin/editAuthor', { author });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+});
+
+// POST 
+router.post('/admin/authors/edit/:id',  middleware.ensureAdminLoggedIn, async (req, res) => {
+  try {
+    const { name, surname, biography, image } = req.body;
+    await Author.findByIdAndUpdate(req.params.id, { name, surname, biography, image });
+		req.flash("success", "Autor uspjesno update-ovan");
+    res.redirect('/admin/authors');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Greska servera');
+  }
+});
+
+router.post('/admin/authors/delete/:id',  middleware.ensureAdminLoggedIn, async (req, res) => {
+  try {
+    await Author.findByIdAndDelete(req.params.id);
+		req.flash("success", "Autor uspjesno obrisan");
+    res.redirect('/admin/authors');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Greska servera');
+  }
+});
+// kraj autora
 module.exports = router;

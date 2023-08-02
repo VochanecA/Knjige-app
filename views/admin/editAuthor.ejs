@@ -1,0 +1,30 @@
+<main>
+	<%- include('../partials/adminSidebar') %>
+	
+	<div id="main-wrapper">
+	 <h5 class="text-center bg-primary text-white form-title">Edit Author</h5>
+
+    <form action="/admin/authors/edit/<%= author._id %>" method="POST" class="w-75 border m-auto my-5 bg-white rounded-2">
+      <div class="form-body p-4">
+        <div class="mb-3">
+          <label for="name" class="form-label">Name</label>
+          <input type="text" name="name" class="form-control" id="name" value="<%= author.name %>" required>
+        </div>
+        <div class="mb-3">
+          <label for="surname" class="form-label">Surname</label>
+          <input type="text" name="surname" class="form-control" id="surname" value="<%= author.surname %>" required>
+        </div>
+        <div class="mb-3">
+          <label for="biography" class="form-label">Biography</label>
+          <textarea name="biography" class="form-control" id="biography" rows="5"><%= author.biography %></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="image" class="form-label">Image</label>
+          <input type="text" name="image" class="form-control" id="image" value="<%= author.image %>">
+        </div>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a href="/admin/authors" class="btn btn-cancel">Cancel</a>
+      </div>
+    </form>
+  </div>
+</main>

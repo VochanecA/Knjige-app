@@ -18,13 +18,13 @@ router.post("/auth/admin-signup", middleware.ensureNotLoggedIn, async (req,res) 
 	let errors = [];
 	
 	if (!firstName || !lastName || !email || !password1 || !password2) {
-		errors.push({ msg: "Please fill in all the fields" });
+		errors.push({ msg: "Molimo popunite sva polja" });
 	}
 	if (password1 != password2) {
-		errors.push({ msg: "Passwords are not matching" });
+		errors.push({ msg: "Lozinke se ne podudaraju" });
 	}
 	if (password1.length < 4) {
-		errors.push({ msg: "Password length should be atleast 4 characters" });
+		errors.push({ msg: "Dužina lozinke treba da bude najmanje 4 karaktera" });
 	}
 	if(errors.length > 0) {
 		return res.render("auth/adminSignup", {
@@ -38,7 +38,7 @@ router.post("/auth/admin-signup", middleware.ensureNotLoggedIn, async (req,res) 
 		const user = await User.findOne({ email: email });
 		if(user)
 		{
-			errors.push({msg: "This Email is already registered. Please try another email."});
+			errors.push({msg: "Ovaj email je već registrovan. Pokušajte s drugom e-mail adresom."});
 			return res.render("auth/adminSignUp", {
 				title: "Admin signup",
 				firstName, lastName, errors, email, password1, password2
@@ -50,7 +50,7 @@ router.post("/auth/admin-signup", middleware.ensureNotLoggedIn, async (req,res) 
 		const hash = bcrypt.hashSync(newUser.password, salt);
 		newUser.password = hash;
 		await newUser.save();
-		req.flash("success", "You are successfully registered and can log in.");
+		req.flash("success", "Uspjesno ste se registrovali i sada se mozete logovati!");
 		res.redirect("/auth/admin-login");
 	}
 	catch(err)
@@ -116,19 +116,19 @@ router.post("/auth/student-signup", middleware.ensureNotLoggedIn, async (req,res
 		const user = await User.findOne({ email: email });
 		if(user)
 		{
-			errors.push({msg: "TOvaj email je vec registrovan. Unesti neki drugi email!"});
+			errors.push({msg: "Ovaj email je vec registrovan. Unesti neki drugi email!"});
 			return res.render("auth/studentSignUp", {
 				title: "Registrovanje korisnika",
 				firstName, lastName, errors, email, password1, password2
 			});
 		}
 		
-		const newUser = new User({ firstName, lastName, email, password:password1, role:"student" });
+		const newUser = new User({ firstName, lastName, email, password:password1, role:"korisnik" });
 		const salt = bcrypt.genSaltSync(10);
 		const hash = bcrypt.hashSync(newUser.password, salt);
 		newUser.password = hash;
 		await newUser.save();
-		req.flash("success", "Uspjesno ste se registrovali i sada se mozee logovati.");
+		req.flash("success", "Uspjesno ste se registrovali i sada se mozete logovati.");
 		res.redirect("/auth/student-login");
 	}
 	catch(err)
@@ -147,7 +147,7 @@ router.get("/auth/student-login", middleware.ensureNotLoggedIn, (req,res) => {
 });
 
 router.post("/auth/student-login", middleware.ensureNotLoggedIn, (req,res,next) => {
-	passport.authenticate('local-student', {
+	passport.authenticate('local-korisnik', {
 		successRedirect: req.session.returnTo || "/student/dashboard",
 		failureRedirect: "/auth/student-login",
 		successFlash: true,
@@ -157,7 +157,7 @@ router.post("/auth/student-login", middleware.ensureNotLoggedIn, (req,res,next) 
 
 router.get("/auth/student-logout", middleware.ensureStudentLoggedIn, (req,res) => {
 	req.logout();
-	req.flash("success", "Logged-out successfully")
+	req.flash("success", "Log out je uspjesan")
 	res.redirect("/");
 });
 

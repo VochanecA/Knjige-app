@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const activitySchema = new mongoose.Schema({
 	category: {
 		type: String,
-		enum: ["issue", "return", "addBook", "updateBook", "updateAdminProfile", "updateStudentProfile"],
+		enum: ["izdaj", "vrati", "dodajknjigu", "updateknjigu", "updateAdminProfile", "updateStudentProfile"],
 		required: true
 	},
 	activityTime: {
@@ -14,7 +14,7 @@ const activitySchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "users"
 	},
-	student: {
+	korisnik: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "users"
 	},

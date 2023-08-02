@@ -12,6 +12,48 @@
 			</div>
 		</div>
 		
+<div class="d-flex flex-wrap justify-content-center">
+			<table id="books-table" class="table table-striped table-bordered">
+				<thead>
+					<tr>
+						<th>Naslov</th>
+						<th>Autor(i)</th>
+						<th>Kategorija</th>
+						<th>ISBN</th>
+						<th>Broj kopija</th>
+						<th>Na stanju</th>
+						<th>Opis</th>
+						<th>Akcije</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% if(books.length == 0) { %>
+						<tr>
+							<td colspan="8">Nije pronadjena niti jedna knjiga.</td>
+						</tr>
+					<% } else { %>
+						<% for(let i=0; i<books.length; i++) { %>
+							<tr>
+								<td><%= books[i].title %></td>
+								<td><%= books[i].authors %></td>
+								<td><%= books[i].category %></td>
+								<td><%= books[i].ISBN %></td>
+								<td><%= books[i].copiesOwned %></td>
+								<td><%= books[i].stock %></td>
+								<td><%= books[i].description %></td>
+								<td>
+									<a href="/admin/book/<%= books[i].id %>" class="btn">Promjeni (Edituj)</a>
+									<form class="d-none" id="hidden-form-<%= books[i].id %>" action="/admin/book/<%= books[i].id %>?_method=DELETE" method="POST"><input type="submit"></form>
+									<button onclick="confirmDelete('<%= books[i].id %>')" class="btn">Obrisi</button>
+				
+								</td>
+							</tr>
+						<% } %>
+					<% } %>
+				</tbody>
+			</table>
+		</div>
+		
 		
 		<div class="d-flex flex-wrap justify-content-center">
 			
@@ -33,6 +75,7 @@
 							<a href="/admin/book/<%= books[i].id %>" class="btn">Promjeni (Edituj)</a>
 							<form class="d-none" id="hidden-form-<%= books[i].id %>" action="/admin/book/<%= books[i].id %>?_method=DELETE" method="POST"><input type="submit"></form>
 							<button onclick="confirmDelete('<%= books[i].id %>')" class="btn">Obrisi</button>
+	
 						</div>
 						
 					</div>
@@ -55,28 +98,28 @@
 					
 					<div class="modal-body p-4">
 						<div class="row mb-4">
-							<label for="filter-title" class="form-label col-2">Title</label>
+							<label for="filter-title" class="form-label col-2">Naslov</label>
 							<div class="col-10"><input type="text" name="filter[title]" class="form-control" id="filter-title"></div>
 						</div>
 						
 						<div class="row mb-4">
-							<label for="filter-author" class="form-label col-2">Author</label>
+							<label for="filter-author" class="form-label col-2">Autor</label>
 							<div class="col-10"><input type="text" name="filter[authors]" class="form-control" id="filter-author"></div>
 						</div>
 						
 						<div class="row mb-4">
-							<label for="filter-category" class="form-label col-2">Category</label>
+							<label for="filter-category" class="form-label col-2">Kategorija</label>
 							<div class="col-10"><input type="text" name="filter[category]" class="form-control" id="filter-category"></div>
 						</div>
 						
 						<div class="row mb-4">
-							<label for="filter-copies-owned-min" class="form-label col-2">Copies owned</label>
+							<label for="filter-copies-owned-min" class="form-label col-2">Broj kopija</label>
 							<div class="col-5"><input type="number" name="filter[minCopiesOwned]" class="form-control" id="filter-copies-owned-min" placeholder="Min copies.."></div>
 							<div class="col-5"><input type="number" name="filter[maxCopiesOwned]" class="form-control" id="filter-copies-owned-max" placeholder="Max copies.."></div>
 						</div>
 						
 						<div class="row mb-4">
-							<label for="filter-stock-min" class="form-label col-2">Stock</label>
+							<label for="filter-stock-min" class="form-label col-2">Na stanju</label>
 							<div class="col-5"><input type="number" name="filter[minStock]" class="form-control" id="filter-stock-min" placeholder="Min stock.."></div>
 							<div class="col-5"><input type="number" name="filter[maxStock]" class="form-control" id="filter-stock-max" placeholder="Max stock.."></div>
 						</div>
@@ -84,7 +127,7 @@
 					</div>
 					
 					<div class="modal-footer">
-						<button type="submit" class="btn">Apply</button>
+						<button type="submit" class="btn">Primjeni</button>
 					</div>
 				</form>
 
@@ -107,33 +150,33 @@
 						<div>
 							<div class="form-check">
 								<input class="form-check-input" type="radio" name="sortBy" id="title-asc" value="title">
-								<label class="form-check-label" for="title-asc">Title (Ascending)</label>
+								<label class="form-check-label" for="title-asc">Naslov (Rastuce)</label>
 							</div>
 							<div class="form-check">
 								<input class="form-check-input" type="radio" name="sortBy" id="title-desc" value="-title">
-								<label class="form-check-label" for="title-desc">Title (Descending)</label>
+								<label class="form-check-label" for="title-desc">Naslov (Opadajuce)</label>
 							</div>
 							<div class="form-check">
 								<input class="form-check-input" type="radio" name="sortBy" id="copies-owned-asc" value="copiesOwned">
-								<label class="form-check-label" for="copies-owned-asc">Copies owned (Ascending)</label>
+								<label class="form-check-label" for="copies-owned-asc">Broj kopija (Rastuce)</label>
 							</div>
 							<div class="form-check">
 								<input class="form-check-input" type="radio" name="sortBy" id="copies-owned-desc" value="-copiesOwned">
-								<label class="form-check-label" for="copies-owned-desc">Copies owned (Descending)</label>
+								<label class="form-check-label" for="copies-owned-desc">Broj kopija (Opadajuce)</label>
 							</div>
 							<div class="form-check">
 								<input class="form-check-input" type="radio" name="sortBy" id="stock-asc" value="stock">
-								<label class="form-check-label" for="stock-asc">Stock (Ascending)</label>
+								<label class="form-check-label" for="stock-asc">Na stanju (Rastuce)</label>
 							</div>
 							<div class="form-check">
 								<input class="form-check-input" type="radio" name="sortBy" id="stock-desc" value="-stock">
-								<label class="form-check-label" for="stock-desc">Stock (Descending)</label>
+								<label class="form-check-label" for="stock-desc">Na stanju (Opadajuce)</label>
 							</div>
 						</div>
 					</div>
 					
 					<div class="modal-footer">
-						<button type="submit" class="btn">Apply</button>
+						<button type="submit" class="btn">Primjeni</button>
 					</div>
 				</form>
 
@@ -154,4 +197,6 @@
 			document.querySelector(`#hidden-form-${id}`).submit();
 		}
 	}
+
+	
 </script>

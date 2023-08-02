@@ -8,7 +8,7 @@ module.exports = function(passport) {
 			User.findOne({ email: email, role: "admin" })
 				.then(user => {
 					if(!user)
-						return done(null, false, { message: "The email is not registered" });
+						return done(null, false, { message: "Email nije registrovan" });
 					
 					bcrypt.compare(password, user.password, (err, isMatch) => {
 						if(err)	throw err;
@@ -22,9 +22,9 @@ module.exports = function(passport) {
 		})
 	);
 	
-	passport.use( "local-student",
+	passport.use( "local-korisnik",
 		new LocalStrategy({ usernameField: 'email', passwordField: 'password'}, (email, password, done) => {
-			User.findOne({ email: email, role: "student" })
+			User.findOne({ email: email, role: "korisnik" })
 				.then(user => {
 					if(!user)
 						return done(null, false, { message: "Email nije registrovan" });

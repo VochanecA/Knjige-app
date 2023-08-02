@@ -11,7 +11,7 @@ router.get("/student/dashboard", middleware.ensureStudentLoggedIn, async (req,re
 	try
 	{
 		await Loan.updateMany({ status: "izdata", dueTime: { $lt: new Date() } }, {status: "kasni"});
-		const numStudents = await User.countDocuments({ role: "student" });
+		const numStudents = await User.countDocuments({ role: "korisnik" });
 		const books = await Book.find();
 		const numDistinctBooks = books.length;
 		const numTotalBooks = books.reduce((total, book) => total + book.copiesOwned, 0);
@@ -38,7 +38,7 @@ router.get("/student/activities", middleware.ensureStudentLoggedIn, async (req,r
 			{ category: ["issue", "return", "updateStudentProfile"], student: req.user._id },
 			{ category: ["addBook", "updateBook"] }
 		]};
-		const activities = await Activity.find(filterObj).populate("student").populate("book").sort("-activityTime");
+		const activities = await Activity.find(filterObj).populate("korisnik").populate("book").sort("-activityTime");
 		res.render("student/activities", { title: "Aktivnosti", activities });
 	}
 	catch(err)
