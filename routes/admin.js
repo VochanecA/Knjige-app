@@ -1,3 +1,5 @@
+
+//const compression = require('compression')
 const express = require("express");
 const router = express.Router();
 const middleware = require("../middleware/index.js");
@@ -6,33 +8,59 @@ const Book = require("../models/book.js");
 const Loan = require("../models/loan.js");
 const Activity = require("../models/activity.js");
 const Author = require('../models/author.js');
+const Reservation  = require('../models/reservations.js');
 const nodemailer = require("nodemailer");
 
 
-router.get("/admin/dashboard", middleware.ensureAdminLoggedIn, async (req,res) => {
-	try
-	{
-		await Loan.updateMany({ status: "izdata", dueTime: { $lt: new Date() } }, {status: "kasni"});
-		const numStudents = await User.countDocuments({ role: "korisnik" });
-		const numAdmins = await User.countDocuments({ role: "admin" });
-		const books = await Book.find();
-		const numDistinctBooks = books.length;
-		const numTotalBooks = books.reduce((total, book) => total + book.copiesOwned, 0);
-		const numBooksNotReturned = await Loan.countDocuments({ status: ["izdata", "kasni"] });
-		const numBooksOverdue = await Loan.countDocuments({ status: "kasni" });
-		
-		res.render("admin/dashboard", {
-			title: "Dashboard",
-			numStudents, numAdmins, numDistinctBooks, numTotalBooks, numBooksNotReturned, numBooksOverdue
-		});
-	}
-	catch(err)
-	{
-		console.log(err);
-		req.flash("error", "Doslo je do greske na serveru.")
-		res.redirect("back");
-	}
+router.get("/admin/dashboard", middleware.ensureAdminLoggedIn, async (req, res) => {
+  try {
+    // Update loans with status "izdata" and dueTime less than current date to "kasni"
+    await Loan.updateMany({ status: "izdata", dueTime: { $lt: new Date() } }, { status: "kasni" });
+
+    // Count the number of students and admins
+    const numStudents = await User.countDocuments({ role: "korisnik" });
+    const numAdmins = await User.countDocuments({ role: "admin" });
+
+    // Fetch all books and calculate the number of distinct books and total books
+    const books = await Book.find();
+    const numDistinctBooks = books.length;
+    const numTotalBooks = books.reduce((total, book) => total + book.copiesOwned, 0);
+ 
+    // Count the number of books that are either "izdata" or "kasni"
+    const numBooksNotReturned = await Loan.countDocuments({ status: { $in: ["izdata", "kasni"] } });
+
+    // Count the number of books with status "kasni"
+    const numBooksOverdue = await Loan.countDocuments({ status: "kasni" });
+
+    // Fetch the last 10 activities and populate the related models
+    const activities = await Activity.find().populate("admin").populate("korisnik").populate("book").sort({ activityTime: -1 }).limit(10);
+
+const reservations = await Reservation.find()
+      .populate("user") // Assuming "user" is the reference to the User model in the Reservation schema
+      .populate("book")
+      .sort({ reservationDate: -1 })
+      .limit(10);
+
+    res.render("admin/dashboard", {
+      title: "Dashboard",
+      numStudents,
+      numAdmins,
+      numDistinctBooks,
+      numTotalBooks,
+      numBooksNotReturned,
+      numBooksOverdue,
+      activities,
+      reservations, // Correct variable name here
+    });
+  } catch (err) {
+    console.log(err);
+    req.flash("error", "Doslo je do greske na serveru.");
+    res.redirect("back");
+  }
 });
+
+
+
 
 router.get("/admin/activities", middleware.ensureAdminLoggedIn, async (req,res) => {
 	try
@@ -552,5 +580,85 @@ router.get('/admin/books/author/:authorId', async (req, res) => {
   }
 });
 
+//Rezervacije
+
+
+router.get('/admin/reservations', async (req, res) => {
+  try {
+    const books = await Book.find();
+    res.render('admin/reservations', { books });
+  } catch (err) {
+    res.status(500).send('Error fetching books');
+  }
+});
+
+
+
+router.get('/admin/reservations/add', middleware.ensureAdminLoggedIn, async (req, res) => {
+  try {
+    const books = await Book.find();
+    const users = await User.find(); // Fetch the users data
+    res.render('admin/addreservations', { books, users }); // Pass both books and users variables to the template
+  } catch (err) {
+    res.status(500).send('Error fetching data');
+  }
+});
+
+// routes/admin.js
+
+// AJAX ZA DETALJE KNJIGE
+router.get('/admin/reservations/book/:id', middleware.ensureAdminLoggedIn, async (req, res) => {
+  try {
+    const bookId = req.params.id;
+    const selectedBook = await Book.findById(bookId);
+
+    if (!selectedBook) {
+      return res.status(404).json({ error: 'Book not found' });
+    }
+
+    res.json(selectedBook);
+  } catch (err) {
+    res.status(500).json({ error: 'Error fetching book details' });
+  }
+});
+
+router.post('/admin/reservations/add', middleware.ensureAdminLoggedIn, async (req, res) => {
+  try {
+    const { book, user, /* add other reservation details here */ } = req.body;
+    // Perform any necessary validation on the form data
+
+    // Fetch the selected book from the database
+    const selectedBook = await Book.findById(book);
+
+    if (!selectedBook) {
+      return res.status(404).send('Book not found');
+    }
+
+    // Fetch the selected user from the database
+    const selectedUser = await User.findById(user);
+
+    if (!selectedUser) {
+      return res.status(404).send('User not found');
+    }
+
+    // Create a new reservation object using the reservation model
+    const newReservation = new Reservation({
+      book: selectedBook._id,
+      user: selectedUser._id,
+      // Add other reservation details here
+    });
+
+    // Save the new reservation data to the database
+    await newReservation.save();
+
+    // Redirect to the reservations page or show a success message
+    res.redirect('/admin/reservations');
+  } catch (err) {
+    res.status(500).send('Error adding reservation');
+  }
+});
+
+
+//kraj rezervacija
 
 module.exports = router;

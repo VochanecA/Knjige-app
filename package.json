@@ -4,7 +4,7 @@
   "description": "Biblioteka-domaci",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "nodemon app.js",
     "dev": "nodemon app.js -e html,css,js,ejs"
   },
   "engines": {
@@ -20,7 +20,9 @@
   "dependencies": {
     "@types/passport": "^1.0.12",
     "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
     "connect-flash": "^0.1.1",
+    "crypto": "^1.0.1",
     "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
@@ -30,11 +32,12 @@
     "helmet": "^7.0.0",
     "method-override": "^3.0.0",
     "mongoose": "^6.1.0",
+    "node-fetch": "^3.3.2",
     "nodemailer": "^6.7.2",
     "passport": "^0.5.3",
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.22"
   }
 }

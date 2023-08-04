@@ -70,24 +70,33 @@
       <% if(books.length == 0) { %>
       <div>Nije pronadjena niti jedna knjiga.</div>
       <% } else for(let i=0; i<books.length; i++) { %>
-      <div class="card border border-2 m-2" style="width: 18rem;">
-        <div class="card-body">
-          <h5 class="card-title"> <%= books[i].title %> </h5>
-          <h6 class="card-subtitle mb-3 text-muted"> <%= books[i].authors %> </h6>
-          <div> <%= books[i].category %> </div>
-          <div> ISBN broj: <%= books[i].ISBN %> </div>
-          <div> Broj kopija: <%= books[i].copiesOwned %> </div>
-          <div> Na stanju: <%= books[i].stock %> </div>
-          <div> <%= books[i].description %> </div>
-          <div class="btn-group mt-3">
-            <a href="/admin/book/<%= books[i]._id %>" class="btn">Promjeni (Edituj)</a>
-            <form class="d-none" id="hidden-form-<%= books[i]._id %>" action="/admin/book/<%= books[i]._id %>?_method=DELETE" method="POST">
-              <input type="submit">
-            </form>
-            <button onclick="confirmDelete('<%= books[i]._id %>')" class="btn">Obrisi</button>
-          </div>
-        </div>
+<div class="card border border-2 m-2" style="width: 18rem;">
+  <div class="card-body d-flex flex-column justify-content-between">
+    <div>
+      <div class="book-image">
+        <% if (books[i].image) { %>
+          <img src="<%= books[i].image %>" alt="<%= books[i].title %>">
+        <% } else { %>
+          <img src="../assets/images/NemaKnjigek.svg.png" alt="Nema slike knjige"  width="200" height="270" class="img-fluid">
+        <% } %>
       </div>
+      <h5 class="card-title"><b><%= books[i].title %> </b></h5>
+      <h6 class="card-subtitle mb-3 text-muted"> <%= books[i].authors %> </h6>
+      <div> <%= books[i].category %> </div>
+      <div> ISBN broj: <%= books[i].ISBN %> </div>
+      <div> Broj kopija: <%= books[i].copiesOwned %> </div>
+      <div> Na stanju: <%= books[i].stock %> </div>
+      <div> <%= books[i].description %> </div>
+    </div>
+    <div class="btn-group mt-3 align-self-end">
+      <a href="/admin/book/<%= books[i]._id %>" class="btn">Promjeni (Edituj)</a>
+      <form class="d-none" id="hidden-form-<%= books[i]._id %>" action="/admin/book/<%= books[i]._id %>?_method=DELETE" method="POST">
+        <input type="submit">
+      </form>
+      <button onclick="confirmDelete('<%= books[i]._id %>')" class="btn">Obrisi</button>
+    </div>
+  </div>
+</div>
       <% } %>
     </div>
 

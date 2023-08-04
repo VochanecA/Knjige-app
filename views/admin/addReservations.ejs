@@ -1,0 +1,35 @@
+<!-- addReservations.ejs -->
+<main>
+  <% include('../partials/adminSidebar') %>
+
+  <div id="main-wrapper">
+    <div class="container">
+      <div class="bg-white mb-5 p-3 d-sm-flex align-items-center justify-content-between">
+        <h5 class="m-0 fw-bold color-theme">Dodaj Rezervaciju</h5>
+      </div>
+
+      <form action="/admin/reservations/add" method="POST" class="w-75 border m-auto my-1 p-4 bg-white rounded-2">
+        <div class="mb-3">
+          <label for="book" class="form-label">Book</label>
+          <select name="book" id="book" class="form-select">
+            <option value="">Select a book</option>
+            <% books.forEach(book => { %>
+            <option value="<%= book._id %>"><%= book.title %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="isbn" class="form-label">ISBN</label>
+          <input type="text" class="form-control" id="isbn" name="isbn" readonly>
+        </div>
+        <div class="mb-3">
+          <label for="author" class="form-label">Author</label>
+          <input type="text" class="form-control" id="author" name="author" readonly>
+        </div>
+        <!-- Add other fields for reservation details here -->
+
+        <button type="submit" class="btn btn-primary">Add Reservation</button>
+      </form>
+    </div>
+  </div>
+</main>

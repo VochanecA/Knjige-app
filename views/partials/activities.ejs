@@ -1,0 +1,103 @@
+<main>
+	<%- include('../partials/adminSidebar') %>
+	
+	<div id="main-wrapper">
+		
+		<div class="bg-white p-3">
+			<h5 class="m-0 fw-bold color-theme">Activities</h5>
+		</div>
+		
+		
+		<div class="col col-sm-10 col-12 m-auto my-4" style="max-height: 75%; overflow: auto;">
+			<table class="table table-info table-striped table-hover m-0 bg-white">
+				<thead>
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">Kategorija</th>
+						<th scope="col">Aktivnost</th>
+						<th scope="col">Aktivnost-Vrijeme</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% for(let i=0; i<activities.length; i++) { %>
+						<tr>
+							
+							<% if(activities[i].category == "izdaj") { %>
+								<th scope="row"> <%= i+1 %> </th>
+								<td> Izdata/Pozajmljena</td>
+								<td>
+									 <% if (activities[i].korisnik) { %>
+      <span class="activity-item"><%= activities[i].korisnik.firstName %></span>
+    <% } %>
+									<span>Pozajmnljena knjiga</span>
+									<span class="activity-item"><%= activities[i].book.title %></span>
+									<span>od</span>
+									<span class="activity-item"><%= activities[i].admin.firstName %></span>
+								</td>
+								<td> <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+								
+							<% } else if(activities[i].category == "vrati") { %>
+								<th scope="row"> <%= i+1 %> </th>
+								<td> Povrat knjige </td>
+								<td>
+									 <% if (activities[i].korisnik) { %>
+      <span class="activity-item"><%= activities[i].korisnik.firstName %></span>
+    <% } %>
+									<span>Vracena knjiga</span>
+									<span class="activity-item"><%= activities[i].book.title %></span>
+									<span> ka </span>
+									<span class="activity-item"><%= activities[i].admin.firstName %></span>
+								</td>
+								<td> <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+								
+							<% } else if(activities[i].category == "dodajknjigu") { %>
+								<th scope="row"> <%= i+1 %> </th>
+								<td> Dodaj Knjigu </td>
+								<td>
+									<span class="activity-item"><%= activities[i].admin.firstName %></span>
+									<span>Dodate knjige</span>
+									<span class="activity-item"><%= activities[i].book.title %></span>
+								</td>
+								<td> <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+								
+							<% } else if(activities[i].category == "updateknjigu") { %>
+								<th scope="row"> <%= i+1 %> </th>
+								<td> Update-uj knjigu </td>
+								<td>
+									<span class="activity-item"><%= activities[i].admin.firstName %></span>
+									<span>updated-ovana knjiga</span>
+									<span class="activity-item"><%= activities[i].book.title %></span>
+								</td>
+								<td> <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+								
+							<% } else if(activities[i].category == "updateAdminProfile") { %>
+								<th scope="row"> <%= i+1 %> </th>
+								<td> Update-uj Administratora </td>
+								<td>
+									<span class="activity-item"><%= activities[i].admin.firstName %></span>
+									<span>updated-ovan njen/njegov profil</span>
+								</td>
+								<td> <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+							
+							<% } else if(activities[i].category == "updateStudentProfile") { %>
+								<th scope="row"> <%= i+1 %> </th>
+								<td> Update-uj korisnika </td>
+								<td>
+								 <% if (activities[i].korisnik) { %>
+      <span class="activity-item"><%= activities[i].korisnik.firstName %></span>
+    <% } %>
+									<span>updated-ovan njen/njegov profil</span>
+								</td>
+								<td> <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+							<% } %>
+							
+						</tr>
+					<% } %>
+				</tbody>
+			</table>
+		</div>
+		
+		
+	</div>
+	
+</main>

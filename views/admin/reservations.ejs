@@ -1,0 +1,54 @@
+<main>
+	<%- include('../partials/adminSidebar') %>
+	
+	<div id="main-wrapper">
+	
+			<div class="bg-white mb-5 p-3 d-sm-flex align-items-center justify-content-between">
+    <h5 class="m-0 fw-bold color-theme">Rezervacije</h5>
+    <div class="btn-group">
+      <a href="/admin/reservations/add" class="btn">Dodaj novu rezervaciju</a>
+      <!-- Add filter and sort buttons if needed -->
+    </div>
+    <div class="mb-4">
+      <h5 class="m-0 fw-bold color-theme">Trazi rezervacije:</h5>
+      <form id="searchForm">
+        <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Trazi rezervacije...">
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="d-flex flex-wrap justify-content-center">
+    <table id="reservations-table" class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Book</th>
+          <th>ISBN</th>
+          <th>Author</th>
+          <th>Reservation Date</th>
+          <th>Reservation Lasts Until</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if(books.length == 0) { %>
+        <tr>
+          <td colspan="5">Nema rezervacija.</td>
+        </tr>
+        <% } else { %>
+        <% books.forEach(book => { %>
+        <tr>
+          <td><%= book.title %></td>
+          <td><%= book.ISBN %></td>
+          <td><%= book.authors %></td>
+          <td><%= book.reservationDate ? book.reservationDate.toDateString() : 'Not reserved' %></td>
+          <td><%= book.reservationLastsUntil ? book.reservationLastsUntil.toDateString() : 'Not reserved' %></td>
+        </tr>
+        <% }) %>
+        <% } %>
+      </tbody>
+    </table> 
+  <s/div>
+</main>
+

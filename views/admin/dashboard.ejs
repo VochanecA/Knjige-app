@@ -40,6 +40,184 @@
 			</div>
 			
 		</div>
-	</div>
+		
+	 <div class="row">
+      <div class="col-sm-6 col-12 mb-4">
+        <div class="bg-plavosiva p-3">
+          <h5 class="m-0 fw-bold color-theme">Aktivnosti</h5>
+        </div>
+
+   <div class="table-responsive">
+        <table class="table table-hover table-nowrap">
+          <thead class="table-light">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Kategorija</th>
+        <th scope="col">Aktivnost</th>
+        <th scope="col">Aktivnost-Vrijeme</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for(let i=0; i<activities.length; i++) { %>
+        <tr>
+          <% if(activities[i].category == "izdaj") { %>
+            <th scope="row"> <%= i+1 %> </th>
+            <td> Izdata/Pozajmljena</td>
+            <td>
+              <% if (activities[i].korisnik) { %>
+                <span class="activity-item"><%= activities[i].korisnik.firstName %></span>
+              <% } %>
+              <span>Pozajmnljena knjiga</span>
+              <span class="activity-item"><%= activities[i].book.title %></span>
+              <span>od</span>
+              <span class="activity-item"><%= activities[i].admin.firstName %></span>
+            </td>
+            <td> <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+          <% } else if(activities[i].category == "vrati") { %>
+            <th scope="row"> <%= i+1 %> </th>
+            <td> Povrat knjige </td>
+            <td>
+              <% if (activities[i].korisnik) { %>
+                <span class="activity-item"><%= activities[i].korisnik.firstName %></span>
+              <% } %>
+              <span>Vracena knjiga</span>
+              <span class="activity-item"><%= activities[i].book.title %></span>
+              <span> ka </span>
+              <span class="activity-item"><%= activities[i].admin.firstName %></span>
+            </td>
+            <td> <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+          <% } else if(activities[i].category == "dodajknjigu") { %>
+            <th scope="row"> <%= i+1 %> </th>
+            <td> Dodaj Knjigu </td>
+            <td>
+              <span class="activity-item"><%= activities[i].admin.firstName %></span>
+              <span>Dodate knjige</span>
+              <span class="activity-item"><%= activities[i].book.title %></span>
+            </td>
+            <td> <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+          <% } else if(activities[i].category == "updateknjigu") { %>
+            <th scope="row"> <%= i+1 %> </th>
+            <td> Update-uj knjigu </td>
+            <td>
+              <span class="activity-item"><%= activities[i].admin.firstName %></span>
+              <span>updated-ovana knjiga</span>
+              <span class="activity-item"><%= activities[i].book.title %></span>
+            </td>
+            <td> <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+          <% } else if(activities[i].category == "updateAdminProfile") { %>
+            <th scope="row"> <%= i+1 %> </th>
+            <td> Update-uj Administratora </td>
+            <td>
+              <span class="activity-item"><%= activities[i].admin.firstName %></span>
+              <span>updated-ovan njen/njegov profil</span>
+            </td>
+            <td> <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+          <% } else if(activities[i].category == "updateStudentProfile") { %>
+            <th scope="row"> <%= i+1 %> </th>
+            <td> Update-uj korisnika </td>
+            <td>
+              <% if (activities[i].korisnik) { %>
+                <span class="activity-item"><%= activities[i].korisnik.firstName %></span>
+              <% } %>
+              <span>updated-ovan njen/njegov profil</span>
+            </td>
+            <td> <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+          <% } %>
+        </tr>
+      <% } %>
+    </tbody>
+   </table>
+        </div>
+      </div>
+	  
+	  
+  <div class="col-sm-6 col-12 mb-4">
+        <div class="row">
+<div class="col-sm-6 col-12 mb-4" style="width: 95%;">
+  <div class="bg-orange p-3">
+    <h5 class="m-0 fw-bold color-theme">Rezervacije</h5>
+  </div>
+
+  <div class="col-sm-6 col-12 mb-4 table-limit-3-rows" style="width: 100%;">
+    <table class="table table-hover table-nowrap">
+      <thead class="table-light">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Korisnik</th>
+          <th scope="col">Knjiga</th>
+          <th scope="col">Datum rezervacije</th>
+          <th scope="col">Datum isteka rezervacije</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i=0; i<reservations.length && i<3; i++) { %> <!-- Limit to 3 rows -->
+          <tr>
+            <th scope="row"> <%= i+1 %> </th>
+            <td><%= reservations[i].user.firstName %> <%= reservations[i].user.lastName %></td>
+            <td><%= reservations[i].book.title %></td>
+            <td> <%= reservations[i].reservationDate.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+            <td> <%= reservations[i].reservationExpiration.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+
+
+
+    </div>
+  </div>
+</div>
+
+
 	
+<div class="row">
+         
+          <div class="col-12" style="width: 95%;">
+
+   <div class="bg-white p-3">
+    <h5 class="m-0 fw-bold color-theme">Statistike</h5>
+  </div>
+  <div class="col col-12 m-auto my-4">
+    <canvas id="barChart"></canvas>
+   </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+	<script  type="text/javascript"  src="../assets/js/chart.js"></script>
+<script nonce="<%= nonce %>">
+
+  const numDistinctBooks = <%= numDistinctBooks %>;
+  const numTotalBooks = <%= numTotalBooks %>;
+  const numBooksNotReturned = <%= numBooksNotReturned %>;
+  const numBooksOverdue = <%= numBooksOverdue %>;
+
+  new Chart(document.getElementById("barChart"), {
+    type: 'bar', // Change 'bar' to 'horizontalBar'
+    data: {
+      labels: ['Jedinstvene knjige', 'Ukupno knjiga', 'Nisu vracene', 'Knjige kasne'],
+      datasets: [{
+        data: [numDistinctBooks, numTotalBooks, numBooksNotReturned, numBooksOverdue],
+        backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56', '#FF5733'],
+      }]
+    },
+    options: {
+      indexAxis: 'y', // Specify 'y' to create a horizontal bar chart
+      scales: {
+        x: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 10,
+          }
+        }
+      }
+    }
+  });
+</script>
+
 </main>

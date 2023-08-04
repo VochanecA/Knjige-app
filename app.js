@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const compression = require('compression');
 const passport = require("passport");
 const flash = require("connect-flash");
 const session = require("express-session");
@@ -10,27 +11,33 @@ const studentRoutes = require("./routes/student.js")
 const adminRoutes = require("./routes/admin.js")
 const helmet = require("helmet")
 const ipfilter = require('express-ipfilter').IpFilter;
+const Book = require("./models/book.js");
+const crypto = require('crypto');
+
 
 require("dotenv").config();
 require("./config/dbConnection.js")();
 require("./config/passport.js")(passport);
 
+
+
+
 // Postavljanje bezbjednosnih opcija koristeći Helmet
 app.use(helmet());
+app.use(compression());
+
+/* if (process.env.NODE_ENV !== 'production') {
+	app.use(debugMiddleware());
+} */
+
 app.use(
 	helmet.hsts({
 		maxAge: 60 * 60 * 24 * 60, // 60 dana u sekundama
 		includeSubDomains: false,
 	})
 );
-/* app.use(helmet.contentSecurityPolicy({
-	directives: {
-		defaultSrc: ["'self'"],
-		scriptSrc: ["'self'", 'code.jquery.com', 'maxcdn.bootstrapcdn.com'],
-		styleSrc: ["'self'", 'maxcdn.bootstrapcdn.com'],
-		fontSrc: ["'self'", 'maxcdn.bootstrapcdn.com','fonts.googleapis.com']
-	}
-}));*/
+
+
 app.disable('x-powered-by');
 app.use(helmet.xssFilter());
 app.use(helmet.ieNoOpen());
@@ -69,6 +76,22 @@ app.use((req, res, next) => {
 	res.locals.warning = req.flash("warning");
 	next();
 });
+//nonce da se salje svima
+
+const nonce = crypto.randomBytes(16).toString('base64');
+
+// Pass the nonce value to all templates
+app.use((req, res, next) => {
+  res.locals.nonce = nonce;
+  next();
+});
+
+// Set the CSP header with the 'nonce' value
+app.use((req, res, next) => {
+  res.setHeader('Content-Security-Policy', `script-src 'self' 'nonce-${nonce}'`);
+  next();
+});
+
 
 // Statički resursi (CSS, JS, itd.)
 app.use("/assets", express.static(__dirname + "/assets"));
@@ -78,8 +101,15 @@ app.set("view engine", "ejs");
 app.use(expressLayouts);
 
 // Rute
-app.get("/", (req, res) => {
-	res.render("welcome");
+app.get("/", async (req, res) => {
+  try {
+    const randomBooks = await Book.aggregate([{ $sample: { size: 5 } }]);
+	
+    res.render("welcome", { randomBooks });
+  } catch (err) {
+    console.error(err);
+    res.render("404page", { message: "Greska u citanju random knjiga" });
+  }
 });
 
 app.use(authRoutes);
@@ -89,6 +119,8 @@ app.use(adminRoutes);
 app.use((req, res) => {
 	res.status(404).render("404page");
 });
+
+
 //Podešavanje porta na koji će server raditi...moze i kroz .env 
 const port = process.env.PORT || 5000;
 app.listen(port, console.log(`Server je pokrenut na http://localhost:${port}`));

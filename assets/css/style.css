@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
-
+@import url(https://unpkg.com/@webpixels/css/dist/index.css);
 :root
 {
 	--theme-color: #3b5998;		/* druge opcije za temu: #1a936f, #ec6464 */
@@ -186,5 +186,81 @@ input.form-control:focus, textarea.form-control:focus
 	from { right: -100px; }
 	to { right: 0px; }
 }
+	/* welcome stranica slide*/
 
+    #slideshow-container {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      overflow: hidden;
+    }
+	
+	 .table-limit-3-rows {
+      width: 90%; 
+    }
+.white-heading {
+  color: white; /* svijetlo plava (#007bff) - valjat ce nedje */
+}
 
+.bg-orange {
+  background-color: #BEE6F1; 
+}
+
+.bg-plavosiva {
+  background-color: #BEE6F1; 
+}
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .slide.active {
+      opacity: 1;
+    }
+
+    @keyframes slideshow {
+      0% {
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      80% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+
+    #slideshow-container {
+      animation: slideshow 9s infinite;
+    }
+
+/* statistika */
+
+.bar-chart {
+  display: inline-block;
+  width: 30%;
+  margin: 5px;
+  position: relative;
+  background-color: #f2f2f2;
+}
+
+.bar {
+  width: 100%;
+  background-color: #007bff;
+  transition: height 0.5s;
+}
+
+.label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
