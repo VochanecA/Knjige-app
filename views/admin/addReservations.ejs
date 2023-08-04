@@ -1,9 +1,7 @@
-<!-- addReservations.ejs -->
 <main>
-  <% include('../partials/adminSidebar') %>
-
-  <div id="main-wrapper">
-    <div class="container">
+	<%- include('../partials/adminSidebar') %>
+	
+	<div id="main-wrapper">
       <div class="bg-white mb-5 p-3 d-sm-flex align-items-center justify-content-between">
         <h5 class="m-0 fw-bold color-theme">Dodaj Rezervaciju</h5>
       </div>
@@ -15,6 +13,16 @@
             <option value="">Select a book</option>
             <% books.forEach(book => { %>
             <option value="<%= book._id %>"><%= book.title %></option>
+            <% }) %>
+          </select>
+        </div>
+		
+		            <div class="mb-3">
+          <label for="user" class="form-label">User</label>
+          <select name="user" id="user" class="form-select">
+            <option value="">Select a user</option>
+            <% users.forEach(user => { %>
+              <option value="<%= user._id %>"><%= user.firstName %> <%= user.lastName %></option>
             <% }) %>
           </select>
         </div>
