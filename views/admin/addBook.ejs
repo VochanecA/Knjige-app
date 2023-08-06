@@ -30,6 +30,26 @@
 					<label for="copies" class="form-label">Broj kopija</label>
 					<input type="number" min="0" name="book[copiesOwned]" class="form-control" id="copies" placeholder="Enter no. of copies.." required>
 				</div>
+				<div class="mb-3">
+				<label for="image">Image URL:</label>
+				<input type="file" id="image" name="image" placeholder="Current Image URL:"
+				<br>
+			</div>
+
+        <label for="bindings">Povez:</label>
+        <select id="bindings" name="bindings">
+            <option value="Povezivanje sedlastim bodovima">Povezivanje sedlastim bodovima</option>
+            <option value="PUR vezivanje">PUR vezivanje</option>
+            <option value="Tvrdi ili futrolni povez">Tvrdi ili futrolni povez</option>
+            <option value="Singer ušiveni povez">Singer ušiveni povez</option>
+            <option value="Singer povez">Singer povez</option>
+            <option value="Sekcija šivenog poveza">Sekcija šivenog poveza</option>
+            <option value="Povezivanje koptskim šavom">Povezivanje koptskim šavom</option>
+            <option value="Žica, češalj ili spiralni uvez">Žica, češalj ili spiralni uvez</option>
+            <option value="Interscrew binding">Interscrew binding</option>
+            <option value="Japanski povez">Japanski povez</option>
+            <option value="Solander kutije i torbe">Solander kutije i torbe</option>
+        </select>
 				<button type="submit" class="btn w-75 d-block m-auto mt-4">Dodaj</button>
 				<a href="/admin/books" class="btn btn-cancel w-75 d-block m-auto mt-4">Otkazi</a>
 			</div>

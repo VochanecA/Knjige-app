@@ -35,7 +35,7 @@ router.get("/student/activities", middleware.ensureStudentLoggedIn, async (req,r
 	try
 	{
 		const filterObj = { $or: [
-			{ category: ["issue", "return", "updateStudentProfile"], student: req.user._id },
+			{ category: ["izdata", "vracena", "updateStudentProfile"], student: req.user._id },
 			{ category: ["addBook", "updateBook"] }
 		]};
 		const activities = await Activity.find(filterObj).populate("korisnik").populate("book").sort("-activityTime");
@@ -73,12 +73,12 @@ router.get("/student/books", middleware.ensureStudentLoggedIn, async (req,res) =
 		
 		// console.log(filterObj);
 		const books = await Book.find(filterObj).sort(sortString);
-		res.render("student/books", { title: "Books", books });
+		res.render("student/books", { title: "Knjige", books });
 	}
 	catch(err)
 	{
 		console.log(err);
-		req.flash("error", "Some error occurred on the server.")
+		req.flash("error", "Greska na serveru.....")
 		res.redirect("back");
 	}
 });
@@ -87,14 +87,14 @@ router.get("/student/loans/current", middleware.ensureStudentLoggedIn, async (re
 	try
 	{
 		const studentId = req.user._id;
-		await Loan.updateMany({ status: "issued", dueTime: { $lt: new Date() } }, {status: "overdue"});
-		const currentLoans = await Loan.find({ user: studentId, status: { $in: ["issued", "overdue"] } }).populate("book");
-		res.render("student/currentLoans", { title: "Current Loans", currentLoans });
+		await Loan.updateMany({ status: "izdata", dueTime: { $lt: new Date() } }, {status: "kasni"});
+		const currentLoans = await Loan.find({ user: studentId, status: { $in: ["izdata", "kasni"] } }).populate("book");
+		res.render("student/currentLoans", { title: "Trenutno izdano", currentLoans });
 	}
 	catch(err)
 	{
 		console.log(err);
-		req.flash("error", "Some error occurred on the server.")
+		req.flash("error", "Greska na serveru.....")
 		res.redirect("back");
 	}
 });
@@ -103,23 +103,23 @@ router.get("/student/loans/previous", middleware.ensureStudentLoggedIn, async (r
 	try
 	{
 		const studentId = req.user._id;
-		const previousLoans = await Loan.find({ user: studentId, status: "returned" }).populate("book").sort("-returnTime");
-		res.render("student/previousLoans", { title: "Previous loans", previousLoans });
+		const previousLoans = await Loan.find({ user: studentId, status: "vracena" }).populate("book").sort("-returnTime");
+		res.render("student/previousLoans", { title: "Prethodna iznajmljivanja", previousLoans });
 	}
 	catch(err)
 	{
 		console.log(err);
-		req.flash("error", "Some error occurred on the server.")
+		req.flash("error", "Greska na serveru.....")
 		res.redirect("back");
 	}
 });
 
 router.get("/student/rules", middleware.ensureStudentLoggedIn, (req,res) => {
-	res.render("student/rules", { title: "Rules and Regulations" });
+	res.render("student/rules", { title: "Pravila i propisi" });
 });
 
 router.get("/student/profile", middleware.ensureStudentLoggedIn, (req,res) => {
-	res.render("student/profile", { title: "My Profile" });
+	res.render("student/profile", { title: "Moj profil" });
 });
 
 router.put("/student/profile", middleware.ensureStudentLoggedIn, async (req,res) => {
@@ -134,13 +134,13 @@ router.put("/student/profile", middleware.ensureStudentLoggedIn, async (req,res)
 		});
 		await newActivity.save();
 		
-		req.flash("success", "Profile updated successfully");
+		req.flash("success", "Profil uspjesno update-ovan");
 		res.redirect("/student/profile");
 	}
 	catch(err)
 	{
 		console.log(err);
-		req.flash("error", "Some error occurred on the server.")
+		req.flash("error", "Greska na serveru.....")
 		res.redirect("back");
 	}
 });

@@ -10,6 +10,7 @@ const Activity = require("../models/activity.js");
 const Author = require('../models/author.js');
 const Reservation  = require('../models/reservations.js');
 const nodemailer = require("nodemailer");
+const upload = require("../middleware/multer");
 
 
 router.get("/admin/dashboard", middleware.ensureAdminLoggedIn, async (req, res) => {
@@ -89,7 +90,7 @@ router.get("/admin/students", middleware.ensureAdminLoggedIn, async (req,res) =>
 		res.redirect("back");
 	}
 });
-
+/* 
 router.get("/admin/books", middleware.ensureAdminLoggedIn, async (req,res) => {
 	try
 	{
@@ -124,43 +125,93 @@ router.get("/admin/books", middleware.ensureAdminLoggedIn, async (req,res) => {
 		req.flash("error", "Doslo je do greske na serveru.")
 		res.redirect("back");
 	}
+}); */
+
+
+
+router.get("/admin/books", middleware.ensureAdminLoggedIn, async (req, res) => {
+  try {
+    const filterObj = {};
+    const filter = req.query.filter;
+    const sortString = req.query.sortBy;
+
+    if (filter) {
+      filterObj.title = new RegExp(filter.title, "i");
+      filterObj.authors = new RegExp(filter.authors, "i");
+      filterObj.category = new RegExp(filter.category, "i");
+      filterObj.copiesOwned = { $gte: 0 };
+      filterObj.stock = { $gte: 0 };
+
+      if (filter.minCopiesOwned) {
+        filterObj.copiesOwned.$gte = filter.minCopiesOwned;
+      }
+
+      if (filter.maxCopiesOwned) {
+        filterObj.copiesOwned.$lte = filter.maxCopiesOwned;
+      }
+
+      if (filter.minStock) {
+        filterObj.stock.$gte = filter.minStock;
+      }
+
+      if (filter.maxStock) {
+        filterObj.stock.$lte = filter.maxStock;
+      }
+
+      if (filter.bindings) {
+        // Filter by the 'bindings' field if provided in the query
+        filterObj.bindings = new RegExp(filter.bindings, "i");
+      }
+    }
+
+    const books = await Book.find(filterObj).sort(sortString);
+    res.render("admin/books", { title: "Books", books });
+  } catch (err) {
+    console.log(err);
+    req.flash("error", "Doslo je do greske na serveru.");
+    res.redirect("back");
+  }
 });
+
 
 
 router.get("/admin/books/add", middleware.ensureAdminLoggedIn, (req,res) => {
 	res.render("admin/addBook", { title: "Add Book" });
 });
 
-router.post("/admin/books/add", middleware.ensureAdminLoggedIn, async (req,res) => {
-	try
-	{
-		const book = req.body.book;
-		if(book.ISBN.toString().length != 13)
-		{
-			req.flash("error", "ISBN broj mora biti duzine 13");
-			return res.redirect("back");
-		}
-		book.stock = book.copiesOwned;
-		const newBook = new Book(book);
-		await newBook.save();
+router.post("/admin/books/add", middleware.ensureAdminLoggedIn, upload.single("uploadImage"), async (req, res) => {
+	try {
+	  const book = req.body.book;
+	  if (book.ISBN.toString().length !== 13) {
+		req.flash("error", "ISBN broj mora biti duzine 13");
+		return res.redirect("back");
+	  }
+  
+	  // vidi je li nova slika uploadovana
+	  if (req.file) {
 		
-		const newActivity = new Activity({
-			category: "dodajknjigu",
-			admin: req.user._id,
-			book: newBook._id
-		});
-		await newActivity.save();
-		
-		req.flash("success", "Knjiga uspjesno dodata");
-		res.redirect("/admin/books");
+		book.image = "/uploads/" + req.file.filename;
+	  }
+  
+	  book.stock = book.copiesOwned;
+	  const newBook = new Book(book);
+	  await newBook.save();
+  
+	  const newActivity = new Activity({
+		category: "dodajknjigu",
+		admin: req.user._id,
+		book: newBook._id,
+	  });
+	  await newActivity.save();
+  
+	  req.flash("success", "Knjiga uspjesno dodata");
+	  res.redirect("/admin/books");
+	} catch (err) {
+	  console.log(err);
+	  req.flash("error", "Doslo je do greske na serveru.");
+	  res.redirect("back");
 	}
-	catch(err)
-	{
-		console.log(err);
-		req.flash("error", "Doslo je do greske na serveru.")
-		res.redirect("back");
-	}
-});
+  });
 
 router.get("/admin/book/:bookId", middleware.ensureAdminLoggedIn, async (req,res) => {
 	const bookId = req.params.bookId;

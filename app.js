@@ -51,6 +51,7 @@ app.use(ipFilterMiddleware);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+
 // Postavljanje Express sesija
 app.use(session({
 	secret: "Idemn4m0r3",
@@ -80,13 +81,13 @@ app.use((req, res, next) => {
 
 const nonce = crypto.randomBytes(16).toString('base64');
 
-// Pass the nonce value to all templates
+// Salji svima nonce
 app.use((req, res, next) => {
   res.locals.nonce = nonce;
   next();
 });
 
-// Set the CSP header with the 'nonce' value
+//  CSP header sa vrijednscu 'nonce' 
 app.use((req, res, next) => {
   res.setHeader('Content-Security-Policy', `script-src 'self' 'nonce-${nonce}'`);
   next();
@@ -99,6 +100,14 @@ app.use("/assets", express.static(__dirname + "/assets"));
 // Podešavanje EJS templating-a sa ejs ekstenzijom
 app.set("view engine", "ejs");
 app.use(expressLayouts);
+
+
+//cors iznad get
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 
 // Rute
 app.get("/", async (req, res) => {
