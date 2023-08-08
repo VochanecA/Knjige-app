@@ -18,3 +18,22 @@ if(btn = document.querySelector("#sidebar-toggler-btn")) {
 		document.querySelector("#sidebar").classList.toggle("sidebar-hide");
 	});
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  var deleteButtons = document.querySelectorAll('.btn-delete');
+  
+  if (deleteButtons) {
+    deleteButtons.forEach(function(button) {
+      button.addEventListener("click", function() {
+        var bookId = button.getAttribute("data-bookid");
+        confirmDelete(bookId);
+      });
+    });
+  }
+});
+
+function confirmDelete(bookId) {
+  if (confirm("Jeste li sigurni da želite da obrišete knjigu?")) {
+    document.getElementById(`hidden-form-${bookId}`).submit();
+  }
+}

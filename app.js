@@ -13,7 +13,7 @@ const helmet = require("helmet")
 const ipfilter = require('express-ipfilter').IpFilter;
 const Book = require("./models/book.js");
 const crypto = require('crypto');
-
+const path = require('path');
 
 require("dotenv").config();
 require("./config/dbConnection.js")();
@@ -51,7 +51,6 @@ app.use(ipFilterMiddleware);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-
 // Postavljanje Express sesija
 app.use(session({
 	secret: "Idemn4m0r3",
@@ -81,13 +80,13 @@ app.use((req, res, next) => {
 
 const nonce = crypto.randomBytes(16).toString('base64');
 
-// Salji svima nonce
+// Pass the nonce value to all templates
 app.use((req, res, next) => {
   res.locals.nonce = nonce;
   next();
 });
 
-//  CSP header sa vrijednscu 'nonce' 
+// Set the CSP header with the 'nonce' value
 app.use((req, res, next) => {
   res.setHeader('Content-Security-Policy', `script-src 'self' 'nonce-${nonce}'`);
   next();
@@ -101,19 +100,11 @@ app.use("/assets", express.static(__dirname + "/assets"));
 app.set("view engine", "ejs");
 app.use(expressLayouts);
 
-
-//cors iznad get
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
-
 // Rute
 app.get("/", async (req, res) => {
   try {
     const randomBooks = await Book.aggregate([{ $sample: { size: 5 } }]);
-	
+	 //res.sendFile(path.join(__dirname+'/views/bild/dashboard.html'));
     res.render("welcome", { randomBooks });
   } catch (err) {
     console.error(err);

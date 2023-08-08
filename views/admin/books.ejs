@@ -1,7 +1,7 @@
 <main>
 	<%- include('../partials/adminSidebar') %>
 	
-	<div id="main-wrapper">
+ <div id="main-wrapper">
 
     <div class="bg-white mb-5 p-3 d-sm-flex align-items-center justify-content-between">
       <h5 class="m-0 fw-bold color-theme">Knjige</h5>
@@ -11,62 +11,65 @@
         <button class="btn" data-bs-toggle="modal" data-bs-target="#sort-modal">Sort</button>
       </div>
 
-      <div class="mb-4">
-        <h5 class="m-0 fw-bold color-theme">Trazi knjige:</h5>
-        <form id="searchForm">
-          <div class="input-group">
-            <input type="text" name="q" class="form-control" placeholder="Trazi knjige...">
-            <button type="submit" class="btn btn-primary">Search</button>
-          </div>
-        </form>
-      </div>
+<div class="mb-4">
+  <h5 class="m-0 fw-bold color-theme">Trazi knjige:</h5>
+  <form id="searchForm">
+    <div class="input-group">
+      <input type="text" name="q" class="form-control" placeholder="Trazi knjige...">
+      <button type="submit" class="btn btn-primary">Search</button>
+      <button type="submit" class="btn btn-primary">Search</button>
     </div>
+  </form>
+</div>
+</div>
 
 
-    <div class="d-flex flex-wrap justify-content-center">
-      <table id="books-table" class="table table-striped table-bordered">
-        <thead>
+<div class="container mt-4 max-w-4xl">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Naslov</th>
+        <th>Autor(i)</th>
+        <th>Kategorija</th>
+        <th>ISBN</th>
+        <th>Broj kopija</th>
+        <th>Na stanju</th>
+        <th>Opis</th>
+        <th>Akcije</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (books.length === 0) { %>
+        <tr>
+          <td colspan="8">Nije pronadjena niti jedna knjiga.</td>
+        </tr>
+      <% } else { %>
+        <% for (let i = 0; i < books.length; i++) { %>
           <tr>
-            <th>Naslov</th>
-            <th>Autor(i)</th>
-            <th>Kategorija</th>
-            <th>ISBN</th>
-            <th>Broj kopija</th>
-            <th>Na stanju</th>
-            <th>Opis</th>
-            <th>Povez</th>
-            <th>Akcije</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% if(books.length == 0) { %>
-          <tr>
-            <td colspan="8">Nije pronadjena niti jedna knjiga.</td>
-          </tr>
-          <% } else { %>
-          <% for(let i=0; i<books.length; i++) { %>
-          <tr>
-            <td><%= books[i].title %></td>
-            <td><%= books[i].authors %></td>
-            <td><%= books[i].category %></td>
-            <td><%= books[i].ISBN %></td>
-            <td><%= books[i].copiesOwned %></td>
-            <td><%= books[i].stock %></td>
-            <td><%= books[i].description %></td>
-             <td><%= books[i].bindings %></td>
+		   <% const commonCellClass = "text-wrap max-h-100 overflow-hidden"; %>
+               <td class="<%= commonCellClass %>">
+  <a href="/admin/book/<%= books[i].id %>" style="text-decoration: none; color: darkblue;">
+    <span style="font-weight: bold;"><%= books[i].title %></span>
+  </a>
+</td>
+               <td class="<%= commonCellClass %>"><%= books[i].authors %></td>
+              <td class="<%= commonCellClass %>"><%= books[i].category %></td>
+              <td class="<%= commonCellClass %>"><%= books[i].ISBN %></td>
+              <td class="<%= commonCellClass %>"><%= books[i].copiesOwned %></td>
+            <td class="<%= commonCellClass %>"><%= books[i].stock %></td>
+           <td class="<%= commonCellClass %>"><%= books[i].description.substring(0, 50) %></td>
+
             <td>
-              <a href="/admin/book/<%= books[i]._id %>" class="btn">Promjeni (Edituj)</a>
-              <form class="d-none" id="hidden-form-<%= books[i]._id %>" action="/admin/book/<%= books[i]._id %>?_method=DELETE" method="POST">
-                <input type="submit">
-              </form>
-              <button onclick="confirmDelete('<%= books[i]._id %>')" class="btn">Obrisi</button>
+              <a href="/admin/book/<%= books[i].id %>" class="btn btn-primary">Promjeni (Edituj)</a>
+              <form class="d-none" id="hidden-form-<%= books[i].id %>" action="/admin/book/<%= books[i].id %>?_method=DELETE" method="POST"><input type="submit"></form>
+              <button onclick="confirmDelete('<%= books[i].id %>')" class="btn btn-danger">Obrisi</button>
             </td>
           </tr>
-          <% } %>
-          <% } %>
-        </tbody>
-      </table>
-    </div>
+        <% } %>
+      <% } %>
+    </tbody>
+  </table>
+</div>
 
 
     <div class="d-flex flex-wrap justify-content-center">
@@ -92,131 +95,122 @@
       <div> <%= books[i].description %> </div>
     </div>
     <div class="btn-group mt-3 align-self-end">
-      <a href="/admin/book/<%= books[i]._id %>" class="btn">Promjeni (Edituj)</a>
-      <form class="d-none" id="hidden-form-<%= books[i]._id %>" action="/admin/book/<%= books[i]._id %>?_method=DELETE" method="POST">
-        <input type="submit">
-      </form>
-      <button onclick="confirmDelete('<%= books[i]._id %>')" class="btn">Obrisi</button>
+<a href="/admin/book/<%= books[i]._id %>" class="btn">Promjeni (Edituj)</a>
+  <form class="d-none" id="hidden-form-<%= books[i]._id %>" action="/admin/book/<%= books[i]._id %>?_method=DELETE" method="POST">
+    <input type="submit">
+  </form>
+  <button class="btn btn-delete" data-bookid="<%= books[i]._id %>" nonce="<%= nonce %>">Obrisi</button>
     </div>
   </div>
 </div>
       <% } %>
     </div>
 
+		
+		
+		<!-- Filter Modal -->
+		<div class="modal fade" id="filter-modal" tabindex="-1">
+			<div class="modal-dialog">
+				
+				<form class="modal-content" action="/admin/books" method="GET">
+					<div class="modal-header bg-primary text-white">
+						<h5 class="modal-title">Filters</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					
+					<div class="modal-body p-4">
+						<div class="row mb-4">
+							<label for="filter-title" class="form-label col-2">Naslov</label>
+							<div class="col-10"><input type="text" name="filter[title]" class="form-control" id="filter-title"></div>
+						</div>
+						
+						<div class="row mb-4">
+							<label for="filter-author" class="form-label col-2">Autor</label>
+							<div class="col-10"><input type="text" name="filter[authors]" class="form-control" id="filter-author"></div>
+						</div>
+						
+						<div class="row mb-4">
+							<label for="filter-category" class="form-label col-2">Kategorija</label>
+							<div class="col-10"><input type="text" name="filter[category]" class="form-control" id="filter-category"></div>
+						</div>
+						
+						<div class="row mb-4">
+							<label for="filter-copies-owned-min" class="form-label col-2">Broj kopija</label>
+							<div class="col-5"><input type="number" name="filter[minCopiesOwned]" class="form-control" id="filter-copies-owned-min" placeholder="Min copies.."></div>
+							<div class="col-5"><input type="number" name="filter[maxCopiesOwned]" class="form-control" id="filter-copies-owned-max" placeholder="Max copies.."></div>
+						</div>
+						
+						<div class="row mb-4">
+							<label for="filter-stock-min" class="form-label col-2">Na stanju</label>
+							<div class="col-5"><input type="number" name="filter[minStock]" class="form-control" id="filter-stock-min" placeholder="Min stock.."></div>
+							<div class="col-5"><input type="number" name="filter[maxStock]" class="form-control" id="filter-stock-max" placeholder="Max stock.."></div>
+						</div>
+						
+					</div>
+					
+					<div class="modal-footer">
+						<button type="submit" class="btn">Primjeni</button>
+					</div>
+				</form>
+
+			</div>
+		</div>
+		
+		
+		
+		<!-- Sort Modal -->
+		<div class="modal fade" id="sort-modal" tabindex="-1">
+			<div class="modal-dialog">
+				
+				<form class="modal-content" action="/admin/books" method="GET">
+					<div class="modal-header bg-primary text-white">
+						<h5 class="modal-title">Sort by</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					
+					<div class="modal-body">
+						<div>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="sortBy" id="title-asc" value="title">
+								<label class="form-check-label" for="title-asc">Naslov (Rastuce)</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="sortBy" id="title-desc" value="-title">
+								<label class="form-check-label" for="title-desc">Naslov (Opadajuce)</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="sortBy" id="copies-owned-asc" value="copiesOwned">
+								<label class="form-check-label" for="copies-owned-asc">Broj kopija (Rastuce)</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="sortBy" id="copies-owned-desc" value="-copiesOwned">
+								<label class="form-check-label" for="copies-owned-desc">Broj kopija (Opadajuce)</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="sortBy" id="stock-asc" value="stock">
+								<label class="form-check-label" for="stock-asc">Na stanju (Rastuce)</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="sortBy" id="stock-desc" value="-stock">
+								<label class="form-check-label" for="stock-desc">Na stanju (Opadajuce)</label>
+							</div>
+						</div>
+					</div>
+					
+					<div class="modal-footer">
+						<button type="submit" class="btn">Primjeni</button>
+					</div>
+				</form>
+
+			</div>
+		</div>
 
 
-    <!-- Filter Modal -->
-    <div class="modal fade" id="filter-modal" tabindex="-1">
-      <div class="modal-dialog">
-
-        <form class="modal-content" action="/admin/books" method="GET">
-          <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title">Filters</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-
-          <div class="modal-body p-4">
-            <div class="row mb-4">
-              <label for="filter-title" class="form-label col-2">Naslov</label>
-              <div class="col-10"><input type="text" name="filter[title]" class="form-control" id="filter-title"></div>
-            </div>
-
-            <div class="row mb-4">
-              <label for="filter-author" class="form-label col-2">Autor</label>
-              <div class="col-10"><input type="text" name="filter[authors]" class="form-control" id="filter-author"></div>
-            </div>
-
-            <div class="row mb-4">
-              <label for="filter-category" class="form-label col-2">Kategorija</label>
-              <div class="col-10"><input type="text" name="filter[category]" class="form-control" id="filter-category"></div>
-            </div>
-            
-
-            <div class="row mb-4">
-              <label for="filter-copies-owned-min" class="form-label col-2">Broj kopija</label>
-              <div class="col-5"><input type="number" name="filter[minCopiesOwned]" class="form-control" id="filter-copies-owned-min" placeholder="Min copies.."></div>
-              <div class="col-5"><input type="number" name="filter[maxCopiesOwned]" class="form-control" id="filter-copies-owned-max" placeholder="Max copies.."></div>
-            </div>
-
-            <div class="row mb-4">
-              <label for="filter-stock-min" class="form-label col-2">Na stanju</label>
-              <div class="col-5"><input type="number" name="filter[minStock]" class="form-control" id="filter-stock-min" placeholder="Min stock.."></div>
-              <div class="col-5"><input type="number" name="filter[maxStock]" class="form-control" id="filter-stock-max" placeholder="Max stock.."></div>
-            </div>
-
-          </div>
-
-          <div class="modal-footer">
-            <button type="submit" class="btn">Primjeni</button>
-          </div>
-        </form>
-
-      </div>
-    </div>
-
-
-
-    <!-- Sort Modal -->
-    <div class="modal fade" id="sort-modal" tabindex="-1">
-      <div class="modal-dialog">
-
-        <form class="modal-content" action="/admin/books" method="GET">
-          <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title">Sort by</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-
-          <div class="modal-body">
-            <div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="sortBy" id="title-asc" value="title">
-                <label class="form-check-label" for="title-asc">Naslov (Rastuce)</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="sortBy" id="title-desc" value="-title">
-                <label class="form-check-label" for="title-desc">Naslov (Opadajuce)</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="sortBy" id="copies-owned-asc" value="copiesOwned">
-                <label class="form-check-label" for="copies-owned-asc">Broj kopija (Rastuce)</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="sortBy" id="copies-owned-desc" value="-copiesOwned">
-                <label class="form-check-label" for="copies-owned-desc">Broj kopija (Opadajuce)</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="sortBy" id="stock-asc" value="stock">
-                <label class="form-check-label" for="stock-asc">Na stanju (Rastuce)</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="sortBy" id="stock-desc" value="-stock">
-                <label class="form-check-label" for="stock-desc">Na stanju (Opadajuce)</label>
-              </div>
-            </div>
-          </div>
-
-          <div class="modal-footer">
-            <button type="submit" class="btn">Primjeni</button>
-          </div>
-        </form>
-
-      </div>
-    </div>
-
-
-  </div>
-
-
+	</div>
+	
+	
 </main>
 
 <script src="../assets/js/jquery-3.6.0.min.js"></script>
 
 <script src="/../assets/js/search.js"></script>
-<script>
-  function confirmDelete(bookId) {
-    if (confirm("Are you sure you want to delete this book?")) {
-      // If the user confirms, submit the form to delete the book
-      document.getElementById(`hidden-form-${bookId}`).submit();
-    }
-  }
-</script>

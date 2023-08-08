@@ -24,7 +24,6 @@ authorResults.addEventListener('click', (e) => {
   selectedAuthorId = selectedAuthorIdAttr;
   authorResults.innerHTML = '';
 
-
   fetchBooksByAuthor(selectedAuthorName);
 });
 
@@ -39,23 +38,36 @@ bookTitleInput.addEventListener('input', async (e) => {
   bookResults.innerHTML = generateBookList(data);
 });
 
-bookResults.addEventListener('click', (e) => {
+bookResults.addEventListener('click', async (e) => {
   const selectedBookTitle = e.target.innerText.trim();
   bookTitleInput.value = selectedBookTitle;
   bookResults.innerHTML = '';
+
+  // Fetch the ISBN by book title
+  try {
+    const response = await fetch(`/admin/books/isbn/${encodeURIComponent(selectedBookTitle)}`);
+    if (response.ok) {
+      const data = await response.json();
+      const isbnInput = document.querySelector('#ISBN');
+      isbnInput.value = data.isbn; // Fill the ISBN input field
+    } else {
+      console.error('Failed to fetch ISBN');
+    }
+  } catch (err) {
+    console.error('Error fetching ISBN:', err);
+  }
 });
 
-// Daj mi listu svih autora
+// Rest of your code for generating author/book lists and fetching books by author
+
 function generateAuthorList(authors) {
   return `<ul>${authors.map(author => `<li data-author-id="${author._id}">${author.name} ${author.surname}</li>`).join('')}</ul>`;
 }
 
-// Funkcija koja generise knjige
 function generateBookList(books) {
   return `<ul>${books.map(book => `<li>${book.title}</li>`).join('')}</ul>`;
 }
 
-// funkcija koja trazi sve knjige od odredjenog autora
 async function fetchBooksByAuthor(authorName) {
   console.log('Fetching books for author:', authorName);
   try {

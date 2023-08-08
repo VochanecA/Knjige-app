@@ -11,6 +11,10 @@ const Author = require('../models/author.js');
 const Reservation  = require('../models/reservations.js');
 const nodemailer = require("nodemailer");
 const upload = require("../middleware/multer");
+const UserActivity = require('../models/UserActivity.js'); 
+const mongoosePaginate = require('mongoose-paginate');
+
+
 
 
 router.get("/admin/dashboard", middleware.ensureAdminLoggedIn, async (req, res) => {
@@ -274,7 +278,7 @@ router.delete("/admin/book/:bookId", middleware.ensureAdminLoggedIn, async (req,
 		await Book.findByIdAndDelete(bookId);
 		await Loan.deleteMany({ book: bookId });
 		await Activity.deleteMany({ book: bookId });
-		req.flash("success", "Knjiga uspjesno dodana!");
+		req.flash("success", "Knjiga uspjesno obrisana!");
 		res.redirect("/admin/books");
 	}
 	catch(err)
@@ -711,5 +715,36 @@ router.post('/admin/reservations/add', middleware.ensureAdminLoggedIn, async (re
 
 
 //kraj rezervacija
+
+router.get('/admin/books/isbn/:title', async (req, res) => {
+  try {
+    const title = req.params.title;
+    const book = await Book.findOne({ title });
+    if (!book) {
+      return res.status(404).json({ error: 'Book not found' });
+    }
+    res.json({ isbn: book.ISBN }); 
+	 console.log({ isbn: book.ISBN });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+router.get('/admin/userActivity', async (req, res) => {
+  try {
+    const pageNumber = req.query.page || 1;
+    const perPage = 10; // Number of items per page
+
+    // Fetch user activity data from the database with pagination
+    const userActivity = await UserActivity.paginate({}, { page: pageNumber, limit: perPage, sort: { loginTime: 'desc' } });
+
+    // Render the userActivity.ejs template and pass the userActivity data
+    res.render('admin/userActivity', { userActivity: userActivity.docs }); // Use userActivity.docs
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching user activity');
+  }
+});
 
 module.exports = router;

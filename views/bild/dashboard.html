@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+    <!-- Meta -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="content-language" content="en" />
+    <meta name="description" content="ICT Cortex Library - project for high school students..." />
+    <meta name="keywords" content="ict cortex, cortex, bild, bildstudio, highschool, students, coding" />
+    <meta name="author" content="bildstudio" />
+    <!-- End Meta -->
+
+    <!-- Title -->
+    <title>Dashboard | Library - ICT Cortex student project</title>
+    <link rel="shortcut icon" href="/assets/bild/img/library-favicon.ico" type="image/vnd.microsoft.icon" />
+    <!-- End Title -->
+<link rel="stylesheet" href="/assets/bild/style/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/assets/bild/style/style.css">
+<link rel="stylesheet" href="/assets/css/all.min.css" />    <!-- End Styles -->
+</head>
+
+<body class="small:bg-gradient-to-r small:from-green-400 small:to-blue-500">
+    <!-- Header -->
+    <header
+    class="z-20 small:hidden  flex items-center text-white justify-between w-full h-[71px] pr-[30px] mx-auto bg-[#4558BE]">
+    <!-- logo -->
+    <div class="logo-font inline-flex bg-[#3F51B5] py-[18px] px-[30px]">
+        <a class="_o6689fn" href="#">
+            <div class="block">
+                <a href="dashboard.html" class="text-[20px] font-medium">
+                    <div class="flex">
+                        <img src='/assets/bild/img/logo.svg' alt="" width="35px" height="35px">
+                        <p class="text-[20px] mt-[5px]">&nbsp;&nbsp;Online Biblioteka</p>
+                    </div>
+
+                </a>
+            </div>
+        </a>
+    </div>
+    <!-- end logo -->
+
+    <!-- login -->
+    <div class="flex-initial">
+        <div class="relative flex items-center justify-end">
+            <div class="flex items-center">
+                <!-- Notification Icon -->
+                <div class="relative block">
+                    <a href="dashboardAktivnost.html" class="relative inline-block px-3 py-2 focus:outline-none"
+                        aria-label="Notification">
+                        <div class="flex items-center h-5">
+                            <div class="_xpkakx">
+                                <span
+                                    class="transition duration-300 ease-in bg-[#606FC7] text-[25px] rounded-full px-[11px] py-[7px] ">
+                                    <i class="far fa-bell"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                    <span
+                        class="absolute bg-[#EF4F4C] text-[11px] font-medium text-white right-[10px] top-[-10px] pl-[4px] pr-[5px] pt-[1px] text-center">12</span>
+                </div>
+                <!-- Add Icon -->
+                <a class="inline-block border-l-[1px] border-gray-300 px-3" href="#" aria-label="Add something" id="dropdownCreate">
+                    <span
+                        class="transition duration-300 ease-in bg-[#606FC7] text-[25px] rounded-full px-[11px] py-[7px]  ">
+                        <i class="fas fa-plus"></i>
+                    </span>
+                </a>
+
+                <div
+                    class="z-10 hidden transition-all duration-300 origin-top-right transform scale-95 -translate-y-2 dropdown-create">
+                    <div class="absolute right-[12px] w-56 mt-[35px] origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"
+                        aria-labelledby="headlessui-menu-button-1" id="headlessui-menu-items-117" role="menu">
+                        <div class="py-1">
+                            <a href="noviBibliotekar.html" tabindex="0"
+                                class="flex w-full px-4 py-2 text-sm leading-5 text-left text-gray-700 outline-none hover:text-blue-600"
+                                role="menuitem">
+                                <i class="far fa-address-book mr-[8px] ml-[5px] py-1"></i>
+                                <span class="px-4 py-0">Bibliotekar</span>
+                            </a>
+                            <a href="noviUcenik.html" tabindex="0"
+                                class="flex w-full px-4 py-2 text-sm leading-5 text-left text-gray-700 outline-none hover:text-blue-600"
+                                role="menuitem">
+                                <i class="fas fa-users mr-[5px] ml-[3px] py-1"></i>
+                                <span class="px-4 py-0">Ucenik</span>
+                            </a>
+                            <a href="novaKnjiga.html" tabindex="0"
+                                class="flex w-full px-4 py-2 text-sm leading-5 text-left text-gray-700 outline-none hover:text-blue-600"
+                                role="menuitem">
+                                <i class="far fa-copy mr-[10px] ml-[5px] py-1"></i>
+                                <span class="px-4 py-0">Knjiga</span>
+                            </a>
+                            <a href="noviAutor.html" tabindex="0"
+                                class="flex w-full px-4 py-2 text-sm leading-5 text-left text-gray-700 outline-none hover:text-blue-600"
+                                role="menuitem">
+                                <i class="far fa-address-book mr-[10px] ml-[5px] py-1"></i>
+                                <span class="px-4 py-0">Autor</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Bild Studio Icon -->
+                <a href="https://www.bild-studio.com/">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ml-[20px] svg-icon svg-icon-bildstudio">
+                        <use xlink:href="#shape-bildstudio">
+                            <svg width="100" viewBox="0 0 100 18.9" id="shape-bildstudio">
+                                <g id="bildstudio-text_1_">
+                                    <path d="M13.6,4.5h3.2v14h-3.2V4.5z"></path>
+                                    <path d="M18.2,0h3.2l0,18.5h-3.2L18.2,0z"></path>
+                                    <path
+                                        d="M34.6,18.5h-3.2v-0.7c0,0-2,1-3.6,1c-3.7,0-5.3-2.1-5.3-7.4c0-5,1.8-7.2,5.8-7.2c1.1,0,3,0.3,3.1,0.4l0-4.6h3.2L34.6,18.5z    M31.4,15.2V7.4c-0.1,0-1.7-0.3-2.9-0.3c-1.9,0-2.8,1.3-2.8,4.3c0,3.4,0.9,4.3,2.6,4.4C29.6,15.8,31.4,15.2,31.4,15.2z">
+                                    </path>
+                                    <path
+                                        d="M46.6,7.6c0,0-3.4-0.4-5-0.4c-1.7,0-2.3,0.4-2.3,1.4c0,0.9,0.6,1.1,2.9,1.5c3.7,0.6,4.9,1.6,4.9,4.3c0,3.3-2.1,4.5-5.6,4.5   c-2,0-5.2-0.6-5.2-0.6l0.1-2.7c0,0,3.4,0.4,4.8,0.4c2,0,2.7-0.4,2.7-1.5c0-0.9-0.4-1.1-2.7-1.5c-3.6-0.6-5.2-1.4-5.2-4.3   c0-3.2,2.5-4.4,5.3-4.4c2,0,5.3,0.6,5.3,0.6L46.6,7.6z">
+                                    </path>
+                                    <path
+                                        d="M51.3,7.4v5.7c0,1.9,0.1,2.7,1.5,2.7c0.8,0,2.3-0.1,2.3-0.1l0.1,2.7c0,0-1.9,0.4-2.9,0.4c-3.2,0-4.2-1.2-4.2-5.3V7.4l0,0   V4.5l0,0l0-4.5l3.2,0l0,4.5H55v2.9H51.3z">
+                                    </path>
+                                    <path
+                                        d="M68.1,4.5v14h-3.2v-0.7c0,0-2.2,1-3.7,1c-4,0-4.8-2.1-4.8-7V4.5h3.2v7.3c0,3,0.2,4.1,2.3,4.1c1.2,0,3.1-0.6,3.1-0.6V4.5   H68.1z">
+                                    </path>
+                                    <path
+                                        d="M81.4,18.5h-3.2v-0.7c0,0-2,1-3.6,1c-3.7,0-5.3-2.1-5.3-7.4c0-5,1.8-7.2,5.8-7.2c1.1,0,3,0.3,3.1,0.4l0-4.6h3.2L81.4,18.5z    M78.2,15.2V7.4c-0.1,0-1.7-0.3-2.9-0.3c-1.9,0-2.8,1.3-2.8,4.3c0,3.4,0.9,4.3,2.6,4.4C76.4,15.8,78.2,15.2,78.2,15.2z">
+                                    </path>
+                                    <path d="M82.9,4.5h3.2v14h-3.2V4.5z"></path>
+                                    <path
+                                        d="M100,11.5c0,4.5-1.5,7.4-6.3,7.4c-4.8,0-6.3-2.8-6.3-7.4c0-4.5,1.6-7.3,6.3-7.3C98.4,4.2,100,7,100,11.5z M96.8,11.5   c0-2.9-0.8-4.3-3-4.3c-2.4,0-3.1,1.3-3.1,4.3c0,3,0.6,4.5,3.1,4.5C96.2,15.9,96.8,14.4,96.8,11.5z">
+                                    </path>
+                                    <circle cx="15.2" cy="1.8" r="1.8"></circle>
+                                    <circle cx="84.5" cy="1.8" r="1.8"></circle>
+                                    <path
+                                        d="M0,0.1h3.2l0,4.5c0.1,0,2-0.4,3.1-0.4c4,0,5.8,2.2,5.8,7.2c0,5.3-1.6,7.4-5.3,7.4c-1.7,0-3.6-1-3.6-1v0.7H0L0,0.1z    M6.4,15.9c1.7-0.1,2.6-1,2.6-4.4c0-3.1-0.9-4.3-2.8-4.3C5,7.1,3.4,7.4,3.2,7.4v7.9C3.2,15.2,5,15.8,6.4,15.9z">
+                                    </path>
+                                </g>
+                            </svg>
+                        </use>
+                    </svg>
+                </a>
+                <!-- User Profile Icon -->
+                <div class="ml-[10px] relative block">
+                    <a href="#" class="relative inline-block px-3 py-2 focus:outline-none" id="dropdownProfile"
+                        aria-label="User profile">
+                        <div class="flex items-center h-5">
+                            <div class="w-[40px] h-[40px] mt-[15px]">
+                                <img class="rounded-full" src="/assets/bild/img/profileExample.jpg" alt="">
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div
+                    class="z-10 hidden transition-all duration-300 origin-top-right transform scale-95 -translate-y-2 dropdown-profile">
+                    <div class="absolute right-[12px] w-56 mt-[35px] origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"
+                        aria-labelledby="headlessui-menu-button-1" id="headlessui-menu-items-117" role="menu">
+                        <div class="py-1">
+                            <a href="bibliotekarProfile.html" tabindex="0"
+                                class="flex w-full px-4 py-2 text-sm leading-5 text-left text-gray-700 outline-none hover:text-blue-600"
+                                role="menuitem">
+                                <i class="fas fa-file mr-[8px] ml-[5px] py-1"></i>
+                                <span class="px-4 py-0">Profile</span>
+                            </a>
+                            <a href="#" tabindex="0"
+                                class="flex w-full px-4 py-2 text-sm leading-5 text-left text-gray-700 outline-none hover:text-blue-600"
+                                role="menuitem">
+                                <i class="fas fa-sign-out-alt mr-[5px] ml-[5px] py-1"></i>
+                                <span class="px-4 py-0">Logout</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end login -->
+</header>    <!-- Header -->
+
+    <!-- Main content -->
+    <main class="flex flex-row small:hidden">
+        <!-- Sidebar -->
+        <nav id="sidebar"
+    class="fixed z-10 flex flex-col justify-between overflow-x-hidden overflow-y-auto bg-[#EFF3F6] sidebar nav-height">
+    <div class="">
+        <!-- Hamburger Icon -->
+        <div
+            class="cursor-pointer text-[#707070] pl-[30px] pt-[28px] pb-[27px] text-[25px] border-b-[1px] border-[#e4dfdf] ">
+            <i id="hamburger" class="hamburger-btn fas fa-bars"></i>
+        </div>
+        <div class="mt-[30px]">
+            <ul class="text-[#2D3B48] sidebar-nav">
+                <!-- Dashboard Icon -->
+                <li class="bg-[#EAEAEA] pt-[18px] pb-[14px] mb-[4px] group hover:bg-[#EAEAEA]">
+                    <div class="ml-[25px]">
+                        <span class="flex justify-between w-full fill-current whitespace-nowrap">
+                            <div class="transition duration-300 ease-in group-hover:text-[#576cdf]">
+                                <a href="dashboard.html" aria-label="Dashboard">
+                                    <i
+                                        class="text-white bg-[#3F51B5] px-[5px] pt-[4px] pb-[5px] fas fa-tachometer-alt text-[19px] rounded-[3px]"></i>
+                                    <div class="hidden sidebar-item">
+                                        <p class="inline text-[15px] ml-[15px]">Dashboard</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </span>
+                    </div>
+                </li>
+                <!-- Bibliotekari Icon -->
+                <li class="pt-[18px] pb-[14px] mb-[4px] group hover:bg-[#EAEAEA] h-[60px]">
+                    <div class="ml-[30px]">
+                        <span class="flex justify-between w-full whitespace-nowrap">
+                            <div>
+                                <a href="bibliotekari.html" aria-label="Bibliotekari">
+                                    <i
+                                        class="text-[25px] text-[#707070] far fa-address-book transition duration-300 ease-in group-hover:text-[#576cdf]"></i>
+                                    <div class="hidden sidebar-item">
+                                        <p
+                                            class=" inline text-[15px] ml-[20px] transition duration-300 ease-in group-hover:text-[#576cdf]">
+                                            Bibliotekari
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                        </span>
+                    </div>
+                </li>
+                <!-- Ucenici Icon -->
+                <li class="pt-[18px] pb-[14px] mb-[4px] group hover:bg-[#EAEAEA] h-[60px]">
+                    <div class="ml-[30px]">
+                        <span class="flex justify-between w-full whitespace-nowrap">
+                            <div>
+                                <a href="ucenik.html" aria-label="Ucenici">
+                                    <i
+                                        class="text-[18px] transition duration-300 ease-in group-hover:text-[#576cdf] text-[#707070] fas fa-users"></i>
+                                    <div class="hidden sidebar-item">
+                                        <p
+                                            class="transition duration-300 ease-in group-hover:text-[#576cdf] inline text-[15px] ml-[20px]">
+                                            Ucenici</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </span>
+                    </div>
+                </li>
+                <!-- Knjige Icon -->
+                <li class="pt-[18px] pb-[14px] mb-[4px] group hover:bg-[#EAEAEA] h-[60px]">
+                    <div class="ml-[30px]">
+                        <span class="flex justify-between w-full whitespace-nowrap">
+                            <div>
+                                <a href="evidencijaKnjiga.html" aria-label="Knjige">
+                                    <i
+                                        class="text-[25px] transition duration-300 ease-in group-hover:text-[#576cdf] text-[#707070] far fa-copy"></i>
+                                    <div class="hidden sidebar-item">
+                                        <p
+                                            class="transition duration-300 ease-in group-hover:text-[#576cdf] inline text-[15px] ml-[20px]">
+                                            Knjige</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </span>
+                    </div>
+                </li>
+                <!-- Autori Icon -->
+                <li class="pt-[18px] pb-[14px] mb-[4px] group hover:bg-[#EAEAEA] h-[60px]">
+                    <div class="ml-[30px]">
+                        <span class="flex justify-between w-full whitespace-nowrap">
+                            <div>
+                                <a href="autori.html" aria-label="Knjige">
+                                    <i
+                                        class="text-[25px] transition duration-300 ease-in group-hover:text-[#576cdf] text-[#707070] far fa-address-book"></i>
+                                    <div class="hidden sidebar-item">
+                                        <p
+                                            class="transition duration-300 ease-in group-hover:text-[#576cdf] inline text-[15px] ml-[20px]">
+                                            Autori</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </span>
+                    </div>
+                </li>
+                <!-- Izdavanje Icon -->
+                <li class="pt-[18px] pb-[14px] mb-[4px] group hover:bg-[#EAEAEA] h-[60px]">
+                    <div class="ml-[30px]">
+                        <span class="flex justify-between w-full whitespace-nowrap">
+                            <div>
+                                <a href="izdateKnjige.html" aria-label="Knjige">
+                                    <i
+                                        class="text-[22px] transition duration-300 ease-in group-hover:text-[#576cdf] text-[#707070] fas fa-exchange-alt"></i>
+                                    <div class="hidden sidebar-item">
+                                        <p
+                                            class="transition duration-300 ease-in group-hover:text-[#576cdf] inline text-[15px] ml-[20px]">
+                                            Izdavanje
+                                            knjiga
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                        </span>
+                    </div>
+                </li>
+                <!-- Expand menu example -->
+                <li class="pt-[18px] pb-[14px] mb-[4px] group hover:bg-[#EAEAEA]">
+                    <div class="mx-[30px]">
+                        <span class="flex justify-between w-full whitespace-nowrap">
+                            <div>
+                                <a href="#" aria-label="Dashboard">
+                                    <i
+                                        class="transition duration-300 ease-in group-hover:text-[#576cdf] text-[25px] text-[#707070] fas fa-expand"></i>
+                                    <div class="hidden sidebar-item">
+                                        <p
+                                            class="transition duration-300 ease-in group-hover:text-[#576cdf] inline text-[15px] ml-[20px]">
+                                            Expand example</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div id="item-collapse_1"
+                                class="asideArrow hidden sidebar-item transition duration-300 ease-in hover:text-[#576cdf] cursor-pointer">
+                                <i id="arrow-collapse_1" class="inline arrow fas fa-angle-right"></i>
+                            </div>
+                        </span>
+                    </div>
+                </li>
+                <!-- Expand menu - items -->
+                <ul id="aside-item_1"
+                    class="aside-item hidden pl-[70px] mt-[5px] pt-[8px] pb-[10px] text-[#778089] text-[14px]">
+                    <li class="mb-[4px] py-[6px]">
+                        <div class="transition duration-300 ease-in hover:text-[#2d3b48]">
+                            <a href="#" aria-label="Dashboard">
+                                <div class="hidden sidebar-item">
+                                    <p class="inline">Basic expand</p>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                    <li class="mb-[4px] py-[6px]">
+                        <div class="transition duration-300 ease-in hover:text-[#2d3b48]">
+                            <a href="#" aria-label="Dashboard">
+                                <div class="hidden sidebar-item">
+                                    <p class="inline">Basic expand</p>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                    <li class="mb-[4px] py-[6px]">
+                        <div class="transition duration-300 ease-in hover:text-[#2d3b48]">
+                            <a href="#" aria-label="Dashboard">
+                                <div class="hidden sidebar-item">
+                                    <p class="inline">Basic expand</p>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </ul>
+        </div>
+    </div>
+    <div class="sidebar-nav py-[10px] border-t-[1px] border-[#e4dfdf] pt-[23px] pb-[29px]  group hover:bg-[#EFF3F6]">
+        <!-- Settings Icon -->
+        <a href="settingsPolisa.html" aria-label="Settngs" class="ml-[30px]">
+            <span class="whitespace-nowrap">
+                <i
+                    class="transition duration-300 ease-in group-hover:text-[#576cdf] text-[22px] text-[#707070] fas fa-cog"></i>
+                <div class="hidden sidebar-item">
+                    <p class="transition duration-300 ease-in group-hover:text-[#576cdf] inline text-[15px] ml-[20px]">
+                        Settings</p>
+                </div>
+            </span>
+        </a>
+    </div>
+</nav>        <!-- End Sidebar -->
+
+        <!-- Content -->
+        <section class="w-screen h-screen pl-[80px] py-4 text-gray-700">
+            <!-- Heading of content -->
+            <div class="heading mt-[7px]">
+                <h1 class="pl-[30px] pb-[21px]  border-b-[1px] border-[#e4dfdf] ">
+                    Dashboard
+                </h1>
+            </div>
+            <!-- Space for content -->
+            <div class="pl-[30px] scroll height-dashboard overflow-auto mt-[20px] pb-[30px]">
+                <div class="flex flex-row justify-between">
+                    <div class="mr-[30px]">
+                        <h3 class="uppercase mb-[20px]">Aktivnosti</h3>
+                        <!-- Activity Cards -->
+                        <div class="activity-card flex flex-row mb-[30px]">
+                            <div class="w-[60px] h-[60px]">
+                                <img class="rounded-full" src="/assets/bild/img/profileStudent.jpg" alt="">
+                            </div>
+                            <div class="ml-[15px] mt-[5px] flex flex-col">
+                                <div class="text-gray-500 mb-[5px]">
+                                    <p class="uppercase">
+                                        Izdavanje knjige
+                                        <span class="inline lowercase">
+                                            - 4 days ago
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="">
+                                    <p>
+                                        <a href="bibliotekarProfile.html" class="text-[#2196f3] hover:text-blue-600">
+                                            Valentina K.
+                                        </a>
+                                        je izdala knjigu <span class="font-medium">Tom Sojer </span>
+                                        <a href="ucenikProfile.html" class="text-[#2196f3] hover:text-blue-600">
+                                            Peru Perovicu
+                                        </a>
+                                        dana <span class="font-medium">21.02.2021.</span>
+                                        <a href="izdavanjeDetalji.html" class="text-[#2196f3] hover:text-blue-600">
+                                            pogledaj detaljnije >>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-card flex flex-row mb-[30px]">
+                            <div class="w-[60px] h-[60px]">
+                                <img class="rounded-full" src="/assets/bild/img/profileExample.jpg" alt="">
+                            </div>
+                            <div class="ml-[15px] mt-[5px] flex flex-col">
+                                <div class="text-gray-500 mb-[5px]">
+                                    <p class="uppercase">
+                                        Izdavanje knjige
+                                        <span class="inline lowercase">
+                                            - 4 mounths ago
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="">
+                                    <p>
+                                        <a href="bibliotekarProfile.html" class="text-[#2196f3] hover:text-blue-600">
+                                            Valentina K.
+                                        </a>
+                                        je izdala knjigu <span class="font-medium">Robinson Kruso</span>
+                                        <a href="ucenikProfile.html" class="text-[#2196f3] hover:text-blue-600">
+                                            Petru Njegosu
+                                        </a>
+                                        dana <span class="font-medium">12.03.2020.</span>
+                                        <a href="izdavanjeDetalji.html" class="text-[#2196f3] hover:text-blue-600">
+                                            pogledaj detaljnije >>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-card flex flex-row mb-[30px]">
+                            <div class="w-[60px] h-[60px]">
+                                <img class="rounded-full" src="/assets/bild/img/profileStudent.jpg" alt="">
+                            </div>
+                            <div class="ml-[15px] mt-[5px] flex flex-col">
+                                <div class="text-gray-500 mb-[5px]">
+                                    <p class="uppercase">
+                                        Izdavanje knjige
+                                        <span class="inline lowercase">
+                                            - 4 days ago
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="">
+                                    <p>
+                                        <a href="bibliotekarProfile.html" class="text-[#2196f3] hover:text-blue-600">
+                                            Valentina K.
+                                        </a>
+                                        je izdala knjigu <span class="font-medium">Tom Sojer </span>
+                                        <a href="ucenikProfile.html" class="text-[#2196f3] hover:text-blue-600">
+                                            Peru Perovicu
+                                        </a>
+                                        dana <span class="font-medium">21.02.2021.</span>
+                                        <a href="izdavanjeDetalji.html" class="text-[#2196f3] hover:text-blue-600">
+                                            pogledaj detaljnije >>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-card flex flex-row mb-[30px]">
+                            <div class="w-[60px] h-[60px]">
+                                <img class="rounded-full" src="/assets/bild/img/profileExample.jpg" alt="">
+                            </div>
+                            <div class="ml-[15px] mt-[5px] flex flex-col">
+                                <div class="text-gray-500 mb-[5px]">
+                                    <p class="uppercase">
+                                        Izdavanje knjige
+                                        <span class="inline lowercase">
+                                            - 4 mounths ago
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="">
+                                    <p>
+                                        <a href="bibliotekarProfile.html" class="text-[#2196f3] hover:text-blue-600">
+                                            Valentina K.
+                                        </a>
+                                        je izdala knjigu <span class="font-medium">Robinson Kruso</span>
+                                        <a href="ucenikProfile.html" class="text-[#2196f3] hover:text-blue-600">
+                                            Petru Njegosu
+                                        </a>
+                                        dana <span class="font-medium">12.03.2020.</span>
+                                        <a href="izdavanjeDetalji.html" class="text-[#2196f3] hover:text-blue-600">
+                                            pogledaj detaljnije >>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-card flex flex-row mb-[30px]">
+                            <div class="w-[60px] h-[60px]">
+                                <img class="rounded-full" src="/assets/bild/img/profileStudent.jpg" alt="">
+                            </div>
+                            <div class="ml-[15px] mt-[5px] flex flex-col">
+                                <div class="text-gray-500 mb-[5px]">
+                                    <p class="uppercase">
+                                        Izdavanje knjige
+                                        <span class="inline lowercase">
+                                            - 4 days ago
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="">
+                                    <p>
+                                        <a href="bibliotekarProfile.html" class="text-[#2196f3] hover:text-blue-600">
+                                            Valentina K.
+                                        </a>
+                                        je izdala knjigu <span class="font-medium">Tom Sojer </span>
+                                        <a href="ucenikProfile.html" class="text-[#2196f3] hover:text-blue-600">
+                                            Peru Perovicu
+                                        </a>
+                                        dana <span class="font-medium">21.02.2021.</span>
+                                        <a href="izdavanjeDetalji.html" class="text-[#2196f3] hover:text-blue-600">
+                                            pogledaj detaljnije >>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-card flex flex-row mb-[30px]">
+                            <div class="w-[60px] h-[60px]">
+                                <img class="rounded-full" src="/assets/bild/img/profileExample.jpg" alt="">
+                            </div>
+                            <div class="ml-[15px] mt-[5px] flex flex-col">
+                                <div class="text-gray-500 mb-[5px]">
+                                    <p class="uppercase">
+                                        Izdavanje knjige
+                                        <span class="inline lowercase">
+                                            - 4 mounths ago
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="">
+                                    <p>
+                                        <a href="bibliotekarProfile.html" class="text-[#2196f3] hover:text-blue-600">
+                                            Valentina K.
+                                        </a>
+                                        je izdala knjigu <span class="font-medium">Robinson Kruso</span>
+                                        <a href="ucenikProfile.html" class="text-[#2196f3] hover:text-blue-600">
+                                            Petru Njegosu
+                                        </a>
+                                        dana <span class="font-medium">12.03.2020.</span>
+                                        <a href="izdavanjeDetalji.html" class="text-[#2196f3] hover:text-blue-600">
+                                            pogledaj detaljnije >>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-card flex flex-row mb-[30px]">
+                            <div class="w-[60px] h-[60px]">
+                                <img class="rounded-full" src="/assets/bild/img/profileStudent.jpg" alt="">
+                            </div>
+                            <div class="ml-[15px] mt-[5px] flex flex-col">
+                                <div class="text-gray-500 mb-[5px]">
+                                    <p class="uppercase">
+                                        Izdavanje knjige
+                                        <span class="inline lowercase">
+                                            - 4 days ago
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="">
+                                    <p>
+                                        <a href="bibliotekarProfile.html" class="text-[#2196f3] hover:text-blue-600">
+                                            Valentina K.
+                                        </a>
+                                        je izdala knjigu <span class="font-medium">Tom Sojer </span>
+                                        <a href="ucenikProfile.html" class="text-[#2196f3] hover:text-blue-600">
+                                            Peru Perovicu
+                                        </a>
+                                        dana <span class="font-medium">21.02.2021.</span>
+                                        <a href="izdavanjeDetalji.html" class="text-[#2196f3] hover:text-blue-600">
+                                            pogledaj detaljnije >>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-card flex flex-row mb-[30px]">
+                            <div class="w-[60px] h-[60px]">
+                                <img class="rounded-full" src="/assets/bild/img/profileExample.jpg" alt="">
+                            </div>
+                            <div class="ml-[15px] mt-[5px] flex flex-col">
+                                <div class="text-gray-500 mb-[5px]">
+                                    <p class="uppercase">
+                                        Izdavanje knjige
+                                        <span class="inline lowercase">
+                                            - 4 mounths ago
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="">
+                                    <p>
+                                        <a href="bibliotekarProfile.html" class="text-[#2196f3] hover:text-blue-600">
+                                            Valentina K.
+                                        </a>
+                                        je izdala knjigu <span class="font-medium">Robinson Kruso</span>
+                                        <a href="ucenikProfile.html" class="text-[#2196f3] hover:text-blue-600">
+                                            Petru Njegosu
+                                        </a>
+                                        dana <span class="font-medium">12.03.2020.</span>
+                                        <a href="izdavanjeDetalji.html" class="text-[#2196f3] hover:text-blue-600">
+                                            pogledaj detaljnije >>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-card flex flex-row mb-[30px]">
+                            <div class="w-[60px] h-[60px]">
+                                <img class="rounded-full" src="/assets/bild/img/profileStudent.jpg" alt="">
+                            </div>
+                            <div class="ml-[15px] mt-[5px] flex flex-col">
+                                <div class="text-gray-500 mb-[5px]">
+                                    <p class="uppercase">
+                                        Izdavanje knjige
+                                        <span class="inline lowercase">
+                                            - 4 days ago
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="">
+                                    <p>
+                                        <a href="bibliotekarProfile.html" class="text-[#2196f3] hover:text-blue-600">
+                                            Valentina K.
+                                        </a>
+                                        je izdala knjigu <span class="font-medium">Tom Sojer </span>
+                                        <a href="ucenikProfile.html" class="text-[#2196f3] hover:text-blue-600">
+                                            Peru Perovicu
+                                        </a>
+                                        dana <span class="font-medium">21.02.2021.</span>
+                                        <a href="izdavanjeDetalji.html" class="text-[#2196f3] hover:text-blue-600">
+                                            pogledaj detaljnije >>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-card flex flex-row mb-[30px]">
+                            <div class="w-[60px] h-[60px]">
+                                <img class="rounded-full" src="/assets/bild/img/profileExample.jpg" alt="">
+                            </div>
+                            <div class="ml-[15px] mt-[5px] flex flex-col">
+                                <div class="text-gray-500 mb-[5px]">
+                                    <p class="uppercase">
+                                        Izdavanje knjige
+                                        <span class="inline lowercase">
+                                            - 4 mounths ago
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="">
+                                    <p>
+                                        <a href="bibliotekarProfile.html" class="text-[#2196f3] hover:text-blue-600">
+                                            Valentina K.
+                                        </a>
+                                        je izdala knjigu <span class="font-medium">Robinson Kruso</span>
+                                        <a href="ucenikProfile.html" class="text-[#2196f3] hover:text-blue-600">
+                                            Petru Njegosu
+                                        </a>
+                                        dana <span class="font-medium">12.03.2020.</span>
+                                        <a href="izdavanjeDetalji.html" class="text-[#2196f3] hover:text-blue-600">
+                                            pogledaj detaljnije >>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="inline-block w-full mt-4">
+                            <a href="dashboardAktivnost.html" 
+                                class="btn-animation block text-center w-full px-4 py-2 text-sm tracking-wider text-gray-600 transition duration-300 ease-in border-[1px] border-gray-400 rounded hover:bg-gray-200 focus:outline-none focus:ring-[1px] focus:ring-gray-300">
+                                Show
+                            </a>
+                        </div>
+                    </div>
+                    <div class="mr-[50px] ">
+                        <h3 class="uppercase mb-[20px] text-left">
+                            Rezervacije knjiga
+                        </h3>
+                        <div>
+                            <table class="w-[560px] table-auto">
+                                <tbody class="bg-gray-200">
+                                    <tr class="bg-white border-b-[1px] border-[#e4dfdf]">
+                                        <td class="flex flex-row items-center px-2 py-4">
+                                            <img class="object-cover w-8 h-8 rounded-full "
+                                                src="/assets/bild/img/profileStudent.jpg" alt="" />
+                                            <a href="ucenikProfile.html" class="ml-2 font-medium text-center">Pero Perovic</a>
+                                        <td>
+                                        </td>
+                                        <td class="px-2 py-2">
+                                            <a href="knjigaOsnovniDetalji.html">
+                                            Ep o Gilgamesu
+                                            </a>
+                                        </td>
+                                        <td class="px-2 py-2">
+                                            <span class="px-[10px] py-[3px] bg-gray-200 text-gray-800 px-[6px] py-[2px] rounded-[10px]">05.11.2020</span>
+                                        </td>
+                                        <td class="px-2 py-2">
+                                            <a href="#" class="hover:text-green-500 mr-[5px]">
+                                                <i class="fas fa-check"></i>
+                                            </a>
+                                            <a href="#" class="hover:text-red-500 ">
+                                                <i class="fas fa-times"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-white border-b-[1px] border-[#e4dfdf]">
+                                        <td class="flex flex-row items-center px-2 py-4">
+                                            <img class="object-cover w-8 h-8 rounded-full "
+                                            src="/assets/bild/img/profileStudent.jpg" alt="" />
+                                            <a href="ucenikProfile.html" class="ml-2 font-medium text-center">Pero Perovic</a>
+                                        <td>
+                                        </td>
+                                        <td class="px-2 py-2">
+                                            <a href="knjigaOsnovniDetalji.html">
+                                                Tom Sojer
+                                            </a>
+                                        </td>
+                                        <td class="px-2 py-2">
+                                            <span class="px-[10px] py-[3px] bg-gray-200 text-gray-800 px-[6px] py-[2px] rounded-[10px]">31.04.2019</span>
+                                        </td>
+                                        <td class="px-2 py-2">
+                                            <a href="#" class="hover:text-green-500 mr-[5px]">
+                                                <i class="fas fa-check"></i>
+                                            </a>
+                                            <a href="#" class="hover:text-red-500 ">
+                                                <i class="fas fa-times"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-white border-b-[1px] border-[#e4dfdf]">
+                                        <td class="flex flex-row items-center px-2 py-4">
+                                            <img class="object-cover w-8 h-8 rounded-full "
+                                            src="/assets/bild/img/profileStudent.jpg" alt="" />
+                                            <a href="ucenikProfile.html" class="ml-2 font-medium text-center">Pero Perovic</a>
+                                        <td>
+                                        </td>
+                                        <td class="px-2 py-2">
+                                            <a href="knjigaOsnovniDetalji.html">
+                                                Ilijada
+                                            </a>
+                                        </td>
+                                        <td class="px-2 py-2">
+                                            <span class="px-[10px] py-[3px] bg-gray-200 text-gray-800 px-[6px] py-[2px] rounded-[10px]">05.11.2020</span>
+                                        </td>
+                                        <td class="px-2 py-2">
+                                            <a href="#" class="hover:text-green-500 mr-[5px]">
+                                                <i class="fas fa-check"></i>
+                                            </a>
+                                            <a href="#" class="hover:text-red-500 ">
+                                                <i class="fas fa-times"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-white border-b-[1px] border-[#e4dfdf]">
+                                        <td class="flex flex-row items-center px-2 py-4">
+                                            <img class="object-cover w-8 h-8 rounded-full "
+                                            src="/assets/bild/img/profileStudent.jpg" alt="" />
+                                            <a href="ucenikProfile.html" class="ml-2 font-medium text-center">Pero Perovic</a>
+                                        <td>
+                                        </td>
+                                        <td class="px-2 py-2">
+                                            <a href="knjigaOsnovniDetalji.html">
+                                                Tom Sojer
+                                            </a>          
+                                        </td>
+                                        <td class="px-2 py-2">
+                                            <span class="px-[10px] py-[3px] bg-gray-200 text-gray-800 px-[6px] py-[2px] rounded-[10px]">31.02.2021</span>
+                                        </td>
+                                        <td class="px-2 py-2">
+                                            <a href="#" class="hover:text-green-500 mr-[5px]">
+                                                <i class="fas fa-check"></i>
+                                            </a>
+                                            <a href="#" class="hover:text-red-500 ">
+                                                <i class="fas fa-times"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="text-right mt-[5px]">
+                                <a href="aktivneRezervacije.html" class="text-[#2196f3] hover:text-blue-600">
+                                    <i class="fas fa-calendar-alt mr-[4px]" aria-hidden="true"></i>
+                                    Prikazi sve
+                                </a>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <h3 class="uppercase mb-[20px] text-left py-[30px]">
+                                Statistika
+                            </h3>
+                            <div class="text-right">
+                                <div class="flex pb-[30px]">
+                                    <a class="w-[145px] text-[#2196f3] hover:text-blue-600" href="izdateKnjige.html">
+                                        Izdate knjige
+                                    </a>
+                                    <div class="ml-[30px] bg-green-600 transition duration-200 ease-in  hover:bg-green-900 stats-bar-green h-[26px]">
+                                    
+                                    </div>
+                                    <p class="ml-[10px] number-green text-[#2196f3] hover:text-blue-600">
+                                        73
+                                    </p>
+                                </div>
+                                <div class="flex pb-[30px]">
+                                    <a class="w-[145px] text-[#2196f3] hover:text-blue-600" href="aktivneRezervacije.html">
+                                        Rezervisane knjige
+                                    </a>
+                                    <div class="ml-[30px] bg-yellow-600 transition duration-200 ease-in  hover:bg-yellow-900 stats-bar-yellow  h-[26px]">
+                                    
+                                    </div>
+                                    <p class="ml-[10px] text-[#2196f3] hover:text-blue-600 number-yellow">
+                                        44
+                                    </p>
+                                </div>
+                                <div class="flex pb-[30px]">
+                                    <a class="w-[145px] text-[#2196f3] hover:text-blue-600" href="knjigePrekoracenje.html">
+                                        Knjige u prekoracenju
+                                    </a>
+                                    <div class="ml-[30px] bg-red-600 transition duration-200 ease-in hover:bg-red-900 stats-bar-red h-[26px]">
+                                    
+                                    </div>
+                                    <p class="ml-[10px] text-[#2196f3] hover:text-blue-600 number-red">
+                                        25
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="absolute h-[220px] w-[1px] bg-black top-[78px] left-[174px]">
+                            </div>
+                            <div class="absolute flex conte left-[175px] border-t-[1px] border-[#e4dfdf] top-[248px] pr-[87px]">
+                                <p class="ml-[-13px]">
+                                    0
+                                </p>
+                                <p class="ml-[57px]">
+                                    20
+                                </p>
+                                <p class="ml-[57px]">
+                                    40
+                                </p>
+                                <p class="ml-[57px]">
+                                    60
+                                </p>
+                                <p class="ml-[57px]">
+                                    80
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- End Content -->
+    </main>
+    <!-- End Main content -->
+
+    <!-- Notification for small devices -->
+    <!-- Notification for small devices -->
+<div class="py-[20px] hidden small:block bg-gradient-to-r  from-red-500 mt-[100px]">
+    <h1 class="text-[40px] font-medium text-center text-white">
+        Trenutno nedostupno...
+    </h1>
+    <p class="text-[17px] text-white text-center">
+        Molimo Vas da koristite vecu rezoluciju.
+    </p>
+</div>
+
+    <!-- Scripts -->
+    <script src="/assets/bild/js/jquery.min.js" defer=""></script>
+<script src="/assets/bild/js/app.js" defer=""></script>
+<script src="/assets/bild/js/ckeditor.js"></script>
+
+<!-- File upload -->
+<script src="/assets/bild/js/alpine.min.js" defer></script>
+<script src="https://unpkg.com/create-file-list"></script>    
+
+</body>
+
+
+</html>

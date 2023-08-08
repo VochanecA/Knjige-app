@@ -6,14 +6,31 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="theme-color" content="#3b5998">
-	<!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'"> -->
+
 	<link rel="shortcut icon" href="/assets/images/library-favicon.ico" type="image/vnd.microsoft.icon">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
 		integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
 		crossorigin="anonymous" referrerpolicy="no-referrer" />
+			<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css">
 	<link rel="stylesheet" href="/assets/css/bootstrap.min.css"
-		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-	<link rel="stylesheet" href="/assets/css/style.css">
+		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"/>
+	 <link rel="stylesheet" href="/assets/css/style.css">
+		<link rel="stylesheet" href="/assets/css/dash-css.css">
+		<script src="/assets/js/bootstrap.bundle.min.js"
+
+		    <title>Dashboard | Library - ICT Cortex student project</title>
+
+
+    <!-- End Title -->
+<link rel="stylesheet" href="/assets/bild/style/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+
+</head>
+					integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+					crossorigin="anonymous"></script>
+				<script type="text/javascript" src="/assets/js/script.js" nonce="<%= nonce %>" defer</script>
+				<script src="/assets/js/bookDetails.js" nonce="<%= nonce %>"></script>
 
 	<link rel="stylesheet" href="/assets/css/sidebar.css">
 	<script type="text/javascript" src="/assets/js/chart.js" nonce="<%= nonce %>"></script>
@@ -21,9 +38,7 @@
 		const inline = 1;
 		console.log(inline);
 	  </script> -->
-	<title>
-		<%= typeof title !='undefined' ? title : "Library" %>
-	</title>
+
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
@@ -40,12 +55,5 @@
 	<%- include('partials/header') %>
 		<%- include('partials/alerts') %>
 			<%- body %>
-
-				<script src="/assets/js/bootstrap.bundle.min.js"
-					integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-					crossorigin="anonymous"></script>
-				<script type="text/javascript" src="/assets/js/script.js"></script>
-				<script src="/assets/js/bookDetails.js" nonce="<%= nonce %>"></script>
-</body>
-
+			</body>
 </html>

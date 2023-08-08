@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/user.js");
 const passport = require("passport");
 const middleware = require("../middleware/index.js")
+const UserActivity = require('../models/UserActivity.js'); 
 
 
 router.get("/auth/admin-signup", middleware.ensureNotLoggedIn, (req,res) => {
@@ -68,14 +69,39 @@ router.get("/auth/admin-login", middleware.ensureNotLoggedIn, (req,res) => {
 	});
 });
 
-router.post("/auth/admin-login", middleware.ensureNotLoggedIn, (req,res,next) => {
-	passport.authenticate('local-admin', {
-		successRedirect: req.session.returnTo || "/admin/dashboard",
-		failureRedirect: "/auth/admin-login",
-		successFlash: true,
-		failureFlash: true
-	})(req, res, next);
+router.post('/auth/admin-login', middleware.ensureNotLoggedIn, (req, res, next) => {
+  passport.authenticate('local-admin', (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+
+    if (!user) {
+      // Authentication failed, redirect to login page
+      return res.redirect('/auth/admin-login');
+    }
+
+    // Log the user in
+    req.login(user, async (err) => {
+      if (err) {
+        return next(err);
+      }
+
+      // Create a new entry in UserActivity for admin login
+      await UserActivity.create({ userId: user._id, loginTime: new Date(), logoutTime: null });
+
+      // Set session start time
+      req.session.sessionStartTime = new Date().getTime();
+
+      // Pass sessionStartTime as a local variable to the template
+      res.locals.sessionStartTime = req.session.sessionStartTime;
+
+      // Redirect to the appropriate page
+      return res.redirect(req.session.returnTo || '/admin/dashboard');
+    });
+  })(req, res, next);
 });
+
+
 
 router.get("/auth/admin-logout", middleware.ensureAdminLoggedIn, (req,res) => {
 	req.logout();
@@ -159,6 +185,20 @@ router.get("/auth/student-logout", middleware.ensureStudentLoggedIn, (req,res) =
 	req.logout();
 	req.flash("success", "Log out je uspjesan")
 	res.redirect("/");
+});
+
+router.get('/auth/userActivity', async (req, res) => {
+  try {
+    // Fetch user activity data from the database
+    const userActivity = await UserActivity.find();
+
+    // Render the userActivity.ejs template and pass the userActivity data
+    res.render('/admin/userActivity', { userActivity });
+  } catch (error) {
+    console.error(error);
+    // Handle errors and render an error page
+    res.render('error', { error });
+  }
 });
 
 module.exports = router;
