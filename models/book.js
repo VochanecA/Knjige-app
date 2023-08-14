@@ -76,7 +76,13 @@ const bookSchema = new mongoose.Schema({
     enum: availableBindings, // Only allows values from the availableBindings array
     default: "Tvrdi ili futrolni povez", // Default binding type
   },
+  status: {
+    type: String,
+    enum: ["active", "written-off"], // Enum for status
+    default: "active", // Default status
+  },
 });
 
 const Book = mongoose.model("books", bookSchema);
 module.exports = Book;
+

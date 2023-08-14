@@ -1,0 +1,25 @@
+<main>
+    <%- include('../partials/adminSidebar') %>
+  
+    <div id="main-wrapper">
+        <form action="/admin/settings/update/<%= setting._id %>" method="POST" class="w-75 border m-auto my-5 bg-white rounded-2">
+            <h5 class="text-center bg-primary text-white form-title">Edit Settings</h5>
+            <div class="form-body p-4">
+                <div class="mb-3">
+                    <label for="reservationExpiry" class="form-label">Rezervacija istice (dana):</label>
+                    <input type="number" name="reservationExpiry" class="form-control" id="reservationExpiry" value="<%= setting.reservationExpiry %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="returnDeadline" class="form-label">Rok za povrat knjige (dana):</label>
+                    <input type="number" name="returnDeadline" class="form-control" id="returnDeadline" value="<%= setting.returnDeadline %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="conflictDeadline" class="form-label">Konflikt krajnji rok (dana):</label>
+                    <input type="number" name="conflictDeadline" class="form-control" id="conflictDeadline" value="<%= setting.conflictDeadline %>" required>
+                </div>
+                <button type="submit" class="btn btn-success w-75 d-block m-auto mt-4">Update Settings</button>
+                <a href="/admin/settings" class="btn btn-secondary w-75 d-block m-auto mt-4">Cancel</a>
+            </div>
+        </form>
+    </div>
+</main>

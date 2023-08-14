@@ -1,15 +1,15 @@
+
 <main>
     <%- include('../partials/adminSidebar') %>
-	
+  
     <div id="main-wrapper">
-		
-        <div class="bg-white p-3">
-            <h5 class="m-0 fw-bold color-theme" style="font-size: 16px; ">Aktivnosti</h5>
-        </div>
-		
-        <div class="container mt-4 max-w-4xl">
-            <table class="table table-striped rounded-lg" style="font-size: 16px; border-collapse: separate; border-spacing: 0 2px;">
 
+        <div class="bg-white p-3">
+            <h5 class="m-0 fw-bold color-theme" style="font-size: 16px;">Aktivnosti</h5>
+        </div>
+
+        <div class="container mt-4 max-w-4xl">
+            <table id="activitiesTable"  class="table table-striped row-border" style="width:100%">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -19,54 +19,60 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% for(let i=0; i<activities.length; i++) { %>
+                    <% for (let i = 0; i < activities.length; i++) { %>
                         <tr>
-                            <th scope="row"> <%= i+1 %> </th>
-                            <td> 
-                                <% if(activities[i].category == "izdaj") { %> 
+                            <th scope="row"> <%= i + 1 %> </th>
+                            <td>
+                                <% if (activities[i].category == "izdaj") { %>
                                     Izdata/Pozajmljena
-                                <% } else if(activities[i].category == "vrati") { %> 
-                                    Povrat knjige 
-                                <% } else if(activities[i].category == "dodajknjigu") { %> 
-                                    Dodaj Knjigu 
-                                <% } else if(activities[i].category == "updateknjigu") { %> 
-                                    Update-uj knjigu 
-                                <% } else if(activities[i].category == "updateAdminProfile") { %> 
-                                    Update-uj Administratora 
-                                <% } else if(activities[i].category == "updateStudentProfile") { %> 
-                                    Update-uj korisnika 
-                                <% } %> 
+                                <% } else if (activities[i].category == "vrati") { %>
+                                    Povrat knjige
+                                <% } else if (activities[i].category == "dodajknjigu") { %>
+                                    Dodaj Knjigu
+                                <% } else if (activities[i].category == "updateknjigu") { %>
+                                    Update-uj knjigu
+                                <% } else if (activities[i].category == "updateAdminProfile") { %>
+                                    Update-uj Administratora
+                                <% } else if (activities[i].category == "updateStudentProfile") { %>
+                                    Update-uj korisnika
+                                <% } %>
                             </td>
                             <td>
                                 <% if (activities[i].korisnik) { %>
-                                    <span class="activity-item"><%= activities[i].korisnik.firstName %></span>
+                                    <div class="activity-user">
+                                        <div class="user-photo" style="width: 30px; height: 30px; border-radius: 50%; overflow: hidden; border: 1px solid #ccc; margin-right: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);">
+                                            <img src="<%= userPhoto %>" alt="Korisnicka fotografija" style="width: 100%; height: 100%; object-fit: cover;">
+                                        </div>
+                                        <div class="user-info">
+                                            <span class="activity-item"><%= activities[i].korisnik.firstName %></span>
+                                        </div>
+                                    </div>
                                 <% } %>
-                                <% if(activities[i].category == "izdaj" || activities[i].category == "vrati") { %>
+                                <% if (activities[i].category == "izdaj" || activities[i].category == "vrati") { %>
                                     <span>Pozajmnljena knjiga</span>
-                                <% } else if(activities[i].category == "dodajknjigu" || activities[i].category == "updateknjigu") { %>
+                                <% } else if (activities[i].category == "dodajknjigu" || activities[i].category == "updateknjigu") { %>
                                     <span>Dodate knjige</span>
-                                <% } else if(activities[i].category == "updateAdminProfile") { %>
-                                    <span>updated-ovan njen/njegov profil</span>
-                                <% } else if(activities[i].category == "updateStudentProfile") { %>
-                                    <span>updated-ovan njen/njegov profil</span>
-                                <% } %>
-                                <% if (activities[i].book) { %>
-                                    <span class="activity-item"><a href="/admin/book/<%= activities[i].book.id %>"><%= activities[i].book.title %></a></span>
-                                <% } %>
-                                <% if(activities[i].category == "izdaj" || activities[i].category == "vrati") { %>
-                                    <span>od</span>
-                                    <span class="activity-item"><%= activities[i].admin.firstName %></span>
-                                <% } else if(activities[i].category == "dodajknjigu" || activities[i].category == "updateknjigu") { %>
-                                    <span class="activity-item"><%= activities[i].admin.firstName %></span>
+                                <% } else if (activities[i].category == "updateAdminProfile" || activities[i].category == "updateStudentProfile") { %>
+                                    <div class="activity-user">
+                                        <div class="user-photo" style="width: 30px; height: 30px; border-radius: 50%; overflow: hidden; border: 1px solid #ccc; margin-right: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);">
+                                            <img src="<%= userPhoto %>" alt="Korisnicka fotografija" style="width: 100%; height: 100%; object-fit: cover;">
+                                        </div>
+                                        <div class="user-info">
+                                            <span class="activity-item"><%= userName %></span>
+                                        </div>
+                                    </div>
+                                    <span class="activity-text">updated-ovan njen/njegov profil</span>
                                 <% } %>
                             </td>
-                            <td> <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
+                            <td>
+                                <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }) %>
+                            </td>
                         </tr>
                     <% } %>
                 </tbody>
             </table>
         </div>
-		
+
     </div>
-	
+
 </main>

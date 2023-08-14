@@ -1,0 +1,45 @@
+<main>
+	<%- include('../partials/adminSidebar') %>
+	
+	<div id="main-wrapper">
+      <h1>Otpiši knjige</h1>
+      <% if (books.length === 0) { %>
+        <p>Nema knjiga koje se za otpis.</p>
+      <% } else { %>
+      <form action="/admin/books/write-off" method="POST" class="w-75 border m-auto my-5 bg-white rounded-2">
+        <h5 class="text-center bg-primary text-white form-title">Otpisi knjige</h5>
+        
+        <div class="form-body p-4">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Selektuj</th>
+                <th>Naslov knjige</th>
+                <th>ISBN</th>
+                <!-- dodaj ako treba ubuduce -->
+              </tr>
+            </thead>
+            <tbody>
+              <% books.forEach(book => { %>
+                <tr>
+                  <td>
+                    <input type="checkbox" name="bookIds" value="<%= book._id %>">
+                  </td>
+                  <td><%= book.title %></td>
+                  <td><%= book.ISBN %></td>
+                  <!-- dodaj jos ako treba-->
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+          
+          <button type="submit" class="btn btn-success" id="write-off-btn" disabled>Otpisi selektovanu</button>
+          <button type="button" class="btn btn-danger" id="cancel-btn">Otkazi</button>
+        </div>
+      </form>
+
+      <% } %>
+    </div>
+  </main>
+  
+  <script src="/assets/js/writeOffBooks.js"></script>

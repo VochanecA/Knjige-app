@@ -1,0 +1,25 @@
+<main>
+  <%- include('../partials/adminSidebar') %>
+  
+  <div id="main-wrapper">
+    <div class="bg-white mb-5 p-3 d-sm-flex align-items-center justify-content-between">
+      <h5 class="m-0 fw-bold color-theme">Update Korisnika</h5>
+    </div>
+
+    <form action="/admin/updateUser/<%= user.id %>" method="POST" class="w-75 border m-auto my-1 p-4 bg-white rounded-2">
+      <div class="mb-3">
+        <label for="firstName" class="form-label">First Name</label>
+        <input type="text" name="firstName" class="form-control" id="firstName" value="<%= user.firstName %>" required>
+      </div>
+      <div class="mb-3">
+        <label for="lastName" class="form-label">Last Name</label>
+        <input type="text" name="lastName" class="form-control" id="lastName" value="<%= user.lastName %>" required>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" name="email" class="form-control" id="email" value="<%= user.email %>" required>
+      </div>
+      <button type="submit" class="btn btn-theme">Update User</button>
+    </form>
+  </div>
+</main>

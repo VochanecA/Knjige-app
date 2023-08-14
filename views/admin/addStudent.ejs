@@ -1,0 +1,45 @@
+<main>
+  <%- include('../partials/adminSidebar') %>
+
+  <div id="main-wrapper">
+    <div class="bg-white mb-5 p-3 d-sm-flex align-items-center justify-content-between">
+      <h5 class="m-0 fw-bold color-theme">Add New Student</h5>
+    </div>
+
+    <form action="/admin/addStudent" method="POST" class="w-75 border m-auto my-1 p-4 bg-white rounded-2" enctype="multipart/form-data">
+
+      <div class="mb-3">
+        <label for="firstName" class="form-label">Ime</label>
+        <input type="text" name="firstName" class="form-control" id="firstName" required>
+      </div>
+      <div class="mb-3">
+        <label for="lastName" class="form-label">Prezime</label>
+        <input type="text" name="lastName" class="form-control" id="lastName" required>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" name="email" class="form-control" id="email" required>
+      </div>
+      <div class="mb-3">
+        <label for="gender" class="form-label">Pol</label>
+        <select name="gender" class="form-control" id="gender">
+          <option value="Musko">Male</option>
+          <option value="Zensko">Female</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="address" class="form-label">Adresa</label>
+        <input type="text" name="address" class="form-control" id="address">
+      </div>
+      <div class="mb-3">
+        <label for="phone" class="form-label">Broj telefona</label>
+        <input type="tel" name="phone" class="form-control" id="phone">
+      </div>
+      <div class="mb-3">
+        <label for="photo" class="form-label">Slika</label>
+        <input type="file" name="photo" class="form-control" id="photo">
+      </div>
+      <button type="submit" class="btn btn-theme">Dodaj korisnika/studenta</button>
+    </form>
+  </div>
+</main>

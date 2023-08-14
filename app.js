@@ -14,12 +14,14 @@ const ipfilter = require('express-ipfilter').IpFilter;
 const Book = require("./models/book.js");
 const crypto = require('crypto');
 const path = require('path');
+const settingsRoute = require('./routes/settings.js');
 
 require("dotenv").config();
 require("./config/dbConnection.js")();
 require("./config/passport.js")(passport);
 
 
+app.use('/dist', express.static(path.join(__dirname, 'assets/dist')));
 
 
 // Postavljanje bezbjednosnih opcija koristeći Helmet
@@ -95,10 +97,23 @@ app.use((req, res, next) => {
 
 // Statički resursi (CSS, JS, itd.)
 app.use("/assets", express.static(__dirname + "/assets"));
+app.use('/assets/users/images', express.static('/assets/users/images'));
 
 // Podešavanje EJS templating-a sa ejs ekstenzijom
 app.set("view engine", "ejs");
 app.use(expressLayouts);
+
+app.use((req, res, next) => {
+	if (req.isAuthenticated()) {
+	  const userPhoto = req.user.photo; // ajdmo da osiguramo da vidimo sliku usera
+	  res.locals.userPhoto = userPhoto;
+	} else {
+	 
+	  res.locals.userPhoto = null;
+	}
+	next();
+  });
+
 
 // Rute
 app.get("/", async (req, res) => {
@@ -115,6 +130,8 @@ app.get("/", async (req, res) => {
 app.use(authRoutes);
 app.use(studentRoutes);
 app.use(adminRoutes);
+app.use(settingsRoute);
+
 //Ruta za obradu nepostojećih zahteva
 app.use((req, res) => {
 	res.status(404).render("404page");

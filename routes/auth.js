@@ -7,6 +7,8 @@ const middleware = require("../middleware/index.js")
 const UserActivity = require('../models/UserActivity.js'); 
 
 
+
+  
 router.get("/auth/admin-signup", middleware.ensureNotLoggedIn, (req,res) => {
 	res.render("auth/adminSignup", {
 		title: "Admin Signup"
@@ -103,11 +105,27 @@ router.post('/auth/admin-login', middleware.ensureNotLoggedIn, (req, res, next) 
 
 
 
-router.get("/auth/admin-logout", middleware.ensureAdminLoggedIn, (req,res) => {
-	req.logout();
-	req.flash("success", "Logged-out successfully")
-	res.redirect("/");
+router.get('/auth/admin-logout', middleware.ensureAdminLoggedIn, async (req, res) => {
+  try {
+    const logoutTime = new Date(); // vidi trenutno datum i vrijeme
+    const userId = req.user._id;
+
+    // Update-uj
+    await UserActivity.updateOne(
+      { userId, logoutTime: { $exists: false } }, // Update-uj samo ako logouttime ne postoji
+      { $set: { logoutTime } }
+    );
+
+    req.logout();
+    req.flash('success', 'Logged out successfully');
+    res.redirect('/');
+  } catch (error) {
+    console.error(error);
+    req.flash('error', 'Error logging out');
+    res.redirect('/');
+  }
 });
+
 
 
 router.get("/auth/student-signup", middleware.ensureNotLoggedIn, (req,res) => {
@@ -198,6 +216,28 @@ router.get('/auth/userActivity', async (req, res) => {
     console.error(error);
     // Handle errors and render an error page
     res.render('error', { error });
+  }
+});
+
+
+// Render reset password stranicu
+router.get('/auth/reset-password', (req, res) => {
+  res.render('auth/resetPassword');
+});
+
+
+router.post('/auth/reset-password', async (req, res) => {
+  try {
+    const newPassword = req.body.newPassword;
+  
+    const userId = req.user._id; 
+    const user = await User.findById(userId);
+    user.password = newPassword;
+    await user.save();
+    res.redirect('/admin/profile'); // 
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Greska tokom resetovanja passworda');
   }
 });
 

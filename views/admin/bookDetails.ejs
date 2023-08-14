@@ -1,0 +1,71 @@
+<script src="/assets/js/guglBook.js"></script>
+<main>
+	<%- include('../partials/adminSidebar') %>
+	
+ <div id="main-wrapper">
+  <div class="bg-white mb-5 p-3 d-sm-flex align-items-center justify-content-between">
+    <h5 class="m-0 fw-bold color-theme">Deatlji o knjizi</h5>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+
+  <div class="product-card" style="width: 380px; position: relative; box-shadow: 0 2px 7px #dfdfdf; margin: 50px auto; background: #fafafa;">
+    <div class="badge" style="position: absolute; left: 0; top: 20px; text-transform: uppercase; font-size: 13px; font-weight: 700; background: red; color: #fff; padding: 3px 10px;">Hot</div>
+    <div class="product-tumb" style="display: flex; align-items: center; justify-content: center; height: 300px; padding: 50px; background: #f0f0f0;">
+      <img src="<%= book.image || '/assets/images/NemaKnjigek.svg.png' %>" alt="<%= book.title %>" style="max-width: 100%; max-height: 100%;">
+    </div>
+    <div class="product-details" style="padding: 30px;">
+      <span class="product-catagory" style="display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #ccc; margin-bottom: 18px;"><%= book.category %></span>
+      <h4><b><%= book.title %></b></h4>
+      <p style="font-size: 15px; line-height: 22px; margin-bottom: 18px; color: #999;"><%= book.authors %></p>
+      <p style="font-size: 15px; line-height: 22px; margin-bottom: 18px; color: #999;">ISBN broj: <%= book.ISBN %></p>
+      <p style="font-size: 15px; line-height: 22px; margin-bottom: 18px; color: #999;">Na stanju: <%= book.stock %></p>
+      <p style="font-size: 15px; line-height: 22px; margin-bottom: 18px; color: #999;">Opis: <%= book.description %></p>
+      <div class="product-bottom-details" style="overflow: hidden; border-top: 1px solid #eee; padding-top: 20px;">
+        <div style="display: flex; justify-content: space-between;">
+          <button class="btn btn-danger btn-delete" data-bookid="<%= book._id %>" nonce="<%= nonce %>">Obriši</button>
+          <a href="/admin/issueBookDirect?title=<%= encodeURIComponent(book.title) %>&isbn=<%= encodeURIComponent(book.ISBN) %>&author=<%= encodeURIComponent(book.authors) %>" class="btn btn-success btn-issue">Izdaj knjigu</a>
+          <a href="/admin/book/<%= book._id %>" class="btn btn-primary">Promjeni</a>
+          <form class="d-none" id="hidden-form-<%= book._id %>" action="/admin/book/<%= book._id %>?_method=DELETE" method="POST">
+            <input type="submit">
+          </form>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+</div>
+
+
+
+
+<div class="col-md-6">
+    <div class="product-card" style="width: 380px; position: relative; box-shadow: 0 2px 7px #dfdfdf; margin: 50px auto; background: #fafafa;">
+        <div class="card-title" style="font-size: 18px; font-weight: bold; text-align: center; padding: 15px; background-color: lightblue; border-bottom: 1px solid grey;">
+            Google info o knjizi:
+          </div>
+          
+      <div class="card-body" style="height: 100%;">
+        <div id="google-book-info" style="display: flex; flex-direction: column; align-items: center;">
+            <!-- Guglov logo -->
+            <img src="/assets/images/Google__G__Logo.svg.webp" alt="Google Logo" style="width: 100px; height: 100px; margin: 0 auto;">
+            <ul style="list-style: none; padding: 0; text-align: center;">
+              <li><strong>Naslov:</strong> Sample Book Title</li>
+              <li><strong>Autori:</strong> Author 1, Author 2</li>
+              <li><strong>Izdavač:</strong> Sample Publisher</li>
+              <li><strong>Broj stranica:</strong> 300</li>
+              <li><strong>Godina izdanja:</strong> 2022-01-01</li>
+              <li><strong>Kategorije:</strong> Fiction, Mystery</li>
+            </ul>
+          </div>
+          
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</main>
+

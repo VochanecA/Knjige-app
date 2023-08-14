@@ -17,15 +17,17 @@
         </tr>
       </thead>
       <tbody>
-  <% userActivity.forEach((activity, index) => { %>
-    <tr>
-      <td><%= index + 1 %></td>
-      <td><%= activity.userId.name %></td>
-      <td><%= activity.loginTime.toLocaleString() %></td>
-      <td><%= activity.logoutTime ? activity.logoutTime.toLocaleString() : 'Not logged out yet' %></td>
-    </tr>
-  <% }) %>
-</tbody>
+        <% userActivity.forEach((activity, index) => { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <td><%= activity.userId.firstName %> <%= activity.userId.lastName %></td>
+
+            <td><%= activity.loginTime.toLocaleString() %></td>
+            <td><%= activity.logoutTime ? activity.logoutTime.toLocaleString() : 'Nije se izlogovao jos...' %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+      
     </table>
 	<div class="pagination">
     <% if (userActivity.hasPrevPage) { %>

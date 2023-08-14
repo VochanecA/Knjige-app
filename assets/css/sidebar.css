@@ -14,6 +14,17 @@ main
 	transition: 0.3s linear;
 }
 
+
+#sidebar.collapsed ul li a {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 20px;
+}
+
+#sidebar.collapsed ul li a i {
+    margin-right: 10px;
+}
 .sidebar-hide
 {
 	width: 0px !important;

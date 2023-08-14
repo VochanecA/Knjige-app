@@ -2,33 +2,61 @@
 	<%- include('../partials/adminSidebar') %>
 	
 	<div id="main-wrapper">
-		
-		<div class="bg-white p-3">
-			<h5 class="m-0 fw-bold color-theme">Korisnik</h5>
+		<div class="bg-white mb-5 p-3 d-sm-flex align-items-center justify-content-between">
+		  <h5 class="m-0 fw-bold color-theme">Korisnici</h5>
+		  <a href="/admin/addUser" class="btn btn-theme">Dodaj</a>
 		</div>
-		
-		<div class="col col-sm-10 col-12 m-auto my-4" style="max-height: 75%; overflow: auto;">
-			<table class="table table-info table-striped table-hover m-0 bg-white">
-				<thead>
-					<tr>
-						<th scope="col">#</th>
-						<th scope="col">Ime</th>
-						<th scope="col">Email</th>
-						<th scope="col">Vrijeme pristupa</th>
-					</tr>
-				</thead>
-				<tbody>
-					<% for(let i=0; i<students.length; i++) { %>
-						<tr>
-							<th scope="row"> <%= i+1 %> </th>
-							<td> <%= students[i].firstName + " " + students[i].lastName %> </td>
-							<td> <%= students[i].email %> </td>
-							<td> <%= students[i].joinedTime.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short"}) %> </td>
-						</tr>
-					<% } %>
-				</tbody>
-			</table>
+
+		<div class="table-responsive">
+			<div style="width: 90%; max-width: 90%; overflow-x: auto; display: flex; justify-content: center; margin: 0 auto;">
+				<div style="border: 1px solid var(--theme-color); border-radius: 8px;height: 80vh;">
+
+				<table class="table table-bordered table-hover" style="margin: 0;">
+					<thead style="background-color: honeydew; font-weight: bold; color:var(--theme-color); text-align: center; font-size: 2vw; border-bottom: 2px solid var(--theme-color);">
+
+
+			  <tr>
+				<th scope="col">ID</th>
+				<th scope="col">Name</th>
+				<th scope="col">Email</th>
+				<th scope="col">Ime</th>
+				<th scope="col">Prezime</th>
+				<th scope="col">Slika</th>
+				<th scope="col">Adresa</th>
+				<th scope="col">Telefon</th>
+				<th scope="col" style="width: 100px; word-wrap: break-word;">Uclanio se:</th>
+				<th scope="col">Uloga</th>
+				<th scope="col">Akcije</th>
+			  </tr>
+			</thead>
+			<tbody>
+			  <% students.forEach(student => { %>
+				<tr>
+				  <td><%= student.id %></td>
+				  <td><%= student.name %></td>
+				  <td><%= student.email %></td>
+				  <td><b><%= student.firstName %></b></td>
+				  <td><b><%= student.lastName %></b></td>
+				  <td><img src="<%= student.photo %>" alt="<%= student.name %>" class="img-fluid rounded-circle" style="max-width: 50px;"></td>
+				  <td><%= student.address %></td>
+				  <td><%= student.phone %></td>
+				  <td style="width: 100px; word-wrap: break-word;color:crimson"><%= student.joinedTime.toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %></td> 
+                        
+				  <td><%= student.role %></td>
+				  <td>
+					<a href="/admin/updateUser/<%= student._id %>" class="btn btn-edit">Update-uj</a>
+					<form class="d-inline" action="/admin/deleteUser/<%= student.id %>" method="POST">
+					  <button type="submit" class="btn btn-delete">Obrisi</button>
+					</form>
+				  </td>
+				</tr>
+			  <% }) %>
+			</tbody>
+		  </table>
 		</div>
-		
-	</div>
-</main>
+	  </div>
+
+
+	</main>
+  </main>
+  

@@ -24,7 +24,7 @@ const loanSchema = new mongoose.Schema({
 	},
 	status: {
 		type: String,
-		enum: ["izdata", "vracena", "kasni"]
+		enum: ["izdata", "vracena", "kasni","written-off"]
 	}
 });
 

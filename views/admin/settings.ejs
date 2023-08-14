@@ -1,0 +1,59 @@
+
+<main>
+    <%- include('../partials/adminSidebar') %>
+  
+    <div id="main-wrapper">
+      <h1>Settings/Podesavanja</h1>
+
+      <div class="table-responsive w-75 m-auto mt-4">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Reservation Expiry</th>
+                    <th>Return Deadline</th>
+                    <th>Conflict Deadline</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% settings.forEach(setting => { %>
+                    <tr>
+                        <td><%= setting.reservationExpiry %></td>
+                        <td><%= setting.returnDeadline %></td>
+                        <td><%= setting.conflictDeadline %></td>
+                        <td>
+                            <a href="/admin/settings/edit/<%= setting._id %>" class="btn btn-primary btn-sm">Edit</a>
+                            <form action="/admin/settings/delete/<%= setting._id %>" method="POST" class="d-inline">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- forma za nova podesavanja -->
+    <form action="/admin/settings/add" method="POST" class="w-75 border m-auto my-5 bg-white rounded-2">
+      <h5 class="text-center bg-primary text-white form-title">Podesavanja</h5>
+      
+      <div class="form-body p-4">
+          <div class="mb-3">
+              <label for="reservationExpiry" class="form-label">Rezervacija istice (dana)</label>
+              <input type="number" name="reservationExpiry" class="form-control" id="reservationExpiry" value="<%= settings.reservationExpiry %>" required>
+          </div>
+          <div class="mb-3">
+              <label for="returnDeadline" class="form-label">Rok za povrat knjige (dana)</label>
+              <input type="number" name="returnDeadline" class="form-control" id="returnDeadline" value="<%= settings.returnDeadline %>" required>
+          </div>
+          <div class="mb-3">
+              <label for="conflictDeadline" class="form-label">Konflikt krajnji rok (dana)</label>
+              <input type="number" name="conflictDeadline" class="form-control" id="conflictDeadline" value="<%= settings.conflictDeadline %>" required>
+          </div>
+          
+          <button type="submit" class="btn w-75 d-block m-auto mt-4">Sacuvaj Podesavanja</button>
+          <a href="/admin/dashboard" class="btn btn-cancel w-75 d-block m-auto mt-4">Otkazi</a>
+      </div>
+  </form>
+  </div>
+</main>

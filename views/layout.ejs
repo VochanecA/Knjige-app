@@ -1,59 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="theme-color" content="#3b5998">
-
-	<link rel="shortcut icon" href="/assets/images/library-favicon.ico" type="image/vnd.microsoft.icon">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-		integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
-		crossorigin="anonymous" referrerpolicy="no-referrer" />
-			<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css">
-	<link rel="stylesheet" href="/assets/css/bootstrap.min.css"
-		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"/>
-	 <link rel="stylesheet" href="/assets/css/style.css">
-		<link rel="stylesheet" href="/assets/css/dash-css.css">
-		<script src="/assets/js/bootstrap.bundle.min.js"
-
-		    <title>Dashboard | Library - ICT Cortex student project</title>
+   <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="theme-color" content="#3b5998">
+      <link rel="shortcut icon" href="/assets/images/library-favicon.ico" type="image/vnd.microsoft.icon">
+	  
+      <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/[email protected]/dist/tailwind.min.css"> -->
+      <!-- <link rel="stylesheet" href="/assets/dist/bootstrap.min.css"
+         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" /> -->
 
 
-    <!-- End Title -->
-<link rel="stylesheet" href="/assets/bild/style/style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+		 <link rel="preload" href="/assets/css/style.css" as="style">
+		 <link rel="stylesheet" href="/assets/css/style.css" async>
+   <link rel="preload" href="/assets/css/dash-css.css" as="style">
+<link rel="stylesheet" href="/assets/css/dash-css.css" async>
 
 
-</head>
-					integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-					crossorigin="anonymous"></script>
-				<script type="text/javascript" src="/assets/js/script.js" nonce="<%= nonce %>" defer</script>
-				<script src="/assets/js/bookDetails.js" nonce="<%= nonce %>"></script>
+      <!-- <script src="/assets/js/bootstrap.bundle.min.js"></script> -->
+      <script src="/assets/js/jquery-3.6.0.min.js" type="text/javascript" async></script>
+      <!-- <script src="/assets/js/jquery.dataTables.min.js" async></script> -->
+      <!-- <link rel="stylesheet" type="text/css" href="/assets/dist/jquery.dataTables.min.css" > -->
+      <link rel="stylesheet" type="text/css" href="/assets/dist/jquery.dataTables.css">
+      <script type="text/javascript" charset="utf8" src="/assets/js/jquery.dataTables.js" async></script>
+      <script type="text/javascript" charset="utf8" src="/assets/js/dataTables.bootstrap4.min.js" async></script>
+      <script type="text/javascript" src="/assets/js/dataTables.buttons.min.js" async></script>
+      <link rel="stylesheet" href="/assets/dist/buttons.dataTables.min.css" async>
+      <title>Dashboard | Library - ICT Cortex student project</title>
+      <!-- <link rel="stylesheet" href="/assets/bild/style/style.css"> -->
+	  <link rel="preload" href="/assets/dist/all.min.css"  as="style">
+      <link rel="stylesheet" href="/assets/dist/all.min.css" >
 
-	<link rel="stylesheet" href="/assets/css/sidebar.css">
-	<script type="text/javascript" src="/assets/js/chart.js" nonce="<%= nonce %>"></script>
-	<!-- 	<script>
-		const inline = 1;
-		console.log(inline);
-	  </script> -->
+      <script src="/assets/js/dataTables.buttons.min.js" async></script>
+      <script src="/assets/js/jszip.min.js" async></script>
+      <script src="/assets/js/buttons.html5.min.js" async></script>
+      <script src="/assets/js/buttons.print.min.js" async></script>
+      <script src="/assets/js/datatables-init.js" type="text/javascript" async></script>
+      
+  
+      <!-- <link rel="stylesheet" href="/dist/optimized.css"> -->
+      <script type="text/javascript" src="/assets/js/script.js" nonce="<%= nonce %>" defer></script>
+      <script src="/assets/js/bookDetails.js" nonce="<%= nonce %>" async></script>
+      <link rel="stylesheet" href="/assets/dist/sidebar.css" async>
+      <script type="text/javascript" src="/assets/js/chart.js" nonce="<%= nonce %>" async></script>
 
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Montserrat:300" rel="stylesheet">
-	<style>
-		/*Optimizacija CPU -nekad bude opterecenje CPU-a veliko;najefektniji nacin je da pokrenemo GPU, tako da misli da ce izvoditi 3D transformacije i sl-nekad flash alerti dignu CPU */
-		* {
-			transform: translateZ(0);
-		}
-	</style>
-</head>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<body>
-	<%- include('partials/header') %>
-		<%- include('partials/alerts') %>
-			<%- body %>
-			</body>
+      <style>
+         /*Optimizacija CPU -nekad bude opterecenje CPU-a veliko;najefektniji nacin je da pokrenemo GPU, tako da misli da ce izvoditi 3D transformacije i sl-nekad flash alerti dignu CPU */
+         * {
+         transform: translateZ(0);
+         }
+		 
+      </style>
+   </head>
+   <body>
+      <%- include('partials/header') %>
+      <%- include('partials/alerts') %>
+      <%- body %>
+   </body>
+   <script src="/assets/js/sidebar.js"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/dist/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" async/>
+	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/dist/fontawesome.min.css" integrity="sha512-siarrzI1u3pCqFG2LEzi87McrBmq6Tp7juVsdmGY1Dr8Saw+ZBAzDzrGwX3vgxX1NkioYNCFOVC0GpDPss10zQ==" crossorigin="anonymous" referrerpolicy="no-referrer" async/>
+	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/dist/brands.min.css" integrity="sha512-W/zrbCncQnky/EzL+/AYwTtosvrM+YG/V6piQLSe2HuKS6cmbw89kjYkp3tWFn1dkWV7L1ruvJyKbLz73Vlgfg==" crossorigin="anonymous" referrerpolicy="no-referrer" async/>
+	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/dist/solid.min.css" integrity="sha512-P9pgMgcSNlLb4Z2WAB2sH5KBKGnBfyJnq+bhcfLCFusrRc4XdXrhfDluBl/usq75NF5gTDIMcwI1GaG5gju+Mw==" crossorigin="anonymous" referrerpolicy="no-referrer" async/>
 </html>

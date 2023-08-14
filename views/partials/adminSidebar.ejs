@@ -1,6 +1,6 @@
 <div id="sidebar">
 	<ul id="sidebar-nav">
-		<li>Dobrodosli, <%= currentUser.firstName ? currentUser.firstName : "Admin" %></li>
+		<li>Dobrodosli, <%= currentUser && currentUser.firstName ? currentUser.firstName : "Admin" %></li>
 		<li><a href="/admin/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
 		<li><a href="/admin/activities"><i class="fas fa-chart-line"></i> Aktivnosti</a></li>
 		<li><a href="/admin/students"><i class="fas fa-users"></i> Korisnici</a></li>
@@ -12,6 +12,8 @@
 		<li><a href="/admin/reservations"><i class="fas fa-calendar-check"></i> Rezervacije</a></li>
 		<li><a href="/admin/profile"><i class="fas fa-user-circle"></i> Moj profil</a></li>
 		<li><a href="/admin/userActivity"><i class="fas fa-user-circle"></i> Aktivnost logovanja</a></li>
+		<li><a href="/admin/books/write-off"><i class="fas fa-book"></i> Otpis knjige</a></li>
+		<li><a href="/admin/settings"><i class="fas fa-cog"></i> Podesavanja</a></li>		
 		<li><a href="/auth/admin-logout" class="btn"><i class="fas fa-sign-out-alt"></i> Izadji</a></li>
 	</ul>
 </div>
@@ -19,9 +21,5 @@
 <div id="toggler" class="text-center">
 	<span id="sidebar-toggler-btn"><i class="fas fa-bars"></i></span>
 </div>
-
-
-
-
 
 

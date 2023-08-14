@@ -9,76 +9,113 @@ const Loan = require("../models/loan.js");
 const Activity = require("../models/activity.js");
 const Author = require('../models/author.js');
 const Reservation  = require('../models/reservations.js');
+
 const nodemailer = require("nodemailer");
-const upload = require("../middleware/multer");
+//const upload = require("../middleware/multer");
 const UserActivity = require('../models/UserActivity.js'); 
 const mongoosePaginate = require('mongoose-paginate');
+const Settings = require('../models/settings.js');
+const multer = require("multer"); 
+const bodyParser = require('body-parser');
 
 
+const storage = multer.diskStorage({
+	destination: (req, file, cb) => {
+	  cb(null, 'assets/users/images/'); // Change this to your desired destination
+	},
+	filename: (req, file, cb) => {
+	  const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+	  cb(null, uniqueSuffix + '-' + file.originalname);
+	},
+  });
+  
+  const upload = multer({ storage: storage });
+  
+  // Use bodyParser middleware
+  router.use(bodyParser.urlencoded({ extended: true }));
+  router.use(bodyParser.json());
 
 
 router.get("/admin/dashboard", middleware.ensureAdminLoggedIn, async (req, res) => {
-  try {
-    // Update loans with status "izdata" and dueTime less than current date to "kasni"
-    await Loan.updateMany({ status: "izdata", dueTime: { $lt: new Date() } }, { status: "kasni" });
+	try {
+	  
+	  await Loan.updateMany({ status: "izdata", dueTime: { $lt: new Date() } }, { status: "kasni" });
+  
+	
+	  const numStudents = await User.countDocuments({ role: "korisnik" });
+	  const numAdmins = await User.countDocuments({ role: "admin" });
+  
+	
+	  const books = await Book.find();
+	  const numDistinctBooks = books.length;
+	  const numTotalBooks = books.reduce((total, book) => total + book.copiesOwned, 0);
+   
+	
+	  const numBooksNotReturned = await Loan.countDocuments({ status: { $in: ["izdata", "kasni"] } });
+  
+	
+	  const numBooksOverdue = await Loan.countDocuments({ status: "kasni" });
+  
 
-    // Count the number of students and admins
-    const numStudents = await User.countDocuments({ role: "korisnik" });
-    const numAdmins = await User.countDocuments({ role: "admin" });
+	  const activities = await Activity.find().populate("admin").populate("korisnik").populate("book").sort({ activityTime: -1 }).limit(10);
 
-    // Fetch all books and calculate the number of distinct books and total books
-    const books = await Book.find();
-    const numDistinctBooks = books.length;
-    const numTotalBooks = books.reduce((total, book) => total + book.copiesOwned, 0);
- 
-    // Count the number of books that are either "izdata" or "kasni"
-    const numBooksNotReturned = await Loan.countDocuments({ status: { $in: ["izdata", "kasni"] } });
+	
+		const reservations = await Reservation.find()
+		.populate("user") 
+		.populate("book")
+		.sort({ reservationDate: -1 })
+		.limit(10);
+  
 
-    // Count the number of books with status "kasni"
-    const numBooksOverdue = await Loan.countDocuments({ status: "kasni" });
-
-    // Fetch the last 10 activities and populate the related models
-    const activities = await Activity.find().populate("admin").populate("korisnik").populate("book").sort({ activityTime: -1 }).limit(10);
-
-const reservations = await Reservation.find()
-      .populate("user") // Assuming "user" is the reference to the User model in the Reservation schema
-      .populate("book")
-      .sort({ reservationDate: -1 })
-      .limit(10);
-
-    res.render("admin/dashboard", {
-      title: "Dashboard",
-      numStudents,
-      numAdmins,
-      numDistinctBooks,
-      numTotalBooks,
-      numBooksNotReturned,
-      numBooksOverdue,
-      activities,
-      reservations, // Correct variable name here
-    });
-  } catch (err) {
-    console.log(err);
-    req.flash("error", "Doslo je do greske na serveru.");
-    res.redirect("back");
-  }
-});
+		const { mostPopularBookTitle, mostPopularBookCount } = await calculateMostPopularBook();
 
 
-
-
-router.get("/admin/activities", middleware.ensureAdminLoggedIn, async (req,res) => {
-	try
-	{
-		const activities = await Activity.find().populate("admin").populate("korisnik").populate("book").sort("-activityTime");
-		res.render("admin/activities", { title: "Activities", activities });
+		
+	  res.render("admin/dashboard", {
+		title: "Dashboard",
+		numStudents,
+		numAdmins,
+		numDistinctBooks,
+		numTotalBooks,
+		numBooksNotReturned,
+		numBooksOverdue,
+		activities,
+		reservations, 
+		currentUser: req.user, 
+		mostPopularBookTitle,
+		mostPopularBookCount
+	  });
+	} catch (err) {
+	  console.log(err);
+	  req.flash("error", "Admin -Doslo je do greske na serveru.");
+	  res.redirect("back");
 	}
-	catch(err)
-	{
-		console.log(err);
-		req.flash("error", "Doslo je do greske na serveru.")
-		res.redirect("back");
-	}
+  });
+
+
+  router.get("/admin/activities", middleware.ensureAdminLoggedIn, async (req, res) => {
+    try {
+        const activities = await Activity.find()
+            .populate("admin")
+            .populate("korisnik")
+            .populate("book")
+            .sort("-activityTime");
+
+        // Fetch user data based on the currently logged-in user
+        const userId = req.user._id;
+        const user = await User.findById(userId); // Assuming you have the user ID stored in req.user
+
+        res.render("admin/activities", {
+            title: "Activities",
+            activities,
+            userPhoto: user ? user.photo : null,
+            userName: user ? user.firstName + " " + user.lastName : "",
+        });
+    } catch (err) {
+        console.log(err);
+        req.flash("error", "Doslo je do greske na serveru.");
+        res.redirect("back");
+    }
 });
 
 router.get("/admin/students", middleware.ensureAdminLoggedIn, async (req,res) => {
@@ -134,48 +171,51 @@ router.get("/admin/books", middleware.ensureAdminLoggedIn, async (req,res) => {
 
 
 router.get("/admin/books", middleware.ensureAdminLoggedIn, async (req, res) => {
-  try {
-    const filterObj = {};
-    const filter = req.query.filter;
-    const sortString = req.query.sortBy;
-
-    if (filter) {
-      filterObj.title = new RegExp(filter.title, "i");
-      filterObj.authors = new RegExp(filter.authors, "i");
-      filterObj.category = new RegExp(filter.category, "i");
-      filterObj.copiesOwned = { $gte: 0 };
-      filterObj.stock = { $gte: 0 };
-
-      if (filter.minCopiesOwned) {
-        filterObj.copiesOwned.$gte = filter.minCopiesOwned;
-      }
-
-      if (filter.maxCopiesOwned) {
-        filterObj.copiesOwned.$lte = filter.maxCopiesOwned;
-      }
-
-      if (filter.minStock) {
-        filterObj.stock.$gte = filter.minStock;
-      }
-
-      if (filter.maxStock) {
-        filterObj.stock.$lte = filter.maxStock;
-      }
-
-      if (filter.bindings) {
-        // Filter by the 'bindings' field if provided in the query
-        filterObj.bindings = new RegExp(filter.bindings, "i");
-      }
-    }
-
-    const books = await Book.find(filterObj).sort(sortString);
-    res.render("admin/books", { title: "Books", books });
-  } catch (err) {
-    console.log(err);
-    req.flash("error", "Doslo je do greske na serveru.");
-    res.redirect("back");
-  }
-});
+	try {
+	  const filterObj = {};
+	  const filter = req.query.filter;
+	  const sortString = req.query.sortBy;
+  
+	  if (filter) {
+		filterObj.title = new RegExp(filter.title, "i");
+		filterObj.authors = new RegExp(filter.authors, "i");
+		filterObj.category = new RegExp(filter.category, "i");
+		filterObj.copiesOwned = { $gte: 0 };
+		filterObj.stock = { $gte: 0 };
+  
+		if (filter.minCopiesOwned) {
+		  filterObj.copiesOwned.$gte = filter.minCopiesOwned;
+		}
+  
+		if (filter.maxCopiesOwned) {
+		  filterObj.copiesOwned.$lte = filter.maxCopiesOwned;
+		}
+  
+		if (filter.minStock) {
+		  filterObj.stock.$gte = filter.minStock;
+		}
+  
+		if (filter.maxStock) {
+		  filterObj.stock.$lte = filter.maxStock;
+		}
+  
+		if (filter.bindings) {
+	
+		  filterObj.bindings = new RegExp(filter.bindings, "i");
+		}
+	  }
+  
+	  // 
+	  const books = await Book.find(filterObj).where('status').ne('written-off').sort(sortString);
+  
+	  res.render("admin/books", { title: "Books", books });
+	} catch (err) {
+	  console.log(err);
+	  req.flash("error", "Doslo je do greske na serveru.");
+	  res.redirect("back");
+	}
+  });
+  
 
 
 
@@ -194,7 +234,7 @@ router.post("/admin/books/add", middleware.ensureAdminLoggedIn, upload.single("u
 	  // vidi je li nova slika uploadovana
 	  if (req.file) {
 		
-		book.image = "/uploads/" + req.file.filename;
+		book.image = "/assets/users/images/" + req.file.filename;
 	  }
   
 	  book.stock = book.copiesOwned;
@@ -289,6 +329,14 @@ router.delete("/admin/book/:bookId", middleware.ensureAdminLoggedIn, async (req,
 	}
 });
 
+//izdaj direktno
+router.get("/admin/issueBookDirect", middleware.ensureAdminLoggedIn, async (req, res) => {
+	const { title, isbn, author } = req.query;
+	res.render("admin/issueBookDirect", { title: "Izdaj knjigu", preFilledData: { title, isbn, author } });
+  });
+  
+  
+
 //izdaj knjigu
 router.get("/admin/issue", middleware.ensureAdminLoggedIn, async (req,res) => {
 	res.render("admin/issueBook", { title: "Izdaj knjigu" });
@@ -298,7 +346,7 @@ router.get("/admin/issue/:bookId", middleware.ensureAdminLoggedIn, async (req,re
 	try
 	{
 		const bookId = req.params.bookId;
-		// Add your logic here to issue the book based on the bookId
+
 		res.render("admin/issueBook", { title: "Izdaj knjigu" });
 	}
 	catch(err)
@@ -416,34 +464,57 @@ router.get("/admin/loans/previous", middleware.ensureAdminLoggedIn, async (req,r
 		res.redirect("back");
 	}
 });
-
-router.get("/admin/profile", middleware.ensureAdminLoggedIn, (req,res) => {
-	res.render("admin/profile", { title: "My Profile" });
-});
-
-router.put("/admin/profile", middleware.ensureAdminLoggedIn, async (req,res) => {
-	try
-	{
-		const id = req.user._id;
-		const updateObj = req.body.admin;	
-		await User.findByIdAndUpdate(id, updateObj);
-		
-		const newActivity = new Activity({
-			category: "updateAdminProfile",
-			admin: req.user._id,
-		});
-		await newActivity.save();
-		
-		req.flash("success", "Profil uspjesno update-ovan.");
-		res.redirect("/admin/profile");
+router.get('/admin/profile', middleware.ensureAdminLoggedIn, async (req, res) => {
+	try {
+	  const userId = req.user._id;
+	  const userActivities = await UserActivity.find({ userId }).sort({ loginTime: -1 });
+	
+	
+	  const user = await User.findById(userId);
+	
+	  console.log(user); // 
+	  
+	  res.render('admin/profile', { userActivities, currentUser: req.user, userPhoto: user.photo, user });
+	} catch (error) {
+	  console.error(error);
+	  res.status(500).send('Error fetching login history');
 	}
-	catch(err)
-	{
-		console.log(err);
-		req.flash("error", "Doslo je do greske na serveru.")
-		res.redirect("back");
+  });
+  
+  
+  
+  
+
+  router.put("/admin/profile", middleware.ensureAdminLoggedIn, upload.single("photo"), async (req, res) => {
+	try {
+	  const id = req.user._id;
+	  const updateObj = req.body.admin;
+  
+	  // Check if a new photo is uploaded
+	  if (req.file) {
+		const photoUrl = '/assets/users/images/' + req.file.filename; // Add a leading slash to the path
+
+		updateObj.photo = photoUrl;
+		
+	  }
+  
+	  await User.findByIdAndUpdate(id, updateObj);
+  
+	  const newActivity = new Activity({
+		category: "updateAdminProfile",
+		admin: req.user._id,
+	  });
+	  await newActivity.save();
+  
+	  req.flash("success", "Ok.Profil uspješno ažuriran.");
+	  res.redirect("/admin/profile");
+	} catch (err) {
+	  console.log(err);
+	  req.flash("error", "Došlo je do greške na serveru.");
+	  res.redirect("back");
 	}
-});
+  });
+  
 
 router.get("/admin/emails/reminder", middleware.ensureAdminLoggedIn, async (req,res) => {
 	try
@@ -716,7 +787,7 @@ router.post('/admin/reservations/add', middleware.ensureAdminLoggedIn, async (re
 
 //kraj rezervacija
 
-router.get('/admin/books/isbn/:title', async (req, res) => {
+router.get('/admin/books/isbn/:title',  middleware.ensureAdminLoggedIn, async (req, res) => {
   try {
     const title = req.params.title;
     const book = await Book.findOne({ title });
@@ -730,14 +801,19 @@ router.get('/admin/books/isbn/:title', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
-
-router.get('/admin/userActivity', async (req, res) => {
+// aktivnosti logovanj
+router.get('/admin/userActivity',  middleware.ensureAdminLoggedIn, async (req, res) => {
   try {
     const pageNumber = req.query.page || 1;
     const perPage = 10; // Number of items per page
 
     // Fetch user activity data from the database with pagination
-    const userActivity = await UserActivity.paginate({}, { page: pageNumber, limit: perPage, sort: { loginTime: 'desc' } });
+    const userActivity = await UserActivity.paginate({}, {
+      page: pageNumber,
+      limit: perPage,
+      sort: { loginTime: 'desc' },
+      populate: { path: 'userId', select: 'firstName lastName' } // Populate userId with firstName and lastName fields
+    });
 
     // Render the userActivity.ejs template and pass the userActivity data
     res.render('admin/userActivity', { userActivity: userActivity.docs }); // Use userActivity.docs
@@ -747,4 +823,288 @@ router.get('/admin/userActivity', async (req, res) => {
   }
 });
 
+  // otpis knjige
+
+  router.get('/admin/books/write-off', async (req, res) => {
+	try {
+	  const conflictDeadline = await Settings.findOne().select('conflictDeadline'); // Dobijte vrijednost konflikt Deadline iz podesavanja
+	  const lateLoans = await Loan.find({ status: 'kasni' }).populate('book'); // Popunite polje 'book'
+  
+	  const lateBooks = lateLoans.filter(loan => {
+		const dueDate = loan.dueTime;
+		const currentDate = new Date();
+		const overdueDays = Math.floor((currentDate - dueDate) / (1000 * 60 * 60 * 24)); //Izračunajte dane kašnjenja
+  
+		return overdueDays >= conflictDeadline.conflictDeadline; // Provjerite je li dani kašnjenja veći ili jednak konfliktnom roku
+	  });
+  
+	  const lateBookIds = lateBooks.map(loan => loan.book._id); //Nabavite ID knjige za kasne pozajmice
+  
+	  const books = await Book.find({ _id: { $in: lateBookIds } }); // Pronađite knjige koje su kasnile na osnovu lateBookIds
+  
+	  res.render('admin/writeOffBooks', { books }); // Render the view with the overdue books
+	} catch (error) {
+	  console.error(error);
+	  res.status(500).send('Error fetching books for write-off');
+	}
+  });
+  
+
+  router.post('/admin/books/write-off', async (req, res) => {
+	try {
+	  const conflictDeadline = await Settings.findOne().select('conflictDeadline'); // Dobijte vrijednost konflikt Deadline iz podesavanja
+	  const lateLoans = await Loan.find({ status: 'kasni' }).populate('book'); // Popunite polje 'book'
+  
+	  const lateBooks = lateLoans.filter(loan => {
+		const dueDate = loan.dueTime;
+		const currentDate = new Date();
+		const overdueDays = Math.floor((currentDate - dueDate) / (1000 * 60 * 60 * 24)); //Izračunajte dane kašnjenja
+  
+		return overdueDays >= conflictDeadline.conflictDeadline; // Provjerite je li dani kašnjenja veći ili jednak konfliktnom roku
+	  });
+  
+	  const lateBookIds = lateBooks.map(loan => loan.book._id); //Nabavite ID knjige za kasne pozajmice
+  
+	  await Book.updateMany(
+		{ _id: { $in: lateBookIds } },
+		{ $set: { status: 'written-off' } }
+	  );
+  
+	  res.redirect('/admin/books'); // Preusmjeri nazad na knjige
+	} catch (error) {
+	  console.error(error);
+	  res.status(500).send('Error writing off books');
+	}
+  });
+  
+  //izmjenjeno u 1252 CETVRTAK, 10.08.23
+  router.get('/admin/delete-login-history/:userId', middleware.ensureAdminLoggedIn, async (req, res) => {
+	try {
+	  const userId = req.params.userId;
+	  
+	  // Delete the user's login history
+	  await UserActivity.deleteMany({ userId });
+  
+	  req.flash('success', 'Login history deleted successfully');
+	  res.redirect('/admin/profile');
+	} catch (error) {
+	  console.error(error);
+	  req.flash('error', 'Error deleting login history');
+	  res.redirect('/admin/profile');
+	}
+  });
+  
+  router.get('/auth/admin-logout', middleware.ensureAdminLoggedIn, async (req, res) => {
+	try {
+	  const logoutTime = new Date(); // Get the current date and time
+	  const userId = req.user._id;
+  
+	  // Update the user's last logout time in UserActivity
+	  await UserActivity.updateOne(
+		{ userId, logoutTime: { $exists: false } }, // Update only if logoutTime doesn't exist
+		{ $set: { logoutTime } }
+	  );
+  
+	  req.logout();
+	  req.flash('success', 'Logged out successfully');
+	  res.redirect('/');
+	} catch (error) {
+	  console.error(error);
+	  req.flash('error', 'Error logging out');
+	  res.redirect('/');
+	}
+  });
+
+  
+// Dodaj sliku
+router.post('/admin/upload-photo', middleware.ensureLoggedIn, upload.single('photo'), async (req, res) => {
+	try {
+	  const user = await User.findById(req.user._id);
+	
+	  if (req.file) {
+		const photoUrl = '/assets/users/images/' + req.file.filename;
+		user.photo = photoUrl;
+		await user.save();
+	
+		req.flash('success', 'Slika dodata uspešno');
+		res.redirect('/admin/profile');
+	  } else {
+		req.flash('error', 'Niste izabrali sliku');
+		res.redirect('/admin/profile');
+	  }
+	} catch (error) {
+	  console.error(error);
+	  req.flash('error', 'Greška tokom dodavanja slike');
+	  res.redirect('/admin/profile');
+	}
+  });
+  
+  
+  
+  
+  
+  
+  // Update-uj sliku
+  router.post('/admin/update-photo', middleware.ensureLoggedIn, async (req, res) => {
+	try {
+	  const user = await User.findById(req.user._id);
+	  
+	  const photo = req.file;
+	
+	  const updatedPhotoUrl = '/assets/users/images/';
+	  user.photo = updatedPhotoUrl;
+	  await user.save();
+  
+	  req.flash('success', 'Slika update-ovana supsjesno');
+	  res.redirect('/admin/profile');
+	} catch (error) {
+	  console.error(error);
+	  req.flash('error', 'Greska tokom update-ovanja slike');
+	  res.redirect('/admin/profile');
+	}
+  });
+  
+  // obrisi sliku
+  router.post('/admin/delete-photo', middleware.ensureLoggedIn, async (req, res) => {
+	try {
+	  const user = await User.findById(req.user._id);
+	  
+	
+	  user.photo = undefined;
+	  await user.save();
+  
+	  req.flash('success', 'Slika uspjesno obrisana');
+	  res.redirect('/admin/profile');
+	} catch (error) {
+	  console.error(error);
+	  req.flash('error', 'Greska tokom brisanja slike');
+	  res.redirect('/admin/profile');
+	}
+  });
+
+  // Obrisi korisnika
+  router.post('/admin/deleteUser/:id', middleware.ensureAdminLoggedIn, async (req, res) => {
+	try {
+	  const userId = req.params.id;
+  
+	  await User.findByIdAndRemove(userId);
+  
+	  req.flash('success', 'User deleted successfully.');
+	  res.redirect('/admin/students');
+	} catch (err) {
+	  console.log(err);
+	  req.flash('error', 'An error occurred while deleting the user.');
+	  res.redirect('/admin/students');
+	}
+  });
+  
+  // Update User
+  router.get('/admin/updateUser/:id', middleware.ensureAdminLoggedIn, async (req, res) => {
+	try {
+	  const userId = req.params.id;
+	  const user = await User.findById(userId);
+  
+	  res.render('admin/updateStudent', { title: 'Update User', user });
+	} catch (err) {
+	  console.error(err);
+	  req.flash('error', 'An error occurred while updating the user.');
+	  res.redirect('back');
+	}
+  });
+  
+  router.post('/admin/updateUser/:id', middleware.ensureAdminLoggedIn, async (req, res) => {
+	try {
+		const updatedUser = await User.findByIdAndUpdate(
+			User.id,
+			{
+			  firstName: req.body.firstName,
+			  lastName: req.body.lastName,
+			  email: req.body.email,
+			  // Add other fields you want to update
+			},
+			{ new: true } // Return the updated document
+		  );
+		console.log('updatedUser:', updatedUser);
+		res.redirect('/admin/students');
+	  } catch (err) {
+		console.error('Database Error:', err);
+		req.flash('error', 'An error occurred while updating the user.');
+		res.redirect('back');
+	  }
+	  
+  });
+  
+  // dodaj korisnika/studenta
+  router.get('/admin/addUser', middleware.ensureAdminLoggedIn, (req, res) => {
+	res.render('admin/addStudent', { title: 'Add User' });
+  });
+  
+  
+  router.post('/admin/addUser', middleware.ensureAdminLoggedIn, upload.single('photo'), async (req, res) => {
+	try {
+	  const newUser = new User({
+		firstName: req.body.firstName,
+		lastName: req.body.lastName,
+		email: req.body.email,
+		gender: req.body.gender,
+		address: req.body.address,
+		phone: req.body.phone,
+		photo: req.file ? req.file.filename : undefined, //snima ime fajla
+		role: 'korisnik', // us tartu dodajem ulogu
+		// 
+	  });
+  
+	  await newUser.save();
+  
+	  res.redirect('/admin/students');
+	} catch (err) {
+	  console.error(err);
+	  req.flash('error', 'Došlo je do greške prilikom kreiranja korisnika.');
+	  res.redirect('back');
+	}
+  });
+
+  router.get('/admin/bookDetails/:id', middleware.ensureAdminLoggedIn, async (req, res) => {
+  try {
+    const book = await Book.findById(req.params.id);
+
+    if (!book) {
+      req.flash('error', 'Knjiga nije nadjena.');
+      return res.redirect('/admin/books');
+    }
+
+    res.render('admin/bookDetails', { book, nonce: res.locals.nonce });
+  } catch (err) {
+    console.error(err);
+    req.flash('error', 'Došlo je do greške prilikom preuzimanja detalja knjige.');
+    res.redirect('/admin/books');
+  }
+});
+
+//najpopularnija
+const calculateMostPopularBook = async () => {
+	try {
+	  const loanedBooks = await Loan.find({ status: { $in: ["izdata", "kasni"] } }).populate("book");
+	  
+	  const bookCountMap = new Map();
+	  loanedBooks.forEach((loan) => {
+		const bookTitle = loan.book.title;
+		bookCountMap.set(bookTitle, (bookCountMap.get(bookTitle) || 0) + 1);
+	  });
+  
+	  let maxCount = 0;
+	  let mostPopularBookTitle = "";
+	  bookCountMap.forEach((count, title) => {
+		if (count > maxCount) {
+		  maxCount = count;
+		  mostPopularBookTitle = title;
+		}
+	  });
+  
+	  return { mostPopularBookTitle, mostPopularBookCount: maxCount };
+	} catch (err) {
+	  console.error("Error calculating most popular book:", err);
+	  return { mostPopularBookTitle: "N/A", mostPopularBookCount: 0 };
+	}
+  };
 module.exports = router;

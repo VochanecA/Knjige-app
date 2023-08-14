@@ -60,14 +60,15 @@
         </div>
 
         <div class="table-responsive">
-          <table class="table table-hover table-nowrap">
-            <thead class="table-light">
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Kategorija</th>
-                <th scope="col">Aktivnost</th>
-                <th scope="col">Aktivnost-Vrijeme</th>
-              </tr>
+          <table class="table table-hover table-striped">
+              <thead class="table-light">
+                  <tr>
+                      <th scope="col">#</th>
+                      <th scope="col" class="category-header" style="width: 90px;">Kategorija</th>
+
+                      <th scope="col">Aktivnost</th>
+                      <th scope="col">Aktivnost-Vrijeme</th>
+                  </tr>
             </thead>
             <tbody>
               <% for(let i=0; i<activities.length; i++) { %>
@@ -78,21 +79,22 @@
                 </th>
                 <td> Izdata/Pozajmljena</td>
                 <td>
-                  <% if (activities[i].korisnik) { %>
-                  <span class="activity-item">
-                    <%= activities[i].korisnik.firstName %>
-                  </span>
-                  <% } %>
-                  <span>Pozajmnljena knjiga</span>
-                  <span class="activity-item">
-                    <%= activities[i].book.title %>
-                  </span>
+                  <div style="display: flex; align-items: center;">
+                      <div style="width: 30px; height: 30px; border-radius: 50%; overflow: hidden; border: 1px solid #ccc; margin-right: 10px;">
+                          <img src="<%= activities[i].korisnik.photo %>" alt="User Photo" style="width: 100%; height: 100%; object-fit: cover; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);">
+                      </div>
+                      <span class="activity-item"><%= activities[i].korisnik.firstName %></span>
+                  </div>
+                  <span>Pozajmljena knjiga</span>
+                  <span class="activity-item"><%= activities[i].book.title %></span>
                   <span>od</span>
-                  <span class="activity-item">
-                    <%= activities[i].admin.firstName %>
-                  </span>
-                </td>
-                <td>
+                  <div style="display: flex; align-items: center;">
+                      <div style="width: 30px; height: 30px; border-radius: 50%; overflow: hidden; border: 1px solid #ccc; margin-right: 10px;">
+                          <img src="<%= activities[i].admin.photo %>" alt="Admin Photo" style="width: 100%; height: 100%; object-fit: cover; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);">
+                      </div>
+                      <span class="activity-item"><%= activities[i].admin.firstName %> <%= activities[i].admin.lastName %></span>
+                  </div>
+              </td>
                   <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium" ,
                           timeStyle: "short" }) %>
                 </td>
@@ -102,20 +104,22 @@
                 </th>
                 <td> Povrat knjige </td>
                 <td>
-                  <% if (activities[i].korisnik) { %>
-                  <span class="activity-item">
-                    <%= activities[i].korisnik.firstName %>
-                  </span>
-                  <% } %>
-                  <span>Vracena knjiga</span>
-                  <span class="activity-item">
-                    <%= activities[i].book.title %>
-                  </span>
-                  <span> ka </span>
-                  <span class="activity-item">
-                    <%= activities[i].admin.firstName %>
-                  </span>
-                </td>
+                  <div style="display: flex; align-items: center;">
+                      <div style="width: 30px; height: 30px; border-radius: 50%; overflow: hidden; border: 1px solid #ccc; margin-right: 10px;">
+                          <img src="<%= activities[i].korisnik.photo %>" alt="User Photo" style="width: 100%; height: 100%; object-fit: cover; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);">
+                      </div>
+                      <span class="activity-item"><%= activities[i].korisnik.firstName %></span>
+                  </div>
+                  <span>Pozajmljena knjiga</span>
+                  <span class="activity-item"><%= activities[i].book.title %></span>
+                  <span>od</span>
+                  <div style="display: flex; align-items: center;">
+                      <div style="width: 30px; height: 30px; border-radius: 50%; overflow: hidden; border: 1px solid #ccc; margin-right: 10px;">
+                          <img src="<%= activities[i].admin.photo %>" alt="Admin Photo" style="width: 100%; height: 100%; object-fit: cover; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);">
+                      </div>
+                      <span class="activity-item"><%= activities[i].admin.firstName %> <%= activities[i].admin.lastName %></span>
+                  </div>
+              </td>
                 <td>
                   <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium" ,
                             timeStyle: "short" }) %>
@@ -126,14 +130,16 @@
                 </th>
                 <td> Dodaj Knjigu </td>
                 <td>
-                  <span class="activity-item">
-                    <%= activities[i].admin.firstName %>
-                  </span>
+                  <div style="display: flex; align-items: center;">
+                      <div style="width: 30px; height: 30px; border-radius: 50%; overflow: hidden; border: 1px solid #ccc; margin-right: 10px;">
+                          <img src="<%= activities[i].admin.photo %>" alt="Admin Photo" style="width: 100%; height: 100%; object-fit: cover; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);">
+                      </div>
+                      <span class="activity-item"><%= activities[i].admin.firstName %></span>
+                  </div>
                   <span>Dodate knjige</span>
-                  <span class="activity-item">
-                    <%= activities[i].book.title %>
-                  </span>
-                </td>
+                  <span class="activity-item"><%= activities[i].book.title %></span>
+              </td>
+              
                 <td>
                   <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium" ,
                               timeStyle: "short" }) %>
@@ -144,14 +150,16 @@
                 </th>
                 <td> Update-uj knjigu </td>
                 <td>
-                  <span class="activity-item">
-                    <%= activities[i].admin.firstName %>
-                  </span>
-                  <span>updated-ovana knjiga</span>
-                  <span class="activity-item">
-                    <%= activities[i].book.title %>
-                  </span>
-                </td>
+                  <div style="display: flex; align-items: center;">
+                      <div style="width: 30px; height: 30px; border-radius: 50%; overflow: hidden; border: 1px solid #ccc; margin-right: 10px;">
+                          <img src="<%= activities[i].admin.photo %>" alt="Admin Photo" style="width: 100%; height: 100%; object-fit: cover; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);">
+                      </div>
+                      <span class="activity-item"><%= activities[i].admin.firstName %></span>
+                  </div>
+                  <span>Dodate knjige</span>
+                  <span class="activity-item"><%= activities[i].book.title %></span>
+              </td>
+              
                 <td>
                   <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium" ,
                                 timeStyle: "short" }) %>
@@ -162,11 +170,15 @@
                 </th>
                 <td> Update-uj Administratora </td>
                 <td>
-                  <span class="activity-item">
-                    <%= activities[i].admin.firstName %>
-                  </span>
-                  <span>updated-ovan njen/njegov profil</span>
-                </td>
+                  <div style="display: flex; align-items: center;">
+                      <div style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden; border: 1px solid #ccc; margin-right: 10px;">
+                          <img src="<%= activities[i].admin.photo %>" alt="Admin Photo" style="width: 100%; height: 100%; object-fit: cover; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);">
+                      </div>
+                      <span class="activity-item"><%= activities[i].admin.firstName %> <%= activities[i].admin.lastName %></span>
+                  </div>
+                  <span class="activity-text">updated-ovan njen/njegov profil</span>
+              </td>
+              
                 <td>
                   <%= activities[i].activityTime.toLocaleString("en-IN", { dateStyle: "medium" ,
                                   timeStyle: "short" }) %>
@@ -217,7 +229,7 @@
                 </thead>
                 <tbody>
                   <% for(let i=0; i<reservations.length && i<3; i++) { %>
-                  <!-- Limit to 3 rows -->
+                
                   <tr>
                     <th scope="row">
                       <%= i+1 %>
@@ -253,15 +265,33 @@
         <div class="row">
 
           <div class="col-12" style="width: 95%;">
-
+        
             <div class="bg-white p-3">
               <h5 class="m-0 fw-bold color-theme">Statistike</h5>
             </div>
             <div class="col col-12 m-auto my-4">
               <canvas id="barChart"></canvas>
             </div>
+        
+            <!-- najpopularnija knjiga -->
+            <div class="col col-12 m-auto my-4">
+              <div class="card shadow rounded">
+                <div class="card-body" style="background-color: lightgreen;">
+                  <h4 class="card-title fw-bold">Najpopularnija knjiga</h4>
+                  <p class="card-text fw-bold"><%= mostPopularBookTitle %></p>
+                  <p class="card-text">
+                    <span class="badge rounded-circle bg-danger text-white">
+                      <%= mostPopularBookCount %>
+                    </span>
+                    puta izdata/kasnjenje
+                  </p>
+                </div>
+              </div>
+            </div>
+            
           </div>
         </div>
+        
 
       </div>
     </div>

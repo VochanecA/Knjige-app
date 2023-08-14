@@ -1,13 +1,34 @@
-<header class="p-2 text-center">
+<header class="p-1 text-center">
     <div class="header-container">
         <div class="wave-text">Jednostavna biblioteka</div>
 
+
+
+    
         <div class="button-container">
-            <a class="btn btnHeader" href="/auth/student-login">Korisnicki Login</a>
+            <!-- Admin Login taster -->
             <a class="btn btnHeader" href="/auth/admin-login">Admin Login</a>
+
+            <!--  Login taster -->
+            <a class="btn btnHeader" href="/auth/student-login">Korisnicki Login</a>
+
+            <a class="btn btnHeader" href="/auth/student-signup"><i class="fas fa-plus"></i> Dodaj korisnika</a>
+
+            <a class="btn btnHeader profile-btn" href="/admin/profile"
+                style="display: flex; flex-direction: column; align-items: center;">
+                <div class="avatar">
+                    <% if (userPhoto) { %>
+                    <img src="<%= userPhoto %>" alt="User Photo" class="header-user-photo"
+                        style="height: 50px; width: 50px; border-radius: 50% !important;">
+                    <% } else { %>
+                    <img src="/assets/users/images/default-avatar.jpg" alt="Slika korisnika" class="header-user-photo"
+                        style="height: 50px; width: 50px; border-radius: 50% !important;">
+                    <% } %>
+                </div>
+            </a>
+
+            <!-- Ikona notif. -->
+            <a class="notification-icon" href="#"><i class="fas fa-bell"></i></a>
         </div>
     </div>
 </header>
-
-</body>
-</html>

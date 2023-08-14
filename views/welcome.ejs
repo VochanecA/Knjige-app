@@ -1,52 +1,35 @@
 <div id="welcome-container" class="bg-image-container">
-    <div class="text-center" style="color: black;">Dobrodosli u jednostavnu online biblioteku</div>
+  <div class="text-center" style="color: black;">Dobrodosli u jednostavnu online biblioteku</div>
 
-    <div id="slideshow-container">
-      <% randomBooks.forEach(book => { %>
-        <img src="<%= book.image %>" class="slide" alt="<%= book.title %>">
-      <% }) %>
-    </div>
-    <div class="container mt-5">
-      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        <% randomBooks.forEach(book => { %>
-          <div class="col">
-            <div class="card bg-transparent border-0">
-              <div class="row g-0">
-                <div class="col-md-4">
-                  <div class="card-img-container">
-                    <% if (book.image) { %>
-                      <img src="<%= book.image %>" class="card-img" alt="<%= book.title %>">
-                    <% } else { %>
-                      <img src="../assets/images/NemaKnjigek.svg.png" class="card-img" alt="Nema slike knjige">
-                    <% } %>
-                  </div>
-                </div>
-                <div class="col-md-8">
-                  <div class="card-body">
-                    <h5 class="card-title" style="font-weight: bold; color: black;"><%= book.title %></h5>
-                    <h6 class="card-subtitle mb-3 text-muted" style="font-size: 0.875rem;"><%= book.authors %></h6>
-                    <p class="card-text" style="font-size: 0.75rem;"><%= book.description %></p>
-                  <!--  <button class="btn btn-primary" onclick="alert('User must be logged in')" style="margin-top: auto;">Detaljnije</button>  -->
-                  </div>
-                </div>
+  <div class="container mt-5">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-4 justify-content-center">
+      <% randomBooks.slice(0, 4).forEach(book => { %>
+        <div class="col">
+          <div class="product-card" style="position: relative; box-shadow: 0 2px 7px #dfdfdf; background: #fafafa; height: 100%;">
+            <a href="/admin/bookDetails/<%= book._id %>" style="display: block; position: relative;">
+              <% if (book.stock === 0) { %>
+                <div class="badge" style="position: absolute; left: 0; bottom: 0; z-index: 1; text-transform: uppercase; font-size: 13px; font-weight: 700; background: red; color: #fff; padding: 3px 10px;">Nije dostupno</div>
+              <% } else if (book.stock === 1) { %>
+                <div class="badge" style="position: absolute; left: 0; bottom: 0; z-index: 1; text-transform: uppercase; font-size: 13px; font-weight: 700; background: orange; color: #fff; padding: 3px 10px;">Jos jedna</div>
+              <% } else { %>
+                <div class="badge" style="position: absolute; left: 0; bottom: 0; z-index: 1; text-transform: uppercase; font-size: 13px; font-weight: 700; background: green; color: #fff; padding: 3px 10px;">Dostupno</div>
+              <% } %>
+              <div class="product-tumb" style="position: relative; display: flex; align-items: center; justify-content: center; height: 200px; background: #f0f0f0;">
+                <% if (book.image) { %>
+                  <img src="<%= book.image %>" alt="<%= book.title %>" style="max-width: 100%; max-height: 100%;">
+                <% } else { %>
+                  <img src="../assets/images/NemaKnjigek.svg.png" alt="Nema slike knjige" style="max-width: 100%; max-height: 100%;">
+                <% } %>
               </div>
+            </a>
+            <div class="product-details" style="padding: 1.5rem;">
+              <h5 class="product-title" style="font-weight: bold; color: black; font-size: 1.25rem;"><%= book.title %></h5>
+              <h6 class="product-subtitle mb-3 text-muted" style="font-size: 0.875rem;"><%= book.authors %></h6>
+              <p class="product-description" style="font-size: 0.875rem;"><%= book.description %></p>
             </div>
           </div>
-        <% }) %>
-      </div>
+        </div>
+      <% }) %>
     </div>
   </div>
-
-  <script type="text/javascript" src="../assets/js/bootstrap.bundle.min.js"></script>
-  <script>
-    const slides = document.querySelectorAll('.slide');
-    let currentSlide = 0;
-
-    function showSlide() {
-      slides[currentSlide].classList.remove('active');
-      currentSlide = (currentSlide + 1) % slides.length;
-      slides[currentSlide].classList.add('active');
-    }
-
-    setInterval(showSlide, 3000);
-  </script>
+</div>

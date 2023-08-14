@@ -76,33 +76,52 @@
       <% if(books.length == 0) { %>
       <div>Nije pronadjena niti jedna knjiga.</div>
       <% } else for(let i=0; i<books.length; i++) { %>
-<div class="card border border-2 m-2" style="width: 18rem;">
-  <div class="card-body d-flex flex-column justify-content-between">
-    <div>
-      <div class="book-image">
-        <% if (books[i].image) { %>
-          <img src="<%= books[i].image %>" alt="<%= books[i].title %>">
-        <% } else { %>
-          <img src="../assets/images/NemaKnjigek.svg.png" alt="Nema slike knjige"  width="200" height="270" class="img-fluid">
-        <% } %>
-      </div>
-      <h5 class="card-title"><b><%= books[i].title %> </b></h5>
-      <h6 class="card-subtitle mb-3 text-muted"> <%= books[i].authors %> </h6>
-      <div> <%= books[i].category %> </div>
-      <div> ISBN broj: <%= books[i].ISBN %> </div>
-      <div> Broj kopija: <%= books[i].copiesOwned %> </div>
-      <div> Na stanju: <%= books[i].stock %> </div>
-      <div> <%= books[i].description %> </div>
-    </div>
-    <div class="btn-group mt-3 align-self-end">
-<a href="/admin/book/<%= books[i]._id %>" class="btn">Promjeni (Edituj)</a>
-  <form class="d-none" id="hidden-form-<%= books[i]._id %>" action="/admin/book/<%= books[i]._id %>?_method=DELETE" method="POST">
-    <input type="submit">
-  </form>
-  <button class="btn btn-delete" data-bookid="<%= books[i]._id %>" nonce="<%= nonce %>">Obrisi</button>
-    </div>
-  </div>
-</div>
+        <div class="product-card" style="width: 380px; position: relative; box-shadow: 0 2px 7px #dfdfdf; margin: 50px auto; background: #fafafa;">
+          <a href="/admin/bookDetails/<%= books[i]._id %>" style="display: block; position: relative;">
+            <% if (books[i].stock === 0) { %>
+              <div class="badge" style="position: absolute; left: 0; top: 0; z-index: 1; text-transform: uppercase; font-size: 13px; font-weight: 700; background: red; color: #fff; padding: 3px 10px;">Nije dostupno</div>
+            <% } else if (books[i].stock === 1) { %>
+              <div class="badge" style="position: absolute; left: 0; top: 0; z-index: 1; text-transform: uppercase; font-size: 13px; font-weight: 700; background: orange; color: #fff; padding: 3px 10px;">Jos jedna</div>
+            <% } else { %>
+              <div class="badge" style="position: absolute; left: 0; top: 0; z-index: 1; text-transform: uppercase; font-size: 13px; font-weight: 700; background: green; color: #fff; padding: 3px 10px;">Dostupno</div>
+            <% } %>
+            <div class="product-tumb" style="position: relative; display: flex; align-items: center; justify-content: center; height: 200px; background: #f0f0f0;">
+              <img src="<%= books[i].image || '../assets/images/NemaKnjigek.svg.png' %>" alt="" style="max-width: 100%; max-height: 100%;">
+            </div>
+            <div class="book-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.3); display: none; justify-content: center; align-items: center;">
+              <p style="color: white; text-align: center; font-size: 20px;">Klikni da vidis detalje</p>
+            </div>
+          </a>
+          
+          <div class="product-details" style="padding: 30px;">
+            <span class="product-catagory" style="display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #ccc; margin-bottom: 18px;"><%= books[i].category %> </span>
+            <h4><a href="/admin/bookDetails/<%= books[i]._id %>" style="font-weight: bold; display: block; margin-bottom: 18px; text-transform: uppercase; color: #363636; text-decoration: none; transition: 0.3s;"><%= books[i].title %> </a></h4>
+        
+            <p style="font-size: 15px; line-height: 22px; margin-bottom: 18px; color: #999;"><%= books[i].authors %></p>
+            <p style="font-size: 15px; line-height: 22px; margin-bottom: 18px; color: #999;">ISBN broj: <%= books[i].ISBN %></p>
+            <div class="shortened-description" style="font-size: 15px; line-height: 22px; margin-bottom: 18px; color: #999;">
+              <%= books[i].description.substring(0, 35) %><span class="full-description" style="display: none;"><%= books[i].description.substring(35) %></span><span class="toggle-description">...</span>
+            </div>
+            <div class="product-bottom-details" style="overflow: hidden; border-top: 1px solid #eee; padding-top: 20px;">
+              <div style="display: flex; justify-content: space-between;">
+                <div class="btn-group">
+                  <button class="btn btn-danger btn-delete" data-bookid="<%= books[i]._id %>" nonce="<%= nonce %>">Obriši</button>
+                  <a href="/admin/issueBookDirect?title=<%= encodeURIComponent(books[i].title) %>&isbn=<%= encodeURIComponent(books[i].ISBN) %>&author=<%= encodeURIComponent(books[i].authors) %>" class="btn btn-success btn-issue">Izdaj knjigu</a>
+                  <a href="/admin/book/<%= books[i]._id %>" class="btn btn-primary">Promjeni</a>
+                  <form class="d-none" id="hidden-form-<%= books[i]._id %>" action="/admin/book/<%= books[i]._id %>?_method=DELETE" method="POST">
+                    <input type="submit">
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+        
+        
+        
+        
       <% } %>
     </div>
 

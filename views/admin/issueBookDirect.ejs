@@ -1,0 +1,33 @@
+<main>
+	<%- include('../partials/adminSidebar') %>
+	
+	<div id="main-wrapper">
+  <div class="bg-white mb-5 p-3 d-sm-flex align-items-center justify-content-between">
+    <h5 class="m-0 fw-bold color-theme">Izdaj knjigu</h5>
+  </div>
+
+  <form action="/admin/issue" method="POST" class="w-75 border m-auto my-1 p-4 bg-white rounded-2">
+    <!-- Your form fields with pre-filled data -->
+    <div class="mb-3">
+      <label for="author" class="form-label">Autor knjige</label>
+      <input type="text" name="author" class="form-control" id="author" value="<%= preFilledData.author || '' %>" required>
+      <div id="author-results"></div>
+    </div>
+    <div class="mb-3">
+      <label for="bookTitle" class="form-label">Naslov knjige</label>
+      <input type="text" name="bookTitle" class="form-control" id="bookTitle" value="<%= preFilledData.title || '' %>" required>
+      <div id="book-results"></div>
+    </div>
+    <div class="mb-3">
+      <label for="ISBN" class="form-label">ISBN broj</label>
+      <input type="number" name="ISBN" class="form-control" id="ISBN" value="<%= preFilledData.isbn || '' %>" required>
+    </div>
+    <div class="mb-3 p-2" style="background-color: lightblue;">
+      <label for="email" class="form-label">Email korisnika</label>
+      <input type="email" name="email" class="form-control" id="email" placeholder="Enter student email.." required>
+    </div>
+    <button type="submit" class="btn w-75 d-block m-auto mt-4">Izdaj knjigu</button>
+  </form>
+</div>
+
+<script src="../assets/js/issueBook.js"></script>
